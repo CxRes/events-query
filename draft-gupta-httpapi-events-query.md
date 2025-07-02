@@ -2,7 +2,7 @@
 title: "HTTP Events Query"
 category: std
 
-docname: draft-todo-yourname-protocol-latest
+docname: draft-gupta-httpapi-events-query-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
@@ -24,9 +24,9 @@ venue:
 
 author:
  -
-    fullname: Your Name Here
+    fullname: "Rahul Gupta"
     organization: Your Organization Here
-    email: your.email@example.com
+    email: "CxRes@users.noreply.github.com"
 
 normative:
 
