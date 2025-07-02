@@ -1,0 +1,13 @@
+# End User Considerations {#end-user-coniderations}
+
+[^End_User]
+
+[^End_User]: If we, the IETF, claim that the Internet is for the end user {{RFC8890}} and promote the end-to-end principle {{RFC3724}}, every specification we produce ought to consider its impact on the Internet end user. For this reason, I propose that specifications must include a considerations section where authors assess the impact of their proposal on the internet end user, aligned with the mission of IETF {{RFC3935}}.
+
+End users of the HTTP protocol can be classified into two groups: publishers and consumers. Consumers have an incentive to subscribe to event-notifications from many resources and to hold on to a connection for as long as possible. Whereas publishers bear the cost of server infrastructure. Consumers also typically outnumber publishers, in many cases by multiple orders of magnitude. This creates an imbalance in the effort to subscribe versus effort to deliver; consumers can easily place a disproportionate burden on servers, reminiscent of a denial-of-service attack.
+
+At the outset, requiring that clients subscribe to event-notifications per resource serves as an effective filtering mechanism that limits the burden on servers. Compare this to the typical implementation of protocols such as WebSockets {{WS}}, where clients connect to dedicated endpoints to receive notifications; the server either has to broadcast notifications for multiple resources or track resources of interest for each client to filter event-notifications accordingly.
+
+{{&protocol}} empowers servers to decide content and duration for which event notifications are served on any given resource, as well as allowing servers to close the response stream at any time. Servers may also limit event-notifications and/or their content, except to authenticated consumers. Such authenticated consumers might, for example, be asked to share the cost burden with publishers in return for a higher quality of service.
+
+The use of HTTP Semantics also enables intermediation of event-notifications, unlike existing mechanisms built with protocols such as WebSockets {{WS}} or WebSub {{WEBSUB}}. Intermediaries can help with improving the latency and reliability of transmission of event notifications as well as scaling of the event-notification traffic to reach a significantly larger base of consumers. On the flip side, economies of scale will likely lead to greater consolidation of intermediary service providers (though not centralization) with the attendant risk of anti-consumer behaviour. In the opinion of the authors, policies designed to treat network traffic as a public utility might provide better outcomes for the end user.

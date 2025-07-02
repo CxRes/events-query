@@ -3,7 +3,7 @@ title: "HTTP Events Query"
 category: std
 
 docname: draft-gupta-httpapi-events-query-latest
-submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
+submissiontype: IETF
 number:
 date:
 consensus: true
@@ -11,9 +11,9 @@ v: 3
 area: "Web and Internet Transport"
 workgroup: "Building Blocks for HTTP APIs"
 keyword:
- - next generation
- - unicorn
- - sparkling distributed ledger
+ - event
+ - query
+ - notification
 venue:
   group: "Building Blocks for HTTP APIs"
   type: "Working Group"
@@ -25,45 +25,106 @@ venue:
 author:
  -
     fullname: "Rahul Gupta"
-    organization: Your Organization Here
     email: "CxRes@users.noreply.github.com"
 
+autolink-iref-cleanup: true
+entity:
+  protocol: Events Query
+
 normative:
-
+  HTTP: RFC9110
+  HTTP-SF: RFC9651
+  HTTP-QUERY: I-D.ietf-httpbis-safe-method-w-body-10
+  INCREMENTAL-HTTP-MESSAGES: I-D.ietf-httpbis-incremental-00
+  RFC8126:
 informative:
+  DESIGN-FRAMEWORK: DOI.10.1145/267896.267920
+  FETCH:
+    target: https://fetch.spec.whatwg.org
+    title: Fetch
+    author:
+      -
+        ins: A. van Kesteren
+        name: Anne van Kesteren
+    seriesinfo:
+      WHATWG: Living Standard
+    date: Last Updated 28 May 2025
+  HTTP-CACHING: RFC9111
+  REST:
+    target: https://roy.gbiv.com/pubs/dissertation/rest_arch_style.htm
+    title: Representational State Transfer (REST)
+    author:
+      -
+        ins: R. Fielding
+        name: Roy Thomas Fielding
+        org: University of California, Irvine
+    date:
+      month: September
+      year: 2000
+    refcontent: Chapter 5, Architectural Styles and the Design of Network-based Software Architectures
+    seriesinfo:
+      "Doctoral Dissertation": University of California, Irvine
+    format:
+      PDF: https://roy.gbiv.com/pubs/dissertation/fielding_dissertation.pdf#G16.1026811
+  RFC3724:
+  RFC3935:
+  RFC6202:
+  RFC7838:
+  RFC8890:
+  RFC9112:
+    -: HTTP1
+    display: HTTP/1.1
+  RFC9205:
+  SSE: W3C.eventsource
+  WEBSUB: W3C.websub
+  WS: W3C.websockets
 
-...
 
 --- abstract
 
-TODO Abstract
+Events Query is a minimal protocol built on top of HTTP that allows user agents to receive event-notifications directly from any resource of interest. The Events Query Protocol (EQP) is predicated on the idea that the most intuitive source for event-notifications is the resource itself.
 
 
 --- middle
 
-# Introduction
+{::include-nested sections/introduction.md}
 
-TODO Introduction
-
-
-# Conventions and Definitions
-
-{::boilerplate bcp14-tagged}
+{::include sections/design.md}
 
 
-# Security Considerations
+<!-- Conformance Sections -->
 
-TODO Security
+{::include boilerplate/conformance.md}
 
 
-# IANA Considerations
+<!-- Normative Sections -->
 
-This document has no IANA actions.
+{::include sections/terminology.md}
+
+{::include sections/events-field.md}
+
+{::include sections/data-model.md}
+
+{::include-nested sections/discovery.md}
+
+{::include-nested sections/single-notification.md}
+
+{::include-nested sections/stream.md}
+
+{::include-nested sections/representation.md}
+
+
+<!-- Considerations Sections -->
+
+{::include considerations/security.md}
+
+{::include considerations/iana.md}
+
+{::include considerations/end-user.md}
 
 
 --- back
 
-# Acknowledgments
-{:numbered="false"}
+{::include-nested appendix/example.md}
 
-TODO acknowledge.
+{::include-nested appendix/acknowledgments.md}

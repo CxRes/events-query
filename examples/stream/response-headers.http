@@ -1,0 +1,6 @@
+HTTP/1.1 200 OK
+Accept-Query: example/event-request
+Content-Type: application/http
+Transfer-Encoding: chunked
+Incremental: ?1
+Events: duration=600

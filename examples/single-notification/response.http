@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+Host: example.org
+Accept-Query: example/event-request
+Content-Type: example/event-response
+Incremental: ?1
+
+Event-ID: 456
+Type: Update

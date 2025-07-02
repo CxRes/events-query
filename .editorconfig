@@ -2,7 +2,11 @@
 
 root = true
 
-[*.{md,xml,org}]
+[*.md]
 charset = utf-8
 insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.http]
+charset = utf-8
 trim_trailing_whitespace = true
