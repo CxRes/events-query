@@ -3,9 +3,9 @@
 
 
 Building Blocks for HTTP APIs                                   R. Gupta
-Internet-Draft                                               2 July 2025
+Internet-Draft                                               4 July 2025
 Intended status: Standards Track                                        
-Expires: 3 January 2026
+Expires: 5 January 2026
 
 
                            HTTP Events Query
@@ -51,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 January 2026.
+   This Internet-Draft will expire on 5 January 2026.
 
 Copyright Notice
 
@@ -1130,4 +1130,4 @@ Index
 Author's Address
 
    Rahul Gupta
-   Email: CxRes@users.noreply.github.com
+   Email: cxres+ietf@protonmail.com
