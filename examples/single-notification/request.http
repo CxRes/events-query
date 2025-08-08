@@ -1,7 +1,7 @@
 QUERY /foo HTTP/1.1
 Host: example.org
-Content-Type: example/event-request
-Accept: example/event-response
+Content-Type: example/events-query
+Accept: example/event-notification
 Events: duration=0
 
 

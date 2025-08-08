@@ -22,7 +22,7 @@ The following example shows the body of a subscription request wherein the `stat
 state:
   Accept: text/html
 events:
-  Accept: example/event-response
+  Accept: example/event-notification
 ~~~
 {: sourcecode-name="data-model-example.yaml" #data-model-example-yaml title="Events Query Data Model in a YAML like syntax"}
 

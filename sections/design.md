@@ -66,13 +66,13 @@ Semantics for the response streaming [multiple event notifications](#stream-resp
 The {{&protocol}} Protocol does not specify:
 
 1. {: #no-scope--specific-data-model}
-A realization of the abstract data model used for requesting event-notifications. For the purposes of illustration, we shall use an imaginary `example/event-request` media-type for the request.
+A realization of the abstract data model used for requesting event-notifications. For the purposes of illustration, we shall use an imaginary `example/events-query` media-type for the request.
 
 1. {: #no-scope--specific-events}
 Specific events for which a notification is generated. !Events for which notifications are generated can vary per resource.
 
 1. {: #no-scope--notification-format}
-The form or content of an event-notification. Implementations have the flexibility to generate event-notifications for the applications they wish to support on a resource. We shall use a very simple YAML notification using an imaginary `example/event-response` media-type for illustration.
+The form or content of an event-notification. Implementations have the flexibility to generate event-notifications for the applications they wish to support on a resource. We shall use a very simple YAML notification using an imaginary `example/event-notification` media-type for illustration.
 
 1. {: #no-scope--stream-representation}
 Specific representations for the response stream with multiple notifications. For the purpose of illustration, we shall use the `application/http` media-type ({{-HTTP1, Section 10.2}}) as the composite media-type for the response that includes a representation and/or multiple event-notifications.

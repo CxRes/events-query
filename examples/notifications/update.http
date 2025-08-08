@@ -1,5 +1,5 @@
 HTTP/1.1 200 OK                                  | Notification
-Content-Type: example/event-response             |
+Content-Type: example/event-notification         |
 Content-Length: 31                               |
                                                  |
 Event-ID: 456                                    |

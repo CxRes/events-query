@@ -1,9 +1,9 @@
 QUERY /foo HTTP/1.1
 Host: example.org
 Accept: application/http
-Content-Type: example/event-request
+Content-Type: example/events-query
 
 state:
   Accept: text/html
 events:
-  Accept: example/event-response
+  Accept: example/event-notification

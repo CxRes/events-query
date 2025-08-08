@@ -19,12 +19,12 @@ With the help of a suitable composite media-type parser, {{&protocol}} responses
 const response = fetch("http://example.com/foo", {
   method: "QUERY",
   headers: {
-    "Content-Type": "application/json",
+    "Content-Type": "example/events-query",
     Accept: "application/http"
   },
   body: JSON.stringify({
     state: { Accept: "text/plain" },
-    events: { Accept: "example/event-request" }
+    events: { Accept: "example/event-notification" }
   })
 });
 
