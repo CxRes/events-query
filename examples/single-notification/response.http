@@ -1,8 +1,9 @@
 HTTP/1.1 200 OK
-Host: example.org
+Date: Thu, 02 Jan 2025 10:10:10 GMT
 Accept-Query: example/events-query
 Content-Type: example/event-notification
 Incremental: ?1
 
-Event-ID: 456
-Type: Update
+published: 2025-01-02T10:11:12.345Z
+event-id: 456
+type: update
