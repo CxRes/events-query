@@ -3,9 +3,9 @@
 
 
 Building Blocks for HTTP APIs                                   R. Gupta
-Internet-Draft                                               4 July 2025
+Internet-Draft                                             8 August 2025
 Intended status: Standards Track                                        
-Expires: 5 January 2026
+Expires: 9 February 2026
 
 
                            HTTP Events Query
@@ -51,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 January 2026.
+   This Internet-Draft will expire on 9 February 2026.
 
 Copyright Notice
 
@@ -152,12 +152,12 @@ Table of Contents
    const response = fetch("http://example.com/foo", {
      method: "QUERY",
      headers: {
-       "Content-Type": "application/json",
+       "Content-Type": "example/events-query",
        Accept: "application/http"
      },
      body: JSON.stringify({
        state: { Accept: "text/plain" },
-       events: { Accept: "example/event-request" }
+       events: { Accept: "example/event-notification" }
      })
    });
 
@@ -278,8 +278,7 @@ Table of Contents
 
    1.  A realization of the abstract data model used for requesting
        event notifications.  For the purposes of illustration, we shall
-       use an imaginary example/event-request media-type for the
-       request.
+       use an imaginary example/events-query media-type for the request.
 
    2.  Specific events for which a notification is generated.  Events
        for which notifications are generated can vary per resource.
@@ -288,7 +287,7 @@ Table of Contents
        have the flexibility to generate event notifications for the
        applications they wish to support on a resource.  We shall use a
        very simple YAML notification using an imaginary example/event-
-       response media-type for illustration.
+       notification media-type for illustration.
 
    4.  Specific representations for the response stream with multiple
        notifications.  For the purpose of illustration, we shall use the
@@ -464,7 +463,7 @@ Table of Contents
    state:
      Accept: text/html
    events:
-     Accept: example/event-response
+     Accept: example/event-notification
 
           Figure 2: Events Query Data Model in a YAML like syntax
 
@@ -483,7 +482,7 @@ Table of Contents
 
    HTTP/1.1 200 OK
    Accept: text/html
-   Accept-Query: "example/events-request"
+   Accept-Query: "example/events-query"
 
                         Figure 4: Discovery Response
 
@@ -516,8 +515,8 @@ Table of Contents
 
    QUERY /foo HTTP/1.1
    Host: example.org
-   Content-Type: example/event-request
-   Accept: example/event-response
+   Content-Type: example/events-query
+   Accept: example/event-notification
    Events: duration=0
 
                 Figure 5: Single Event Notification Request
@@ -529,8 +528,8 @@ Table of Contents
 
    HTTP/1.1 200 OK
    Host: example.org
-   Accept-Query: example/event-request
-   Content-Type: example/event-response
+   Accept-Query: example/events-query
+   Content-Type: example/event-notification
    Incremental: ?1
 
    Event-ID: 456
@@ -574,11 +573,11 @@ Table of Contents
    QUERY /foo HTTP/1.1
    Host: example.org
    Accept: application/http
-   Content-Type: example/event-request
+   Content-Type: example/events-query
    Events: duration=0
 
    events:
-     Accept: example/event-response
+     Accept: example/event-notification
 
                    Figure 7: Notifications Stream Request
 
@@ -605,7 +604,7 @@ Table of Contents
       immediately forwarded by intermediaries and not buffered.
 
    HTTP/1.1 200 OK
-   Accept-Query: example/event-request
+   Accept-Query: example/events-query
    Content-Type: application/http
    Transfer-Encoding: chunked
    Incremental: ?1
@@ -621,7 +620,7 @@ Table of Contents
    (Section 9.2.1) are omitted.
 
    HTTP/1.1 200 OK                                  | Notification
-   Content-Type: example/event-response             |
+   Content-Type: example/event-notification         |
    Content-Length: 31                               |
                                                     |
    Event-ID: 456                                    |
@@ -633,7 +632,7 @@ Table of Contents
    event notification upon a resource being deleted.
 
    HTTP/1.1 200 OK                                  | Notification
-   Content-Type: example/event-response             |
+   Content-Type: example/event-notification         |
    Content-Length: 31                               |
                                                     |
    Event-ID: 789                                    |
@@ -670,12 +669,12 @@ Table of Contents
    QUERY /foo HTTP/1.1
    Host: example.org
    Accept: application/http
-   Content-Type: example/event-request
+   Content-Type: example/events-query
 
    state:
      Accept: text/html
    events:
-     Accept: example/event-response
+     Accept: example/event-notification
 
             Figure 11: Representation and Notifications Request
 
@@ -695,7 +694,7 @@ Table of Contents
    omitted for clarity.
 
    HTTP/1.1 200 OK
-   Accept-Query: example/event-request
+   Accept-Query: example/events-query
    Content-Type: application/http
    Transfer-Encoding: chunked
    Incremental: ?1
@@ -971,19 +970,19 @@ A.1.  Request
    QUERY /foo HTTP/1.1
    Host: example.org
    Accept: application/http
-   Content-Type: example/event-request
+   Content-Type: example/events-query
 
    state:
      Accept: text/html
    events:
-     Accept: example/event-response
+     Accept: example/event-notification
 
           Figure 13: Request for Representation and Notifications
 
 A.2.  Response
 
    HTTP/1.1 200 OK
-   Accept-Query: example/event-request
+   Accept-Query: example/events-query
    Content-Type: application/http
    Transfer-Encoding: chunked
    Incremental: ?1
@@ -996,14 +995,14 @@ A.2.  Response
    Hello World!                                     |
 
    HTTP/1.1 200 OK                                  | Notification
-   Content-Type: example/event-response             |
+   Content-Type: example/event-notification         |
    Content-Length: 31                               |
                                                     |
    Event-ID: 456                                    |
    Type: Update                                     |
 
    HTTP/1.1 200 OK                                  | Notification
-   Content-Type: example/event-response             |
+   Content-Type: example/event-notification         |
    Content-Length: 31                               |
                                                     |
    Event-ID: 789                                    |
@@ -1130,4 +1129,4 @@ Index
 Author's Address
 
    Rahul Gupta
-   Email: cxres+ietf@protonmail.com
+   Email: CxRes@users.noreply.github.com

@@ -9,13 +9,13 @@
 <meta content="
        Events Query is a minimal protocol built on top of HTTP that allows user agents to receive  event notifications  directly from any resource of interest. The Events Query Protocol (EQP) is predicated on the idea that the most intuitive source for  event notifications  is the resource itself. 
     " name="description">
-<meta content="xml2rfc 3.29.0" name="generator">
+<meta content="xml2rfc 3.30.0" name="generator">
 <meta content="event" name="keyword">
 <meta content="query" name="keyword">
 <meta content="notification" name="keyword">
 <meta content="draft-gupta-httpapi-events-query-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.29.0
+  xml2rfc 3.30.0
     Python 3.12.11
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
@@ -1046,11 +1046,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">HTTP Events Query</td>
-<td class="right">July 2025</td>
+<td class="right">August 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Gupta</td>
-<td class="center">Expires 5 January 2026</td>
+<td class="center">Expires 9 February 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1063,12 +1063,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-gupta-httpapi-events-query-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-07-04" class="published">4 July 2025</time>
+<time datetime="2025-08-08" class="published">8 August 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-01-05">5 January 2026</time></dd>
+<dd class="expires"><time datetime="2026-02-09">9 February 2026</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1117,7 +1117,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 5 January 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 9 February 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1336,12 +1336,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 const response = fetch("http://example.com/foo", {
   method: "QUERY",
   headers: {
-    "Content-Type": "application/json",
+    "Content-Type": "example/events-query",
     Accept: "application/http"
   },
   body: JSON.stringify({
     state: { Accept: "text/plain" },
-    events: { Accept: "example/event-request" }
+    events: { Accept: "example/event-notification" }
   })
 });
 
@@ -1483,7 +1483,7 @@ for await (const notification of splitResponse) {
 <ol start="1" type="1" class="normal type-1" id="section-2.3-4">
 <li id="section-2.3-4.1">
 <div id="no-scope--specific-data-model">
-            <p id="section-2.3-4.1.1">A realization of the abstract <span id="iref-data-model-63" class="iref"></span><a href="#data-model" class="internal xref">data model</a> used for requesting <span id="iref-notification-64" class="iref"></span><span id="iref-event-notification-65" class="iref"></span><a href="#notification" class="internal xref">event notifications</a>. For the purposes of illustration, we shall use an imaginary <code>example/event-request</code> media-type for the request.<a href="#section-2.3-4.1.1" class="pilcrow">¶</a></p>
+            <p id="section-2.3-4.1.1">A realization of the abstract <span id="iref-data-model-63" class="iref"></span><a href="#data-model" class="internal xref">data model</a> used for requesting <span id="iref-notification-64" class="iref"></span><span id="iref-event-notification-65" class="iref"></span><a href="#notification" class="internal xref">event notifications</a>. For the purposes of illustration, we shall use an imaginary <code>example/events-query</code> media-type for the request.<a href="#section-2.3-4.1.1" class="pilcrow">¶</a></p>
 </div>
           </li>
 <li id="section-2.3-4.2">
@@ -1493,7 +1493,7 @@ for await (const notification of splitResponse) {
           </li>
 <li id="section-2.3-4.3">
 <div id="no-scope--notification-format">
-            <p id="section-2.3-4.3.1">The form or content of an <span id="iref-notification-72" class="iref"></span><span id="iref-event-notification-73" class="iref"></span><a href="#notification" class="internal xref">event notification</a>. Implementations have the flexibility to generate <span id="iref-notification-74" class="iref"></span><span id="iref-event-notification-75" class="iref"></span><a href="#notification" class="internal xref">event notifications</a> for the applications they wish to support on a resource. We shall use a very simple YAML <span id="iref-event-notification-76" class="iref"></span><span id="iref-notification-77" class="iref"></span><a href="#notification" class="internal xref">notification</a> using an imaginary <code>example/event-response</code> media-type for illustration.<a href="#section-2.3-4.3.1" class="pilcrow">¶</a></p>
+            <p id="section-2.3-4.3.1">The form or content of an <span id="iref-notification-72" class="iref"></span><span id="iref-event-notification-73" class="iref"></span><a href="#notification" class="internal xref">event notification</a>. Implementations have the flexibility to generate <span id="iref-notification-74" class="iref"></span><span id="iref-event-notification-75" class="iref"></span><a href="#notification" class="internal xref">event notifications</a> for the applications they wish to support on a resource. We shall use a very simple YAML <span id="iref-event-notification-76" class="iref"></span><span id="iref-notification-77" class="iref"></span><a href="#notification" class="internal xref">notification</a> using an imaginary <code>example/event-notification</code> media-type for illustration.<a href="#section-2.3-4.3.1" class="pilcrow">¶</a></p>
 </div>
           </li>
 <li id="section-2.3-4.4">
@@ -1688,7 +1688,7 @@ appear in all capitals, as shown here.<a href="#section-3.2-1" class="pilcrow">�
 state:
   Accept: text/html
 events:
-  Accept: example/event-response
+  Accept: example/event-notification
 </pre>
 </div>
 <figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
@@ -1724,7 +1724,7 @@ Host: example.org
 <pre>
 HTTP/1.1 200 OK
 Accept: text/html
-Accept-Query: "example/events-request"
+Accept-Query: "example/events-query"
 </pre>
 </div>
 <figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
@@ -1764,8 +1764,8 @@ Accept-Query: "example/events-request"
 <pre>
 QUERY /foo HTTP/1.1
 Host: example.org
-Content-Type: example/event-request
-Accept: example/event-response
+Content-Type: example/events-query
+Accept: example/event-notification
 Events: duration=0
 
 
@@ -1791,8 +1791,8 @@ Events: duration=0
 <pre>
 HTTP/1.1 200 OK
 Host: example.org
-Accept-Query: example/event-request
-Content-Type: example/event-response
+Accept-Query: example/events-query
+Content-Type: example/event-notification
 Incremental: ?1
 
 Event-ID: 456
@@ -1843,11 +1843,11 @@ Type: Update
 QUERY /foo HTTP/1.1
 Host: example.org
 Accept: application/http
-Content-Type: example/event-request
+Content-Type: example/events-query
 Events: duration=0
 
 events:
-  Accept: example/event-response
+  Accept: example/event-notification
 </pre>
 </div>
 <figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
@@ -1896,7 +1896,7 @@ events:
             <div class="lang-http-message sourcecode" id="section-9.2.1-3.1">
 <pre>
 HTTP/1.1 200 OK
-Accept-Query: example/event-request
+Accept-Query: example/events-query
 Content-Type: application/http
 Transfer-Encoding: chunked
 Incremental: ?1
@@ -1923,7 +1923,7 @@ Events: duration=600
 <pre>
 
 HTTP/1.1 200 OK                                  | Notification
-Content-Type: example/event-response             |
+Content-Type: example/event-notification         |
 Content-Length: 31                               |
                                                  |
 Event-ID: 456                                    |
@@ -1943,7 +1943,7 @@ Type: Update                                     |
 <pre>
 
 HTTP/1.1 200 OK                                  | Notification
-Content-Type: example/event-response             |
+Content-Type: example/event-notification         |
 Content-Length: 31                               |
                                                  |
 Event-ID: 789                                    |
@@ -1989,12 +1989,12 @@ Type: Delete                                     |
 QUERY /foo HTTP/1.1
 Host: example.org
 Accept: application/http
-Content-Type: example/event-request
+Content-Type: example/events-query
 
 state:
   Accept: text/html
 events:
-  Accept: example/event-response
+  Accept: example/event-notification
 </pre>
 </div>
 <figcaption><a href="#figure-11" class="selfRef">Figure 11</a>:
@@ -2022,7 +2022,7 @@ events:
           <div class="lang-http-message sourcecode" id="section-10.2-4.1">
 <pre>
 HTTP/1.1 200 OK
-Accept-Query: example/event-request
+Accept-Query: example/events-query
 Content-Type: application/http
 Transfer-Encoding: chunked
 Incremental: ?1
@@ -2339,12 +2339,12 @@ Hello World!                                     |
 QUERY /foo HTTP/1.1
 Host: example.org
 Accept: application/http
-Content-Type: example/event-request
+Content-Type: example/events-query
 
 state:
   Accept: text/html
 events:
-  Accept: example/event-response
+  Accept: example/event-notification
 </pre>
 </div>
 <figcaption><a href="#figure-13" class="selfRef">Figure 13</a>:
@@ -2363,7 +2363,7 @@ events:
           <div class="lang-http-message sourcecode" id="appendix-A.2-1.1">
 <pre>
 HTTP/1.1 200 OK
-Accept-Query: example/event-request
+Accept-Query: example/events-query
 Content-Type: application/http
 Transfer-Encoding: chunked
 Incremental: ?1
@@ -2376,14 +2376,14 @@ Content-Length: 14                               |
 Hello World!                                     |
 
 HTTP/1.1 200 OK                                  | Notification
-Content-Type: example/event-response             |
+Content-Type: example/event-notification         |
 Content-Length: 31                               |
                                                  |
 Event-ID: 456                                    |
 Type: Update                                     |
 
 HTTP/1.1 200 OK                                  | Notification
-Content-Type: example/event-response             |
+Content-Type: example/event-notification         |
 Content-Length: 31                               |
                                                  |
 Event-ID: 789                                    |
@@ -2732,7 +2732,7 @@ Type: Delete                                     |
         <div dir="auto" class="left"><span class="fn nameRole">Rahul Gupta</span></div>
 <div class="email">
 <span>Email:</span>
-<a href="mailto:cxres+ietf@protonmail.com" class="email">cxres+ietf@protonmail.com</a>
+<a href="mailto:CxRes@users.noreply.github.com" class="email">CxRes@users.noreply.github.com</a>
 </div>
 </address>
 </section>
