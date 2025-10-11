@@ -34,7 +34,7 @@ entity:
 normative:
   HTTP: RFC9110
   HTTP-SF: RFC9651
-  HTTP-QUERY: I-D.ietf-httpbis-safe-method-w-body-10
+  HTTP-QUERY: I-D.ietf-httpbis-safe-method-w-body-12
   INCREMENTAL-HTTP-MESSAGES: I-D.ietf-httpbis-incremental-00
   RFC8126:
 informative:
