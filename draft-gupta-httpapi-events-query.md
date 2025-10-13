@@ -38,6 +38,15 @@ normative:
   INCREMENTAL-HTTP-MESSAGES: I-D.ietf-httpbis-incremental-00
   RFC8126:
 informative:
+  COMET:
+    target: https://infrequently.org/2006/03/comet-low-latency-data-for-the-browser/
+    title: "Comet: Low Latency Data for the Browser"
+    author:
+      -
+        ins: A. Russell
+        name: Alex Russell
+    date: 3 March 2006
+    refcontent: Infrequently Noted
   DESIGN-FRAMEWORK: DOI.10.1145/267896.267920
   FETCH:
     target: https://fetch.spec.whatwg.org
