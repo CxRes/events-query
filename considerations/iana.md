@@ -43,7 +43,7 @@ Comments: Additional information to be included in the template.
 {: #events-field-registry-initial-content-instruction}
 The initial contents of the HTTP Events Field Registry are:
 
-| Property Name  | Structured-Type  | Reference             |
+| Property Name  | Structured-Type         | Reference             |
 |-
-| =duration=     | Integer Item     | {{duration-property}} |
+| =duration=     | Integer or Decimal Item | {{duration-property}} |
 {: title="List of HTTP Events Field property name registrations" #events-property-registration-list}

@@ -63,4 +63,4 @@ A server MUST end the response immediately after transmitting the event-notifica
 {: sourcecode-name="stream-delete-event.http" #stream-delete-event title="Delete Notification"}
 
 {: #stream-response-timeout}
-Otherwise, a server MUST end the response when the connection duration has exceeded the period set in the =duration= property of the =Events= header field. A server MAY terminate the response earlier.
+Otherwise, a server MUST end the response when the connection duration has exceeded the period set in the =duration= property of the =Events= header field.
