@@ -22,7 +22,7 @@ The following example shows subscription request for representation along with n
 A server unable to provide a representation MUST NOT serve event-notifications. This does not apply in case of conditional request for representation that is not fulfilled.
 
 {: #representation-response-body}
-A server able to provide a stream with a representation and event-notifications transmits the representation immediately following the response header ({{stream-response-header}}). Otherwise, the response is the same as that described in {{stream-response}}.
+A server able to provide a stream with a representation and event-notifications transmits the representation immediately following the response headers ({{stream-response-headers}}). Otherwise, the response is the same as that described in {{stream-response}}.
 
 {: #representation-response-encapsulation}
 Again, we shall use the `application/http` media-type ({{-HTTP1, Section 10.2}}) for the purpose of illustration. Chunks have been omitted for clarity.
