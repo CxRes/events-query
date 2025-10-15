@@ -30,7 +30,7 @@ Again, we shall use the `application/http` media-type ({{-HTTP1, Section 10.2}})
 ~~~ http-message
 {::include examples/stream/response-headers.http}
 
-{::include examples/stream/representation.http}
+{::include examples/stream/representation.http.txt}
 ~~~
 {: sourcecode-name="representation-response-example.http" #representation-response-example title="Representation Response"}
 

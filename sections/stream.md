@@ -51,7 +51,7 @@ Subsequently, when event(s) occur, the server transmits a notification identical
 ~~~ http-message
 
 
-{::include examples/notifications/update.http}
+{::include examples/notifications/update.http.txt}
 ~~~
 {: sourcecode-name="stream-update-event.http" #stream-update-event title="Update Notification"}
 
@@ -61,7 +61,7 @@ A server MUST end the response immediately after transmitting the event-notifica
 ~~~ http-message
 
 
-{::include examples/notifications/delete.http}
+{::include examples/notifications/delete.http.txt}
 ~~~
 {: sourcecode-name="stream-delete-event.http" #stream-delete-event title="Delete Notification"}
 

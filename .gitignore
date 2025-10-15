@@ -22,3 +22,6 @@ draft-gupta-httpapi-events-query.xml
 package-lock.json
 report.xml
 !requirements.txt
+!/examples/**/*.txt
+_*
+TODO
