@@ -5,11 +5,11 @@ The simplest {{&protocol}} is to request a notification for the next event(s) on
 
 ## Request {#single-notification-request}
 
-{: #single-notification-request-content}
-To be notified of the next event(s) on a resource using {{&protocol}}, a client can send an empty query. A server MUST consider a request with an empty query in an appropriate media type made using the `QUERY` method ({{HTTP-QUERY, Section 3}}) as a subscription request for a single event-notification.
+{: #single-notification-procedure}
+To receive a single notification, a client makes a `QUERY` request ({{HTTP-QUERY, Section 3}}) using a realization of the subscription data model that MUST NOT include an interest in receiving a stream of event notifications.
 
 {: #single-notification-request-conneg}
-Since the content of the response is an event-notification, a client can negotiate its form in the usual manner with header fields.
+Since the content of the response is an event-notification, a client can negotiate its form with header fields in the usual manner.
 
 ~~~ http-message
 {::include examples/single-notification/request.http}

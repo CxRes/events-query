@@ -6,7 +6,7 @@
 ## Request {#stream-request}
 
 {: #stream-request-procedure}
-To request a stream of event-notifications from a resource in an {{&protocol}}, a client MUST express its interest in receiving the event-notifications in a preferred form using a realization of the subscription data model with the `QUERY` method ({{HTTP-QUERY, Section 3}}).
+To receive multiple notifications, a client makes a QUERY request ({{HTTP-QUERY, Section 3}}) using a realization of the subscription data model that MUST include an interest in receiving a stream of event-notifications in a preferred form.
 
 {: #stream-request-conneg}
 Since the response transmits event-notifications within an encapsulating representation ({{stream-response}}), it follows that header fields cannot be used to negotiate the form of event-notifications as in the case of [Single Notification Request](#single-notification-request){:noabbrev}. Instead, header fields are useful for negotiating the representation that encapsulates event-notifications. The following examples illustrate subscription requests that negotiate a stream of event-notifications to be transferred respectively using a composite media type (`application/http`) and a discrete media type (`application/json-seq`):
