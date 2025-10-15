@@ -3,5 +3,3 @@ Host: example.org
 Content-Type: example/events-query
 Accept: example/event-notification
 Events: duration=0
-
-
