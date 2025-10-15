@@ -9,12 +9,12 @@
 To request a representation of the resource in an {{&protocol}}, a client MUST express interest in receiving the representation in a preferred form using a realization of the subscription data model ({{data-model}}) with the `QUERY` method ({{HTTP-QUERY, Section 3}}).
 
 {: #representation-request-example-description}
-The following example shows a subscription request for the current representation along with the subsequent event-notifications transmitted using the `application/http` media type. The `state` property indicates interest in receiving representation. The preferred form of representation is specified using sub-properties identical to request headers in the `state` property.
+The following example shows a subscription request for the current representation along with the subsequent event-notifications transmitted using the `application/http` media type. The `state` property indicates interest in receiving representation and its sub-properties describe the preferred form of notifications. Since the representation is being transferred in an HTTP message pipeline, these sub-properties are identical to header fields used for specifying preconditions and content negotiation in a GET request on the said resource.
 
 ~~~ http-message
 {::include examples/stream/state-request.http}
 ~~~
-{: sourcecode-name="representation-request-example.http" #representation-request-example title="Representation and Notifications Request"}
+{: sourcecode-name="representation-request-http-example.http" #representation-request-http-example title="HTTP Representation and Notifications Request"}
 
 ## Response {#representation-response}
 
@@ -32,10 +32,10 @@ Again, the `application/http` media type ({{-HTTP1, Section 10.2}}) is used for 
 
 {::include examples/stream/representation.http.txt}
 ~~~
-{: sourcecode-name="representation-response-example.http" #representation-response-example title="Representation Response"}
+{: sourcecode-name="representation-response-before-notifications-http-example.http" #representation-response-before-notifications-http-example title="Representation Response before Notifications"}
 
 {: #representation-response-non-standard}
 While this is default behaviour, there is no requirement that a representation is the first message or that representations are sent only once. In such cases, the encapsulated message needs to indicate if it is a representation and not an event-notification. Such a mechanism is not defined in this specification.
 
 {: #representation-response-notifications}
-Notifications are transmitted just as in the case of [regular streaming](#stream-response). See {{example}} for a complete example of a response with representation and notifications.
+Notifications are transmitted just as in the case of [regular streaming](#stream-response). See {{example-representation}} for a complete example of a response with representation and notifications.
