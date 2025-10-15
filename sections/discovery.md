@@ -5,6 +5,7 @@ A user agent can discover if a server enables {{&protocol}} on a resource by exa
 
 ~~~ http-message
 {::include examples/discovery/request.http}
+
 ~~~
 {: sourcecode-name="discovery-request-example.http" #discovery-request-example title="Discovery Request"}
 

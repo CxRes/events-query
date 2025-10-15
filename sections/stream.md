@@ -40,6 +40,7 @@ The `Incremental` header field ({{INCREMENTAL-HTTP-MESSAGES, Section 3}}) set to
 
 ~~~ http-message
 {::include examples/stream/response-headers.http}
+
 ~~~
 {: sourcecode-name="stream-response-headers-example.http" #stream-response-header-example title="Notifications Stream Response Headers"}
 
@@ -49,8 +50,6 @@ The `Incremental` header field ({{INCREMENTAL-HTTP-MESSAGES, Section 3}}) set to
 Subsequently, when event(s) occur, the server transmits a notification identical to the [Single Notification Response](#single-notification-response){:noabbrev}, except header fields redundant with response header ({{stream-response-header}}) are omitted.
 
 ~~~ http-message
-
-
 {::include examples/notifications/update.http.txt}
 ~~~
 {: sourcecode-name="stream-update-event.http" #stream-update-event title="Update Notification"}
@@ -59,8 +58,6 @@ Subsequently, when event(s) occur, the server transmits a notification identical
 A server MUST end the response immediately after transmitting the event-notification upon a resource being deleted.
 
 ~~~ http-message
-
-
 {::include examples/notifications/delete.http.txt}
 ~~~
 {: sourcecode-name="stream-delete-event.http" #stream-delete-event title="Delete Notification"}
