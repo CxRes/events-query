@@ -126,6 +126,8 @@ Events Query is a minimal protocol built on top of HTTP that allows user agents 
 
 <!-- Considerations Sections -->
 
+{::include considerations/implementation.md}
+
 {::include considerations/security.md}
 
 {::include considerations/iana.md}
