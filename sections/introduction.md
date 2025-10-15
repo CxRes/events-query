@@ -19,8 +19,8 @@ With the help of a suitable composite media-type parser, {{&protocol}} responses
 const response = fetch("http://example.com/foo", {
   method: "QUERY",
   headers: {
-    "Content-Type": "example/events-query",
-    Accept: "application/http"
+    Accept: "application/http",
+    "Content-Type": "example/events-query"
   },
   body: JSON.stringify({
     state: { Accept: "text/plain" },
