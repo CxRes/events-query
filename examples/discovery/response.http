@@ -1,3 +1,4 @@
 HTTP/1.1 200 OK
+Date: Thu, 02 Jan 2025 10:00:00 GMT
 Accept: text/html
-Accept-Query: "example/events-request"
+Accept-Query: "example/events-query"

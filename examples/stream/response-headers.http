@@ -1,6 +1,7 @@
 HTTP/1.1 200 OK
-Accept-Query: example/event-request
+Date: Thu, 02 Jan 2025 10:10:10 GMT
+Accept-Query: example/events-query
 Content-Type: application/http
-Transfer-Encoding: chunked
-Incremental: ?1
 Events: duration=600
+Incremental: ?1
+Transfer-Encoding: chunked

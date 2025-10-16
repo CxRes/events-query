@@ -1,0 +1,7 @@
+HTTP/1.1 200 OK                                  | Notification
+Content-Length: 31                               |
+Content-Type: example/event-notification         |
+                                                 |
+published: 2025-01-02T11:12:13.456Z              |
+event-id: 789                                    |
+type: delete                                     |

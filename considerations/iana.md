@@ -27,7 +27,7 @@ The registration of an =Events= property MUST include the following fields:
 Property Name: A Dictionary ({{HTTP-SF, Section 3.2}}) key to be used in the =Events= header field.
 + {: #events-field-registry-template--structured-type}
 Structured Type: The Structured Data Type ({{HTTP-SF, Section 3.3}}) of the value associated with the key, according to requirements in {{Section 3.2 of HTTP-SF}}.
-+ {: #events-field-registry-template--refrence}
++ {: #events-field-registry-template--reference}
 Reference: A pointer to the specification text.
 
 {: #events-field-registry-template-optional-list}
@@ -43,7 +43,7 @@ Comments: Additional information to be included in the template.
 {: #events-field-registry-initial-content-instruction}
 The initial contents of the HTTP Events Field Registry are:
 
-| Property Name  | Structured-Type  | Reference             |
+| Property Name  | Structured-Type         | Reference             |
 |-
-| =duration=     | Integer Item     | {{duration-property}} |
+| =duration=     | Integer or Decimal Item | {{duration-property}} |
 {: title="List of HTTP Events Field property name registrations" #events-property-registration-list}
