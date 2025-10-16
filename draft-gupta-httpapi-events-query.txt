@@ -3,9 +3,9 @@
 
 
 Building Blocks for HTTP APIs                                   R. Gupta
-Internet-Draft                                               4 July 2025
+Internet-Draft                                           16 October 2025
 Intended status: Standards Track                                        
-Expires: 5 January 2026
+Expires: 19 April 2026
 
 
                            HTTP Events Query
@@ -51,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 January 2026.
+   This Internet-Draft will expire on 19 April 2026.
 
 Copyright Notice
 
@@ -75,6 +75,7 @@ Table of Contents
      2.2.  Constraints
      2.3.  Scope
      2.4.  Limitations
+     2.5.  Comparison with Server-Sent Events
    3.  Conformance
      3.1.  Document Conventions
      3.2.  Requirements Notation
@@ -90,7 +91,7 @@ Table of Contents
    8.  Single Notification
      8.1.  Request
      8.2.  Response
-   9.  Notification Stream
+   9.  Notifications Stream
      9.1.  Request
      9.2.  Response
        9.2.1.  Headers
@@ -98,143 +99,152 @@ Table of Contents
    10. Representation
      10.1.  Request
      10.2.  Response
-   11. Security Considerations
-   12. IANA Considerations
-     12.1.  HTTP Field Registration
-     12.2.  The HTTP Events Field Registry
-       12.2.1.  Template
-       12.2.2.  Initial Registry Contents
-   13. End User Considerations
-   14. References
-     14.1.  Normative References
-     14.2.  Informative References
-   Appendix A.  Example
-     A.1.  Request
-     A.2.  Response
+   11. Implementation Status
+   12. Security Considerations
+   13. IANA Considerations
+     13.1.  HTTP Field Registration
+     13.2.  The HTTP Events Field Registry
+       13.2.1.  Template
+       13.2.2.  Initial Registry Contents
+   14. End User Considerations
+   15. References
+     15.1.  Normative References
+     15.2.  Informative References
+   Appendix A.  Examples
+     A.1.  Representation and Notifications
+       A.1.1.  Request
+       A.1.2.  Response
+     A.2.  Notifications Stream
+       A.2.1.  Request
+       A.2.2.  Response
    Acknowledgments
    Index
    Author's Address
 
 1.  Introduction
 
-   HTTP was originally designed for transferring static documents within
-   a single request and response.  HTTP does not automatically inform
-   clients of changes to a document.  This design was adequate for web
-   pages that were mostly static and written by hand.
+   HTTP was originally designed as a stateless, request/response
+   protocol for transferring hypermedia documents on the web ([HTTP],
+   Section 1.2).  This design was adequate for web pages that were
+   mostly static and written by hand.
 
-   But web-applications today are dynamic, requiring instantaneous
-   updates from sources.  The many workarounds developed over the years
-   to provide real-time updates for resources using HTTP have proven to
-   be inadequate.  Web programmers instead resort to implementing custom
-   messaging systems over alternate protocols such as WebSockets [WS],
-   which requires additional layers of code, typically involving non-
-   standard JavaScript frameworks to provide event notifications.  It
-   also requires additional work to coordinate a representation and
-   notifications that are served on different protocols.
+   But web applications have evolved over time to provide increasingly
+   dynamic and interactive experiences, requiring near-instantaneous
+   updates.  HTTP does not automatically inform clients of changes to a
+   resource.  Developers have employed various techniques, such as Comet
+   [COMET] and Server-Sent Events [SSE] to work around this constraint,
+   but these can be suboptimal for many applications.
 
-   Events Query is a minimal protocol built on top of [HTTP] that allows
-   applications to request event notifications directly from a resource
-   of interest using the QUERY method ([HTTP-QUERY], Section 3).
+   For this reason, web programmers often prefer implementing custom
+   messaging systems over alternate protocols such as WebSocket [WS] and
+   WebSub [WEBSUB].  Not only does this approach require additional
+   layers of code, involving multiple Web APIs and/or userland libraries
+   such as socket.io (https://socket.io/), it demands extra coordination
+   effort to synchronize representation and notifications across
+   multiple protocols.  The dual-protocol approach thus compounds the
+   development and maintenance overhead.  Furthermore, deployment at
+   scale is challenging with the notifications traffic now opaque to
+   network intermediaries.
+
+   Events Query is a minimal protocol built on top of the Hypertext
+   Transfer Protocol [HTTP] that allows applications to request event
+   notifications directly from a resource of interest using the QUERY
+   method ([HTTP-QUERY], Section 3).
 
    The objective of this specification is to make the request and
    receipt of event notifications extremely convenient for consumers.
-   Programmers implementing Events Query shall no longer be forced to
-   switch to another protocol to incorporate real-time functionality in
-   their web applications.  Not only that, web-applications shall
-   receive a representation and notifications in a single response,
-   obviating any need for co-ordination and saving on unnecessary
-   roundtrips.
+   Events Query allows programmers to incorporate real-time
+   functionality in their web applications without the need to switch to
+   another protocol.  Further, Events Query can deliver representation
+   and notifications from a resource in a single response, obviating any
+   need for coordination and saving on unnecessary round trips.
 
-   With the help of a suitable composite media-type parser, Events Query
+   With the help of a suitable composite media type parser, Events Query
    responses can be consumed with just a few lines of code, as
    illustrated in the JavaScript example below:
 
-   const response = fetch("http://example.com/foo", {
+   const response = await fetch("http://example.com/foo", {
      method: "QUERY",
      headers: {
-       "Content-Type": "application/json",
-       Accept: "application/http"
+       Accept: "application/http",
+       "Content-Type": "example/events-query"
      },
      body: JSON.stringify({
        state: { Accept: "text/plain" },
-       events: { Accept: "example/event-request" }
+       events: { Accept: "example/event-notification" }
      })
    });
 
+   // split the response into an iterable of representation and notifications
    const splitResponse = splitHTTPResponseStream(response);
-   // splits the response into an iterable of representation and notifications
 
+   // read the representation
    const {done, value: representation} = await splitResponse.next();
    if (!done) {
      // do something with the representation
-     // API identical to fetch Response
    }
 
+   // iterate over notifications
    for await (const notification of splitResponse) {
      // do something with a notification
-     // API identical to fetch Response
    }
 
                     Figure 1: Events Query fetch example
 
-   Unlike other HTTP based event notification mechanisms, Events Query
-   supports content negotiation for notifications, just like
-   representations.  Thus, the Events Query Protocol preserves the
-   flexibility of interaction afforded by HTTP and extends it to event
-   notifications.
+   Unlike other event notification mechanisms, Events Query supports
+   content negotiation for notifications, just like representations.
+   Thus, the Events Query Protocol preserves the flexibility of
+   interaction afforded by HTTP and extends it to event notifications.
 
-   When combined with suitable data synchronization mechanisms like
+   When combined with suitable data synchronization technologies like
    Conflict Free Replicated Data Types (CRDT) or Operational Transforms
-   (OT), event notifications can be used create representations that are
-   "live" for user agents.  This has the potential to immensely simplify
-   the task of programming multi-author distributed real-time
-   applications.
+   (OT), event notifications can be used to create "live"
+   representations.  This can immensely simplify the task of programming
+   multi-author distributed real-time applications.
 
 2.  Design
 
-   Events Query is predicated on a resource being the most intuitive
-   source for notifying its events.  Events Query treats notifications
+   Events Query is predicated on a resource itself being the most
+   intuitive source for events on it.  Events Query treats notifications
    as a response to a query for an event occurring on the resource.
    With HTTP allowing representations to provide a potentially unbounded
    stream of data, the Events Query Protocol is also able to communicate
    multiple events on the resource as a stream of notifications.
 
-   Unlike other protocols, Events Query does not (usually) require
-   additional resources to be specifically dedicated as endpoints for
-   delivering event notifications.  By giving a resource the ability to
-   send notifications when an event occurs, Events Query aims to reduce
-   the complexity of both servers and clients implementing
-   notifications, making it easier to develop real-time applications.
-
 2.1.  Goals
 
-   The goals of the Events Query are:
+   To aid the development of real-time applications, it is imperative
+   that the Events Query Protocol reduces the complexity of both servers
+   and clients implementing event notifications.  With this in mind, the
+   goals of the Events Query Protocol are:
 
-   1.  to use the Hypertext Transfer Protocol [HTTP] for reliable and
-       in-order transfer of event notifications.  Clients fetching
-       resources using HTTP need not required to switch to another
-       protocol for receiving event notifications.
+   1.  to provide reliable and in-order transfer of event notifications
+       using the Hypertext Transfer Protocol [HTTP].  Clients fetching
+       resources over HTTP need not switch to another protocol for
+       receiving event notifications.
 
-   2.  to provide updates directly from a resource of interest,
-       obviating the need to create another endpoint for event
-       notifications.  This eliminates the need to co-ordinate responses
-       between a resource and the notification endpoint as is the case
-       with existing approaches.
+   2.  to send updates directly from a resource of interest, obviating
+       the need for additional resources to be specifically dedicated as
+       notification endpoints.  In contrast to existing approaches, this
+       frees up the client from the burden of coordinating the response
+       from the resource of interest with notifications from an
+       endpoint.
 
-   3.  to allow clients to fetch representation and notifications in
-       response to a single request, minimizing round-trips between
-       clients and servers and eliminating the need to manage race
-       conditions between responses.
+   3.  to deliver the representation and notifications in response to a
+       single request, minimizing round trips between clients and
+       servers.  It also eliminates the need to synchronize the delivery
+       of the representation and notifications.
 
-   4.  to allow event notifications to be communicated in any arbitrary
-       format that might be negotiated.  Implementers shall be able to
-       provide more expressive notifications in comparison to existing
-       HTTP based messaging protocols such as Server Sent Events [SSE].
+   4.  to enable the transfer of event notifications using arbitrary
+       formats that might be content-negotiated.  This allows
+       implementers to serve notifications that are more expressive,
+       say, in comparison to existing HTTP-based messaging protocols
+       such as Server-Sent Events [SSE].
 
-   5.  to specify transparent semantics that allow intermediaries to
-       participate in scaling, improving reliability, and reducing
-       latency of event notifications as well as proactively update
-       caches.
+   5.  to specify transparent notification semantics that empowers
+       intermediaries to scale event notifications, improve reliability
+       and reduce latency.  Intermediaries shall also be able to
+       proactively update caches in real-time.
 
 2.2.  Constraints
 
@@ -249,77 +259,117 @@ Table of Contents
        practices for Building Protocols with HTTP [RFC9205], and Known
        Issues and Best Practices for the Use of Long Polling and
        Streaming in Bidirectional HTTP [RFC6202].  This specification
-       can, thus, be used to extend the capabilities of any existing
-       HTTP resource to provide event notifications.  Implementers shall
-       be able to scale notifications along with their data/
-       applications.
+       can thus be used to extend the capabilities of any existing or
+       future resource to additionally serve event notifications over
+       HTTP.  This is to afford implementers the opportunity to scale
+       notifications with their data and application.
 
 2.3.  Scope
 
    The Events Query Protocol specifies:
 
-   1.  A mechanism to discover notification capabilities on a resource
+   1.  A mechanism to discover support for Events Query on a resource
        (Section 7).
 
    2.  A mechanism to request event notifications from a resource
        (Sections 8.1 and 9.1) along with the representation
        (Section 10.1).
 
-   3.  An abstract data model for the subscription (Section 6).
+   3.  An abstract data model for requesting event notifications
+       (Section 6).
 
-   4.  Semantics for a response carrying a single notification
-       (Section 8.2).
+   4.  Response semantics for a single notification (Section 8.2).
 
-   5.  Semantics for the response streaming multiple event notifications
-       (Section 9.2) as well as the representation (Section 10.2), if
-       requested.
+   5.  Response semantics for a stream carrying the representation
+       (Section 10.2) (if requested) and multiple event notifications
+       (Section 9.2).
 
    The Events Query Protocol does not specify:
 
    1.  A realization of the abstract data model used for requesting
-       event notifications.  For the purposes of illustration, we shall
-       use an imaginary example/event-request media-type for the
-       request.
+       event notifications.
 
-   2.  Specific events for which a notification is generated.  Events
-       for which notifications are generated can vary per resource.
+   2.  The events for which a notification might be generated.  This can
+       be varied per resource.
 
    3.  The form or content of an event notification.  Implementations
        have the flexibility to generate event notifications for the
-       applications they wish to support on a resource.  We shall use a
-       very simple YAML notification using an imaginary example/event-
-       response media-type for illustration.
+       applications they wish to support on a resource.
 
    4.  Specific representations for the response stream with multiple
-       notifications.  For the purpose of illustration, we shall use the
-       application/http media-type ([HTTP/1.1], Section 10.2) as the
-       composite media-type for the response that includes a
-       representation and/or multiple event notifications.
+       notifications.
 
 2.4.  Limitations
 
    Events Query only allows notifications to be sent for events on a
-   given resource.  To send notifications for events on multiple
-   resources in a single response, implementations will need to mint
-   separate resources as notification endpoints.  This is no different
-   from APIs built on top of existing messaging protocols (See, for
-   example, [WS] and [WEBSUB]).
+   given resource.  To transfer event notifications originating from
+   multiple resources in a single response, implementations will need to
+   mint additional resources to serve as notification endpoints.  This
+   is no different from APIs built on top of existing messaging
+   protocols (See, for example, WebSocket [WS] and WebSub [WEBSUB]).
 
    Browsers cap the number of persistent HTTP/1.1 connections per host,
    limiting the suitability of Events Query for web applications in the
    browser that require simultaneous event notifications from multiple
    resources on the same host.  This limitation is identical to that of
-   other HTTP streaming based protocols, such as Server-Sent Events
+   other HTTP-based streaming protocols, such as Server-Sent Events
    [SSE].  Implementations are strongly encouraged to adopt HTTP/2 (or
    later).  HTTP/1.1 servers might consider setting up a reverse proxy
-   over HTTP/2 (or later) or implement mitigation strategies, such as to
-   maximize the number of concurrent connections and to provide
+   over HTTP/2 (or later) or implement mitigation strategies, such as,
+   maximizing the number of concurrent connections and providing
    alternate hosts for resources.  Implementations might alternatively
    consider using endpoints to provide event notifications for multiple
    resources as previously described.  Clients on a browser requesting
    event notifications over an HTTP/1.1 connection are advised to
-   exercise caution when opening multiple simultaneous persistent
-   connections to any given host.
+   exercise caution when simultaneously opening multiple persistent
+   connections to a given host.
+
+2.5.  Comparison with Server-Sent Events
+
+   At the time of writing, Server-Sent Events (SSE) is the de facto
+   mechanism for transferring event notifications over HTTP,
+   standardized through the EventSource API [SSE] as part of HTML Living
+   Standard by the WHATWG.
+   // As of October 2022, HTML Living Standard maintainer Anne van
+   // Kesteren has stated (https://github.com/whatwg/html/
+   // issues/8297#issuecomment-1291658863) that WHATWG does not intend
+   // to extend EventSource, with reasons for the decision cited in a
+   // subsequent comment (https://github.com/whatwg/html/
+   // issues/8297#issuecomment-1291658863).
+
+   Server-Sent Events defines the text/event-stream media type to
+   transmit event notifications in response to a GET request.  This
+   approach is fundamentally inconsistent with terminology defined in
+   HTTP Semantics ([HTTP], Section 3.2), transferring a sequence of
+   asynchronous messages instead of a representation "that is intended
+   to reflect a past, current, or desired state of a given resource".
+   Practically, the text/event-stream media type being limited to only
+   textual content forces developers to opt for alternative protocols
+   such as WebSockets [WS], despite the increased complexity.  The
+   EventSource API does not even allow for headers to be sent with
+   requests.  This has led to a proliferation of aftermarket hacks
+   // such as this (https://www.npmjs.com/package/event-source-plus),
+   // this (https://www.npmjs.com/package/@microsoft/fetch-event-
+   // source), this (https://www.npmjs.com/package/fetch-event-stream),
+   // this (https://www.npmjs.com/package/extended-eventsource), this
+   // (https://www.npmjs.com/package/ngx-sse-client) and this
+   // (https://www.npmjs.com/package/sse.js) that extend Server-Sent
+   Events with support for custom headers, such as for credentials, or
+   use the POST method to communicate additional configuration in the
+   request body.
+
+   Events Query takes a principled approach to event notifications, as
+   established in Section 4.  In particular, the definition of an event
+   notification as a "representation" of event(s) (Section 4.3) admits
+   the use of arbitrary media types for event notifications.  Clients
+   can use content negotiation as well as preconditions in a
+   subscription request.  Further, Events Query not only lets clients
+   receive both the representation and notifications over the same
+   protocol, viz. HTTP, but these can be encapsulated within a single
+   HTTP response.  Clients do not need to, say, authenticate multiple
+   times, possibly with different mechanisms, to obtain data from the
+   same resource or co-ordinate and synchronize multiple response
+   streams carrying a representation and notifications.
 
 3.  Conformance
 
@@ -340,14 +390,14 @@ Table of Contents
 4.1.  Event
 
    An event is the instantaneous effect of the (normal or abnormal)
-   termination of invocation of an operation on an object of interest
-   [DESIGN-FRAMEWORK].  The entity invoking an operation is termed the
-   *invoker*.
+   termination of the invocation of an operation on an object of
+   interest [DESIGN-FRAMEWORK].  The entity invoking an operation is
+   termed the *invoker*.
 
    In the specific context of HTTP, the object of interest is data
    scoped to some resource.  When the operation is an HTTP method, the
    invoker is a user agent.  However, an operation need not be limited
-   an HTTP method, it might just as easily have been invoked using
+   to an HTTP method, it might just as easily have been invoked using
    another mechanism or protocol.  Events are then an extension of
    resource state (See [HTTP], Section 3.2) in the temporal dimension.
 
@@ -363,7 +413,7 @@ Table of Contents
    implementation details for the server.
 
    That an origin server has to assume the role of an observer in order
-   to generate event notifications is obvious.  An intermediary while
+   to generate event notifications is obvious.  An intermediary, while
    not observing the data scoped to a resource directly, still has the
    possibility to serve as an observer.  An intermediary can observe
    events transmitted by an origin server or another intermediary,
@@ -383,7 +433,7 @@ Table of Contents
    A target resource might be capable of generating multiple
    notifications for the same event(s) that a subscriber can select from
    using content negotiation.  Hypertext notifications can not only
-   provide information of the resource events but also processing
+   provide information about the resource events but also processing
    instructions that help guide the recipient's future actions, for
    example, the possibility to determine the current representation from
    a previous representation.
@@ -398,8 +448,8 @@ Table of Contents
    coincides with the recipient of event notifications
    ([DESIGN-FRAMEWORK] uses the term _requester_ or _broker_ to identify
    a requesting entity, with the _broker_ and _recipient_ together
-   forming the subscriber; for this specification the distinction is not
-   necessary).
+   forming the subscriber; for this specification, the distinction is
+   not necessary).
 
    The subscription in the form of a query affords the user agent the
    opportunity to engage in content negotiation for preferred form of
@@ -408,50 +458,59 @@ Table of Contents
 
 5.  Events Header Field
 
-   The Events header field when used by a client in a request
-   communicates preferences for the Events Query response.  The Events
-   header field is not meant for content negotiation.
+   "Events" is a Dictionary structured header field ([HTTP-SF],
+   Section 3.2) to communicate the properties of a response stream to an
+   Events Query.
 
-   The Events header field allows a server to communicate the properties
-   of a response carrying event notifications.
+   In a request, the Events header field allows a client to indicate its
+   preferences for the properties of the response stream carrying event
+   notifications.  The Events header field is not meant for content
+   negotiation.
 
-   Events is a Dictionary structured header field ([HTTP-SF],
-   Section 3.2).  The order of keys is insignificant.  Senders SHOULD
-   NOT generate keys not registered with the HTTP Event Field Registry
-   (An exception is made to allow for experimentation).  Recipients MAY
-   ignore keys that they are unaware of.
+   In a response, the Events header field allows a server to specify the
+   properties of a response stream carrying event notifications.
+
+   The order of keys in the Events header field is insignificant.
+   Senders SHOULD NOT generate keys not registered with the HTTP Event
+   Field Registry (with the exception made to allow experimentation).
+   Recipients MAY ignore keys that they are unaware of.
 
 5.1.  duration Property
 
-   The duration property when be used by a client in a request specifies
-   the duration for which they prefer the response stream to remain
-   open.  A server is completely free to ignore this property.
+   The "duration" property is an Integer ([HTTP-SF], Section 3.3.1) or
+   Decimal ([HTTP-SF], Section 3.3.2) valued Dictionary key specified on
+   the Events header field to communicate the response duration in
+   seconds.
 
-   The duration property when used by a server in a response indicates
-   the minimum duration for which a server intends to keep the response
-   stream open.  This property is merely advisory, and a server might
-   still close the response stream before this duration.
+   In a request, the duration property indicates the duration for which
+   a client wants to receive event notifications.  A server MAY ignore
+   this property.
 
-   The duration property is a key specified in the Events header field.
-   It is of the type Integer ([HTTP-SF], Section 3.3.1) with its value
-   indicating duration in seconds.  Only positive integer values are
-   valid.  A value of 0 indicates an indefinite duration.  A sender MUST
-   conform to these stipulations when generating the duration property.
-   If the value of the duration property fails to conform to these
-   stipulations, it MUST be ignored by the recipient.
+   In a response, the duration property specifies the maximum duration
+   for which a server intends to serve event notifications.  This
+   property is merely advisory, and a server MAY close the response
+   stream before this duration.
+
+   Only positive values are valid.  A value of 0 indicates an indefinite
+   duration.  A sender MUST conform to these stipulations when
+   generating the duration property.  If the value of the duration
+   property fails to conform to these stipulations, it MUST be ignored
+   by the recipient.
 
 6.  Subscription Data Model
 
    The abstract data model specifies the semantics of an Events Query.
 
-   A realization of the data model MUST allow a client to specify in a
+   A realization of the data model allows a client to specify in a
    subscription request:
 
-   *  interest in receiving a representation in a preferred form.
+   *  an interest in receiving a stream of event notifications from a
+      resource in a preferred form.
 
-   *  interest in receiving event notifications in a preferred form.
+   *  an interest in receiving a representation of a resource in a
+      preferred form.
 
-   Implementations can choose an appropriate media-type to realize the
+   Implementations can choose appropriate media types to realize the
    subscription data model.  Implementations are free to extend the data
    model to include additional data.  A specific realization of the data
    model is outside the scope of this specification.
@@ -459,20 +518,20 @@ Table of Contents
    The following example shows the body of a subscription request
    wherein the state and events properties are used to specify request
    headers for representation and event notifications respectively in a
-   YAML like syntax.
+   YAML-like syntax.
 
    state:
      Accept: text/html
    events:
-     Accept: example/event-response
+     Accept: example/event-notification
 
-          Figure 2: Events Query Data Model in a YAML like syntax
+          Figure 2: Events Query Data Model in a YAML-like syntax
 
 7.  Discovery
 
    A user agent can discover if a server enables Events Query on a
-   resource by examining support for query with a media-type that can
-   realize the Subscription Data Model.  A server MUST advertise media-
+   resource by examining support for query with a media type that can
+   realize the Subscription Data Model.  A server MUST advertise media
    types accepted for Events Query using the Accept-Query header field
    ([HTTP-QUERY], Section 3) in a response.
 
@@ -482,8 +541,9 @@ Table of Contents
                         Figure 3: Discovery Request
 
    HTTP/1.1 200 OK
+   Date: Thu, 02 Jan 2025 10:00:00 GMT
    Accept: text/html
-   Accept-Query: "example/events-request"
+   Accept-Query: "example/events-query"
 
                         Figure 4: Discovery Response
 
@@ -499,42 +559,44 @@ Table of Contents
 
 8.  Single Notification
 
-   The simplest event query is to ask for a notification for the next
-   event(s) on a resource.  This, in effect, adds long-polling
+   The simplest Events Query is to request a notification for the next
+   event(s) on a resource.  This, in effect, adds long polling
    capability ([RFC6202], Section 2) to a resource.
 
 8.1.  Request
 
-   To be notified of the next event(s) on a resource using Events Query,
-   a client can send an empty query.  A server MUST consider a request
-   with an empty query in an appropriate media-type made using the QUERY
-   method ([HTTP-QUERY], Section 3) as a subscription request for a
-   single event notification.
+   To receive a single notification, a client makes a QUERY request
+   ([HTTP-QUERY], Section 3) using a realization of the subscription
+   data model that MUST NOT include an interest in receiving a stream of
+   event notifications.
 
-   A client can, as usual, negotiate the form of the event notification
-   using header fields.
+   Since the content of the response is an event notification, a client
+   can negotiate its form with header fields in the usual manner.
 
    QUERY /foo HTTP/1.1
    Host: example.org
-   Content-Type: example/event-request
-   Accept: example/event-response
+   Accept: example/event-notification
+   Content-Type: example/events-query
    Events: duration=0
+
+   ---
 
                 Figure 5: Single Event Notification Request
 
 8.2.  Response
 
-   When providing a single notification, the server MUST close the
-   connection immediately after transmitting the event notification.
+   When a single notification is requested, the server MUST close the
+   connection immediately after sending the event notification.
 
    HTTP/1.1 200 OK
-   Host: example.org
-   Accept-Query: example/event-request
-   Content-Type: example/event-response
+   Date: Thu, 02 Jan 2025 10:10:10 GMT
+   Accept-Query: example/events-query
+   Content-Type: example/event-notification
    Incremental: ?1
 
-   Event-ID: 456
-   Type: Update
+   published: 2025-01-02T10:11:12.345Z
+   event-id: 456
+   type: update
 
                 Figure 6: Single Event Notification Response
 
@@ -545,204 +607,287 @@ Table of Contents
       |  using Events Query, user agents are strongly encouraged to
       |  properly close the response and release the connection.
 
-9.  Notification Stream
+9.  Notifications Stream
 
-   Instead of long-polling for event notifications, Events Query can
-   also be used request a stream ([RFC6202], Section 3) of multiple
-   event notifications.
+   Events Query can also be used to request a stream of multiple event
+   notifications ([RFC6202], Section 3).
 
 9.1.  Request
 
-   To request a stream of event notifications from a resource in an
-   Events Query, a client MUST express the interest in receiving the
-   event notifications in a preferred form using a realization of the
-   subscription data model with the QUERY method ([HTTP-QUERY],
-   Section 3).
+   To receive multiple notifications, a client makes a QUERY request
+   ([HTTP-QUERY], Section 3) using a realization of the subscription
+   data model that MUST include an interest in receiving a stream of
+   event notifications in a preferred form.
 
-   A client can also negotiate the response that encapsulates event
-   notifications using header fields.  Since the response carries an
-   encapsulating representation, header fields can no longer be used to
-   negotiate the form of an event notification itself like in the case
-   of a Single Notification Request (Section 8.1).
+   Since the response transmits event notifications within an
+   encapsulating representation (Section 9.2), it follows that header
+   fields cannot be used to negotiate the form of event notifications as
+   in the case of Single Notification Request (Section 8.1).  Instead,
+   header fields are useful for negotiating the representation that
+   encapsulates event notifications.  The following examples illustrate
+   subscription requests that negotiate a stream of event notifications
+   to be transferred respectively using a composite media type
+   (application/http) and a discrete media type (application/json-seq):
 
-   The following example shows subscription request for a stream of
-   event notifications transmitted using the application/http media-
-   type.  The events property indicates the interest in receiving event
-   notifications.  Preferences are specified using the request headers
-   in the events property.
+   The first example shows a subscription request for effectively a
+   stream of discrete Single Notifications (Section 8) to be transferred
+   using application/http ([HTTP/1.1], Section 10.2) as the
+   encapsulating media type.  The events property in this example
+   indicates an interest in receiving event notifications and its sub-
+   properties describe the preferred form of notifications.  Since the
+   notifications are transferred as a pipeline of HTTP messages, these
+   sub-properties are identical to header fields (Section 8.1, Paragraph
+   2) used for specifying preconditions and content negotiation in a
+   Single Notification Request (Section 8.1).
 
    QUERY /foo HTTP/1.1
    Host: example.org
    Accept: application/http
-   Content-Type: example/event-request
+   Content-Type: example/events-query
    Events: duration=0
 
    events:
-     Accept: example/event-response
+     Accept: example/event-notification
 
-                   Figure 7: Notifications Stream Request
+              Figure 7: Request for HTTP Notifications Stream
+
+   The second example shows a subscription request for a stream of JSON
+   notifications to be transferred using application/json-seq
+   ([RFC7464]) as the encapsulating media type.  The events property in
+   this example is being used to communicate the preferred schema for
+   the requested event notifications.
+
+   QUERY /foo HTTP/1.1
+   Host: example.org
+   Accept: application/json-seq
+   Content-Type: example/events-query
+   Events: duration=0
+
+   events:
+     @context: activity+json
+
+              Figure 8: Request for JSON Notifications Stream
 
 9.2.  Response
 
-   The response stream encapsulates multiple event notifications
-   (typically, but not necessarily) in a composite media-type.  We shall
-   be using application/http media-type ([HTTP/1.1], Section 10.2) for
-   the purpose of illustration.
+   The response stream transmits multiple event notifications in an
+   encapsulating media type.  The following illustrates event
+   notifications streamed in both a composite media type (application/
+   http) and a discrete media type (application/json-seq) in response to
+   the example requests (Section 9.1) in Section 9.1.
 
 9.2.1.  Headers
 
-   A server able to provide a stream of event notifications immediately
-   sends the header which MUST include:
+   A server able to provide a stream of event notifications MUST
+   immediately send headers, which include:
 
-   *  The Events header field to communicate the properties of the
+   *  The Events header field, to communicate the properties of the
       notifications stream.
 
-      -  The duration property set with the time for which the server
-         intends to serve notifications.
+      -  The duration property, set to the maximum duration for which
+         the server intends to serve event notifications.
 
    *  The Incremental header field ([INCREMENTAL-HTTP-MESSAGES],
       Section 3) set to ?1 to indicate that the response is to be
       immediately forwarded by intermediaries and not buffered.
 
    HTTP/1.1 200 OK
-   Accept-Query: example/event-request
-   Content-Type: application/http
-   Transfer-Encoding: chunked
-   Incremental: ?1
+   Date: Thu, 02 Jan 2025 10:10:10 GMT
+   Accept-Query: example/events-query
    Events: duration=600
+   Incremental: ?1
+   Transfer-Encoding: chunked
 
-              Figure 8: Notifications Stream Response Headers
+              Figure 9: Notifications Stream Response Headers
+
+      |  Since the Content-Type header field varies in response to the
+      |  requests in Figure 7 and Figure 8, it has been omitted here.
 
 9.2.2.  Notifications
 
    Subsequently, when event(s) occur, the server transmits a
-   notification identical to the Single Notification Response
-   (Section 8.2), except header fields redundant with response header
-   (Section 9.2.1) are omitted.
+   notification.
+
+   An event notification transferred in an application/http response
+   stream is identical to the Single Notification Response
+   (Section 8.2), except fields which are redundant with the response
+   headers (Section 9.2.1) are omitted.
 
    HTTP/1.1 200 OK                                  | Notification
-   Content-Type: example/event-response             |
    Content-Length: 31                               |
+   Content-Type: example/event-notification         |
                                                     |
-   Event-ID: 456                                    |
-   Type: Update                                     |
+   published: 2025-01-02T10:11:12.345Z              |
+   event-id: 456                                    |
+   type: update                                     |
 
-                       Figure 9: Update Notification
+                    Figure 10: HTTP Update Notification
+
+   The same event notification when transferred in an application/json-
+   seq response stream is as follows:
+
+   ␞{                                              | Notification
+     "published": "2025-01-02T10:11:12.345Z",       |
+     "event-id": 456,                               |
+     "type": "Update"                               |
+   }                                                |
+
+                    Figure 11: JSON Update Notification
 
    A server MUST end the response immediately after transmitting the
-   event notification upon a resource being deleted.
+   event notification that signals the deletion of a resource.
+
+   The notification for a delete event expressed as an HTTP message
+   might be as follows:
 
    HTTP/1.1 200 OK                                  | Notification
-   Content-Type: example/event-response             |
    Content-Length: 31                               |
+   Content-Type: example/event-notification         |
                                                     |
-   Event-ID: 789                                    |
-   Type: Delete                                     |
+   published: 2025-01-02T11:12:13.456Z              |
+   event-id: 789                                    |
+   type: delete                                     |
 
-                       Figure 10: Delete Notification
+                    Figure 12: HTTP Delete Notification
+
+   The same notification for a delete event in JSON would be as follows:
+
+   ␞{                                              | Notification
+     "published": "2025-01-02T11:12:13.456Z",       |
+     "event-id": 789,                               |
+     "type": "delete"                               |
+   }                                                |
+
+                    Figure 13: JSON Delete Notification
 
    Otherwise, a server MUST end the response when the connection
-   duration has exceeded the period set in the duration property of the
-   Events header field.  A server MAY terminate the response earlier.
+   duration exceeds the period set in the duration property of the
+   Events header field.
 
 10.  Representation
 
-   Events Query lets a user agent to ask and receive the current
+   Events Query enables a user agent to ask and receive the current
    representation and subsequent event notifications in a single
    request/response.  When compared to using, say, Fetch [FETCH] and
    EventSource [SSE] in conjunction, Events Query not only saves on an
    extra round trip, but relieves a user agent from the burden of
-   handling the possible race condition.
+   synchronizing the representation with event notifications.
 
 10.1.  Request
 
-   To request a representation of the resource in an Events Query, a
-   client MUST express the interest in receiving the representation in a
-   preferred form using a realization of the subscription data model
-   (Section 6) with the QUERY method ([HTTP-QUERY], Section 3).
+   To receive a representation of the resource alongside notifications,
+   a client makes a QUERY request ([HTTP-QUERY], Section 3) using a
+   realization of the subscription data model that MUST also include an
+   interest in receiving the representation in a preferred form.
 
-   The following example shows subscription request for representation
-   along with notifications transmitted using the application/http
-   media-type.  The state property indicates the interest in receiving
-   representation.  The preferred form of representation is specified
-   using the request headers in the state property.
+   The following example shows a subscription request for the current
+   representation along with the subsequent event notifications
+   transmitted using the application/http media type.  The state
+   property indicates interest in receiving representation and its sub-
+   properties describe the preferred form of notifications.  Since the
+   representation is being transferred in an HTTP message pipeline,
+   these sub-properties are identical to header fields used for
+   specifying preconditions and content negotiation in a GET request on
+   the said resource.
 
    QUERY /foo HTTP/1.1
    Host: example.org
    Accept: application/http
-   Content-Type: example/event-request
+   Content-Type: example/events-query
 
    state:
      Accept: text/html
    events:
-     Accept: example/event-response
+     Accept: example/event-notification
 
-            Figure 11: Representation and Notifications Request
+          Figure 14: HTTP Representation and Notifications Request
 
 10.2.  Response
 
    A server unable to provide a representation MUST NOT serve event
-   notifications.  This does not apply in case of conditional request
-   for representation that is not fulfilled.
+   notifications.  This does not apply to a conditional request for
+   representation that is not fulfilled.
 
    A server able to provide a stream with a representation and event
    notifications transmits the representation immediately following the
-   response header (Section 9.2.1).  Otherwise, the response is the same
-   as that described in Section 9.2.
+   response headers (Section 9.2.1).  Otherwise, the response is the
+   same as that described in Section 9.2.
 
-   Again, we shall use the application/http media-type ([HTTP/1.1],
-   Section 10.2) for the purpose of illustration.  Chunks have been
-   omitted for clarity.
+   Again, the application/http media type ([HTTP/1.1], Section 10.2) is
+   used for the purpose of illustration.  Chunks have been omitted for
+   clarity.
 
    HTTP/1.1 200 OK
-   Accept-Query: example/event-request
-   Content-Type: application/http
-   Transfer-Encoding: chunked
-   Incremental: ?1
+   Date: Thu, 02 Jan 2025 10:10:10 GMT
+   Accept-Query: example/events-query
    Events: duration=600
+   Incremental: ?1
+   Transfer-Encoding: chunked
 
    HTTP/1.1 200 OK                                  | Representation
-   Content-Type: text/plain                         |
    Content-Length: 14                               |
+   Content-Type: text/plain                         |
                                                     |
    Hello World!                                     |
 
-                     Figure 12: Representation Response
+          Figure 15: Representation Response before Notifications
 
    While this is default behaviour, there is no requirement that a
-   representation is the first message or is sent only once.  In such
-   cases, the encapsulated message needs to indicate if it is a
-   representation and not an event notification.  Such a mechanism is
-   not defined in this specification.
+   representation is the first message or that representations are sent
+   only once.  In such cases, the encapsulated message needs to indicate
+   if it is a representation and not an event notification.  Such a
+   mechanism is not defined in this specification.
 
-   Notifications are transmitted just as described in Section 9.2.  See
-   Appendix A for a complete example of a response with representation
-   and notifications.
+   Notifications are transmitted just as in the case of regular
+   streaming (Section 9.2).  See Appendix A.1 for a complete example of
+   a response with representation and notifications.
 
-11.  Security Considerations
+11.  Implementation Status
+
+   A toy server built in Express.js demonstrating the Events Query
+   Protocol is available at https://github.com/CxRes/events-query-
+   express-demo.  This demo is powered by the following libraries:
+
+   *  Negotiate Events Field (https://github.com/CxRes/negotiate-events-
+      field): To read the request Events header field (Section 5) and
+      negotiate the response duration (Section 5.1),
+
+   *  NOSE (https://github.com/CxRes/nose): To observe events on
+      resources and generate notifications in a preferred format, and
+
+   *  Extended Response (https://github.com/CxRes/extended-response): To
+      write the representation and event notifications on the response
+      stream for a given duration (Section 5.1).
+
+   The demonstration and libraries are Free and Open Source Software,
+   released under the Mozilla Public License, v. 2.0.  Please contact
+   the author for more information about these programs.
+
+12.  Security Considerations
 
    Events Query is subject to the security considerations of the HTTP
    QUERY method ([HTTP-QUERY], Section 2) and more generally HTTP
    Semantics.  Considerations relevant to the use of HTTP QUERY method
-   are discussed in Section 4 of [HTTP-QUERY] and HTTP Semantics and its
+   are discussed in Section 4 of [HTTP-QUERY].  HTTP Semantics and its
    use for transferring information over the Internet are discussed in
    Section 17 of [HTTP].
 
-   When serving a stream of event notifications, resources are required
-   to keep the response stream open for an extended period of time,
-   making them more susceptible to Denial-of-Service attacks because the
-   effort required to request notifications from the same resource is
-   tiny compared to the time, memory, and bandwidth consumed by
-   attempting to serve the notifications.  Servers ought to ignore,
-   coalesce, or reject egregious event notification request, such as
-   repeated notification requests to a resource from the same origin.
+   When serving event notifications, servers are required to keep the
+   response stream open for an extended period of time.  Since the
+   effort required to request notifications is tiny compared to the
+   time, memory, and bandwidth consumed attempting to serve the
+   notifications, servers implementing Events Query have increased
+   susceptibility to Denial-of-Service attacks.  Servers ought to
+   ignore, coalesce, or reject egregious subscription requests, such as
+   repeated requests from the same origin within a short interval of
+   time.
 
-12.  IANA Considerations
+13.  IANA Considerations
 
    The change controller for the following registrations is: "IETF
    (iesg@ietf.org) - Internet Engineering Task Force".
 
-12.1.  HTTP Field Registration
+13.1.  HTTP Field Registration
 
    IANA is requested to add the following entry in the "Hypertext
    Transfer Protocol (HTTP) Field Name Registry
@@ -757,7 +902,7 @@ Table of Contents
 
               Table 1: List of HTTP Field Name registrations
 
-12.2.  The HTTP Events Field Registry
+13.2.  The HTTP Events Field Registry
 
    IANA is requested to create a new registry, "HTTP Events Field
    Registry", under the Hypertext Transfer Protocol (HTTP) Parameters
@@ -766,7 +911,7 @@ Table of Contents
    registrations will use the Specification Required policy ([RFC8126],
    Section 4.6).
 
-12.2.1.  Template
+13.2.1.  Template
 
    The registration of an Events property MUST include the following
    fields:
@@ -789,20 +934,20 @@ Table of Contents
 
    *  Comments: Additional information to be included in the template.
 
-12.2.2.  Initial Registry Contents
+13.2.2.  Initial Registry Contents
 
    The initial contents of the HTTP Events Field Registry are:
 
-             +===============+=================+=============+
-             | Property Name | Structured-Type | Reference   |
-             +===============+=================+=============+
-             | duration      | Integer Item    | Section 5.1 |
-             +---------------+-----------------+-------------+
+         +===============+=========================+=============+
+         | Property Name | Structured-Type         | Reference   |
+         +===============+=========================+=============+
+         | duration      | Integer or Decimal Item | Section 5.1 |
+         +---------------+-------------------------+-------------+
 
-                Table 2: List of HTTP Events Field property
-                             name registrations
+              Table 2: List of HTTP Events Field property name
+                               registrations
 
-13.  End User Considerations
+14.  End User Considerations
 
 
    // If we, the IETF, claim that the Internet is for the end user
@@ -810,7 +955,7 @@ Table of Contents
    // specification we produce ought to consider its impact on the
    // Internet end user.  For this reason, I propose that specifications
    // must include a considerations section where authors assess the
-   // impact of their proposal on the internet end user, aligned with
+   // impact of their proposal on the Internet end user, aligned with
    // the mission of IETF [RFC3935].
 
    End users of the HTTP protocol can be classified into two groups:
@@ -832,11 +977,11 @@ Table of Contents
    resources of interest for each client to filter event notifications
    accordingly.
 
-   Events Query empowers servers to decide content and duration for
-   which event notifications are served on any given resource, as well
-   as allowing servers to close the response stream at any time.
+   Events Query empowers servers to decide the content and the duration
+   for which event notifications are served on any given resource, as
+   well as allowing servers to close the response stream at any time.
    Servers may also limit event notifications and/or their content,
-   except to authenticated consumers.  Such authenticated consumers
+   except for authenticated consumers.  Such authenticated consumers
    might, for example, be asked to share the cost burden with publishers
    in return for a higher quality of service.
 
@@ -852,9 +997,9 @@ Table of Contents
    authors, policies designed to treat network traffic as a public
    utility might provide better outcomes for the end user.
 
-14.  References
+15.  References
 
-14.1.  Normative References
+15.1.  Normative References
 
    [HTTP]     Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
               Ed., "HTTP Semantics", STD 97, RFC 9110,
@@ -864,9 +1009,9 @@ Table of Contents
    [HTTP-QUERY]
               Reschke, J., Snell, J. M., and M. Bishop, "The HTTP QUERY
               Method", Work in Progress, Internet-Draft, draft-ietf-
-              httpbis-safe-method-w-body-10, 29 April 2025,
+              httpbis-safe-method-w-body-12, 29 September 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
-              safe-method-w-body-10>.
+              safe-method-w-body-12>.
 
    [HTTP-SF]  Nottingham, M. and P. Kamp, "Structured Field Values for
               HTTP", RFC 9651, DOI 10.17487/RFC9651, September 2024,
@@ -893,7 +1038,12 @@ Table of Contents
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
-14.2.  Informative References
+15.2.  Informative References
+
+   [COMET]    Russell, A., "Comet: Low Latency Data for the Browser",
+              Infrequently Noted, March 2006,
+              <https://infrequently.org/2006/03/comet-low-latency-data-
+              for-the-browser/>.
 
    [DESIGN-FRAMEWORK]
               Rosenblum, D. and A. Wolf, "A design framework for
@@ -939,6 +1089,10 @@ Table of Contents
               DOI 10.17487/RFC6202, April 2011,
               <https://www.rfc-editor.org/rfc/rfc6202>.
 
+   [RFC7464]  Williams, N., "JavaScript Object Notation (JSON) Text
+              Sequences", RFC 7464, DOI 10.17487/RFC7464, February 2015,
+              <https://www.rfc-editor.org/rfc/rfc7464>.
+
    [RFC7838]  Nottingham, M., McManus, P., and J. Reschke, "HTTP
               Alternative Services", RFC 7838, DOI 10.17487/RFC7838,
               April 2016, <https://www.rfc-editor.org/rfc/rfc7838>.
@@ -960,62 +1114,114 @@ Table of Contents
    [WS]       "The WebSocket API", W3C NOTE websockets, W3C websockets,
               <https://www.w3.org/TR/websockets/>.
 
-Appendix A.  Example
+Appendix A.  Examples
+
+   Some examples used in this specification are consolidated below.
+   Chunks have been omitted for clarity.
+
+A.1.  Representation and Notifications
 
    The following example illustrates a complete request and response for
-   representation and notifications using Events Query.  Chunks have
-   been omitted for clarity.
+   representation and notifications transferred with the application/
+   http media-type as described in Section 10: Representation.
 
-A.1.  Request
+A.1.1.  Request
 
    QUERY /foo HTTP/1.1
    Host: example.org
    Accept: application/http
-   Content-Type: example/event-request
+   Content-Type: example/events-query
 
    state:
      Accept: text/html
    events:
-     Accept: example/event-response
+     Accept: example/event-notification
 
-          Figure 13: Request for Representation and Notifications
+          Figure 16: Request for Representation and Notifications
 
-A.2.  Response
+A.1.2.  Response
 
    HTTP/1.1 200 OK
-   Accept-Query: example/event-request
-   Content-Type: application/http
-   Transfer-Encoding: chunked
-   Incremental: ?1
+   Date: Thu, 02 Jan 2025 10:10:10 GMT
+   Accept-Query: example/events-query
    Events: duration=600
+   Incremental: ?1
+   Transfer-Encoding: chunked
+   Content-Type: application/http
 
    HTTP/1.1 200 OK                                  | Representation
-   Content-Type: text/plain                         |
    Content-Length: 14                               |
+   Content-Type: text/plain                         |
                                                     |
    Hello World!                                     |
 
    HTTP/1.1 200 OK                                  | Notification
-   Content-Type: example/event-response             |
    Content-Length: 31                               |
+   Content-Type: example/event-notification         |
                                                     |
-   Event-ID: 456                                    |
-   Type: Update                                     |
+   published: 2025-01-02T10:11:12.345Z              |
+   event-id: 456                                    |
+   type: update                                     |
 
    HTTP/1.1 200 OK                                  | Notification
-   Content-Type: example/event-response             |
    Content-Length: 31                               |
+   Content-Type: example/event-notification         |
                                                     |
-   Event-ID: 789                                    |
-   Type: Delete                                     |
+   published: 2025-01-02T11:12:13.456Z              |
+   event-id: 789                                    |
+   type: delete                                     |
 
-      Figure 14: Response Stream with Representation and Notifications
+         Figure 17: Response with Representation and Notifications
+
+A.2.  Notifications Stream
+
+   This following example illustrates complete request and response for
+   JSON formatted notifications transferred with the application/json-
+   seq media-type as described in Notifications Stream: Notifications
+   Stream.
+
+A.2.1.  Request
+
+   QUERY /foo HTTP/1.1
+   Host: example.org
+   Accept: application/json-seq
+   Content-Type: example/events-query
+   Events: duration=0
+
+   events:
+     @context: activity+json
+
+                 Figure 18: Request for JSON Notifications
+
+A.2.2.  Response
+
+   HTTP/1.1 200 OK
+   Date: Thu, 02 Jan 2025 10:10:10 GMT
+   Accept-Query: example/events-query
+   Events: duration=600
+   Incremental: ?1
+   Transfer-Encoding: chunked
+   Content-Type: application/json-seq
+
+   ␞{                                              | Notification
+     "published": "2025-01-02T10:11:12.345Z",       |
+     "event-id": 456,                               |
+     "type": "Update"                               |
+   }                                                |
+   ␞{                                              | Notification
+     "published": "2025-01-02T11:12:13.456Z",       |
+     "event-id": 789,                               |
+     "type": "delete"                               |
+   }                                                |
+
+                Figure 19: Response with JSON Notifications
 
 Acknowledgments
 
-   We thank members of the HTTP Working Group, the Solid community, the
-   Braid community and others for discussions, ideas, reviews, and
-   feedback on previous work that has led to specification.
+   We thank members of the HTTP Working Group, the HTTPAPI Working
+   Group, the Solid community, the Braid community and others for
+   discussions, ideas, reviews, and feedback on previous work that has
+   led to this specification.
 
 Index
 
@@ -1024,55 +1230,64 @@ Index
       D
 
          data model  Section 2.3, Paragraph 2.3.1; Section 2.3,
-            Paragraph 4.1.1; *_Section 6_*; Section 9.1, Paragraph 1;
-            Section 10.1, Paragraph 1
+            Paragraph 4.1.1; *_Section 6_*; Section 8.1, Paragraph 1;
+            Section 9.1, Paragraph 1; Section 10.1, Paragraph 1
          duration (property)  *_Section 5.1_*; Section 9.2.1, Paragraph
-            2.1.2.1.1; Section 9.2.2, Paragraph 5; Table 2
+            2.1.2.1.1; Section 9.2.2, Paragraph 11; Section 11,
+            Paragraph 2.1.1; Section 11, Paragraph 2.3.1; Table 2
 
       E
 
-         event  Section 2, Paragraph 1; Section 2, Paragraph 2;
-            Section 2.3, Paragraph 4.2.1; Section 2.4, Paragraph 1;
+         event  Section 2, Paragraph 1; Section 2.3, Paragraph 4.2.1;
+            Section 2.4, Paragraph 1; Section 2.5, Paragraph 3;
             *_Section 4.1_*; Section 4.2, Paragraph 1; Section 4.2,
             Paragraph 2; Section 4.2, Paragraph 3; Section 4.3,
             Paragraph 1; Section 4.3, Paragraph 2; Section 4.3,
-            Paragraph 3; Section 5, Paragraph 3; Section 7, Paragraph
+            Paragraph 3; Section 5, Paragraph 4; Section 7, Paragraph
             4.2; Section 8, Paragraph 1; Section 8.1, Paragraph 1;
-            Section 9.2.2, Paragraph 1; Section 13, Paragraph 4;
-            Section 13, Paragraph 5
+            Section 9.2.2, Paragraph 1; Section 9.2.2, Paragraph 7;
+            Section 9.2.2, Paragraph 9; Section 11, Paragraph 2.2.1
          event notification  Section Abstract, Paragraph 1; Section 1,
-            Paragraph 2; Section 1, Paragraph 3; Section 1, Paragraph 4;
-            Section 1, Paragraph 7; Section 1, Paragraph 8; Section 2,
-            Paragraph 1; Section 2, Paragraph 2; Section 2.1, Paragraph
-            2.1.1; Section 2.1, Paragraph 2.2.1; Section 2.1, Paragraph
-            2.3.1; Section 2.1, Paragraph 2.4.1; Section 2.1, Paragraph
-            2.5.1; Section 2.2, Paragraph 2.2.1; Section 2.3, Paragraph
-            2.1.1; Section 2.3, Paragraph 2.2.1; Section 2.3, Paragraph
-            4.1.1; Section 2.3, Paragraph 4.2.1; Section 2.3, Paragraph
-            4.3.1; Section 2.3, Paragraph 4.4.1; Section 2.4, Paragraph
-            1; Section 2.4, Paragraph 2; Section 4.2, Paragraph 3;
-            *_Section 4.3_*; Section 4.3, Paragraph 1; Section 4.3,
-            Paragraph 2; Section 4.3, Paragraph 3; Section 4.4,
-            Paragraph 1; Section 4.4, Paragraph 2; Section 4.4,
-            Paragraph 3; Section 5, Paragraph 2; Section 6, Paragraph
-            3.2.1; Section 6, Paragraph 5; Section 7, Paragraph 4.2;
+            Paragraph 3; Section 1, Paragraph 4; Section 1, Paragraph 5;
+            Section 1, Paragraph 8; Section 1, Paragraph 9; Section 2,
+            Paragraph 1; Section 2.1, Paragraph 1; Section 2.1,
+            Paragraph 2.1.1; Section 2.1, Paragraph 2.2.1; Section 2.1,
+            Paragraph 2.3.1; Section 2.1, Paragraph 2.4.1; Section 2.1,
+            Paragraph 2.5.1; Section 2.2, Paragraph 2.2.1; Section 2.3,
+            Paragraph 2.2.1; Section 2.3, Paragraph 2.3.1; Section 2.3,
+            Paragraph 4.1.1; Section 2.3, Paragraph 4.2.1; Section 2.3,
+            Paragraph 4.3.1; Section 2.3, Paragraph 4.4.1; Section 2.4,
+            Paragraph 1; Section 2.4, Paragraph 2; Section 2.5,
+            Paragraph 1; Section 2.5, Paragraph 2; Section 2.5,
+            Paragraph 3; Section 4.2, Paragraph 3; *_Section 4.3_*;
+            Section 4.3, Paragraph 1; Section 4.3, Paragraph 2;
+            Section 4.3, Paragraph 3; Section 4.4, Paragraph 1;
+            Section 4.4, Paragraph 2; Section 4.4, Paragraph 3;
+            Section 5, Paragraph 2; Section 5, Paragraph 3; Section 5.1,
+            Paragraph 2; Section 5.1, Paragraph 3; Section 6, Paragraph
+            3.1.1; Section 6, Paragraph 5; Section 7, Paragraph 4.2;
             Section 8, Paragraph 1; Section 8.1, Paragraph 1;
             Section 8.1, Paragraph 2; Section 8.2, Paragraph 1;
             Section 9, Paragraph 1; Section 9.1, Paragraph 1;
             Section 9.1, Paragraph 2; Section 9.1, Paragraph 3;
-            Section 9.2, Paragraph 1; Section 9.2.1, Paragraph 1;
-            Section 9.2.1, Paragraph 2.1.1; Section 9.2.1, Paragraph
-            2.1.2.1.1; Section 9.2.2, Paragraph 1; Section 9.2.2,
-            Paragraph 3; Section 10, Paragraph 1; Section 10.1,
-            Paragraph 2; Section 10.2, Paragraph 1; Section 10.2,
-            Paragraph 2; Section 10.2, Paragraph 5; Section 10.2,
-            Paragraph 6; Section 11, Paragraph 2; Section 13, Paragraph
-            2; Section 13, Paragraph 3; Section 13, Paragraph 4;
-            Section 13, Paragraph 5; Appendix A, Paragraph 1
+            Section 9.1, Paragraph 5; Section 9.2, Paragraph 1;
+            Section 9.2.1, Paragraph 1; Section 9.2.1, Paragraph 2.1.1;
+            Section 9.2.1, Paragraph 2.1.2.1.1; Section 9.2.2, Paragraph
+            1; Section 9.2.2, Paragraph 2; Section 9.2.2, Paragraph 4;
+            Section 9.2.2, Paragraph 6; Section 9.2.2, Paragraph 7;
+            Section 9.2.2, Paragraph 9; Section 10, Paragraph 1;
+            Section 10.1, Paragraph 1; Section 10.1, Paragraph 2;
+            Section 10.2, Paragraph 1; Section 10.2, Paragraph 2;
+            Section 10.2, Paragraph 5; Section 10.2, Paragraph 6;
+            Section 11, Paragraph 2.2.1; Section 11, Paragraph 2.3.1;
+            Section 12, Paragraph 2; Section 14, Paragraph 2;
+            Section 14, Paragraph 3; Section 14, Paragraph 4;
+            Section 14, Paragraph 5; Appendix A.1, Paragraph 1;
+            Appendix A.2, Paragraph 1
          events (header field)  *_Section 5_*; Section 9.2.1, Paragraph
-            2.1.1; Section 9.2.2, Paragraph 5; Table 1; Section 12.2,
-            Paragraph 1; Section 12.2.1, Paragraph 1; Section 12.2.1,
-            Paragraph 2.1.1
+            2.1.1; Section 9.2.2, Paragraph 11; Section 11, Paragraph
+            2.1.1; Table 1; Section 13.2, Paragraph 1; Section 13.2.1,
+            Paragraph 1; Section 13.2.1, Paragraph 2.1.1
 
       I
 
@@ -1082,37 +1297,45 @@ Index
       N
 
          notification  Section Abstract, Paragraph 1; Section 1,
-            Paragraph 2; Section 1, Paragraph 3; Section 1, Paragraph 4;
-            Section 1, Paragraph 7; Section 1, Paragraph 8; Section 2,
-            Paragraph 1; Section 2, Paragraph 2; Section 2.1, Paragraph
-            2.1.1; Section 2.1, Paragraph 2.2.1; Section 2.1, Paragraph
-            2.3.1; Section 2.1, Paragraph 2.4.1; Section 2.1, Paragraph
-            2.5.1; Section 2.2, Paragraph 2.2.1; Section 2.3, Paragraph
-            2.1.1; Section 2.3, Paragraph 2.2.1; Section 2.3, Paragraph
-            4.1.1; Section 2.3, Paragraph 4.2.1; Section 2.3, Paragraph
-            4.3.1; Section 2.3, Paragraph 4.4.1; Section 2.4, Paragraph
-            1; Section 2.4, Paragraph 2; Section 4.2, Paragraph 3;
-            *_Section 4.3_*; Section 4.3, Paragraph 1; Section 4.4,
-            Paragraph 1; Section 4.4, Paragraph 2; Section 4.4,
-            Paragraph 3; Section 5, Paragraph 2; Section 6, Paragraph
-            3.2.1; Section 6, Paragraph 5; Section 7, Paragraph 4.2;
+            Paragraph 3; Section 1, Paragraph 4; Section 1, Paragraph 5;
+            Section 1, Paragraph 8; Section 1, Paragraph 9; Section 2,
+            Paragraph 1; Section 2.1, Paragraph 1; Section 2.1,
+            Paragraph 2.1.1; Section 2.1, Paragraph 2.2.1; Section 2.1,
+            Paragraph 2.3.1; Section 2.1, Paragraph 2.4.1; Section 2.1,
+            Paragraph 2.5.1; Section 2.2, Paragraph 2.2.1; Section 2.3,
+            Paragraph 2.2.1; Section 2.3, Paragraph 2.3.1; Section 2.3,
+            Paragraph 4.1.1; Section 2.3, Paragraph 4.2.1; Section 2.3,
+            Paragraph 4.3.1; Section 2.3, Paragraph 4.4.1; Section 2.4,
+            Paragraph 1; Section 2.4, Paragraph 2; Section 2.5,
+            Paragraph 1; Section 2.5, Paragraph 2; Section 2.5,
+            Paragraph 3; Section 4.2, Paragraph 3; *_Section 4.3_*;
+            Section 4.3, Paragraph 1; Section 4.4, Paragraph 1;
+            Section 4.4, Paragraph 2; Section 4.4, Paragraph 3;
+            Section 5, Paragraph 2; Section 5, Paragraph 3; Section 5.1,
+            Paragraph 2; Section 5.1, Paragraph 3; Section 6, Paragraph
+            3.1.1; Section 6, Paragraph 5; Section 7, Paragraph 4.2;
             Section 8, Paragraph 1; Section 8.1, Paragraph 1;
             Section 8.1, Paragraph 2; Section 8.2, Paragraph 1;
             Section 9, Paragraph 1; Section 9.1, Paragraph 1;
             Section 9.1, Paragraph 2; Section 9.1, Paragraph 3;
-            Section 9.2, Paragraph 1; Section 9.2.1, Paragraph 1;
-            Section 9.2.1, Paragraph 2.1.1; Section 9.2.1, Paragraph
-            2.1.2.1.1; Section 9.2.2, Paragraph 1; Section 9.2.2,
-            Paragraph 3; Section 10, Paragraph 1; Section 10.1,
-            Paragraph 2; Section 10.2, Paragraph 1; Section 10.2,
-            Paragraph 2; Section 10.2, Paragraph 5; Section 10.2,
-            Paragraph 6; Section 11, Paragraph 2; Section 13, Paragraph
-            2; Section 13, Paragraph 3; Section 13, Paragraph 4;
-            Section 13, Paragraph 5; Appendix A, Paragraph 1
+            Section 9.1, Paragraph 5; Section 9.2, Paragraph 1;
+            Section 9.2.1, Paragraph 1; Section 9.2.1, Paragraph 2.1.1;
+            Section 9.2.1, Paragraph 2.1.2.1.1; Section 9.2.2, Paragraph
+            1; Section 9.2.2, Paragraph 2; Section 9.2.2, Paragraph 4;
+            Section 9.2.2, Paragraph 6; Section 9.2.2, Paragraph 7;
+            Section 9.2.2, Paragraph 9; Section 10, Paragraph 1;
+            Section 10.1, Paragraph 1; Section 10.1, Paragraph 2;
+            Section 10.2, Paragraph 1; Section 10.2, Paragraph 2;
+            Section 10.2, Paragraph 5; Section 10.2, Paragraph 6;
+            Section 11, Paragraph 2.2.1; Section 11, Paragraph 2.3.1;
+            Section 12, Paragraph 2; Section 14, Paragraph 2;
+            Section 14, Paragraph 3; Section 14, Paragraph 4;
+            Section 14, Paragraph 5; Appendix A.1, Paragraph 1;
+            Appendix A.2, Paragraph 1
 
       O
 
-         observation  *_Section 4.2_*
+         observation  *_Section 4.2_*; Section 11, Paragraph 2.2.1
          observer  *_Section 4.2, Paragraph 1_*; Section 4.2, Paragraph
             2; Section 4.2, Paragraph 3; Section 4.3, Paragraph 1;
             Section 4.4, Paragraph 1
@@ -1121,11 +1344,13 @@ Index
 
          subscriber  Section 4.3, Paragraph 3; *_Section 4.4, Paragraph
             1_*; Section 4.4, Paragraph 2
-         subscription  Section 2.3, Paragraph 2.3.1; *_Section 4.4_*;
+         subscription  Section 2.5, Paragraph 3; *_Section 4.4_*;
             Section 6, Paragraph 2; Section 6, Paragraph 4; Section 6,
             Paragraph 5; Section 8.1, Paragraph 1; Section 9.1,
-            Paragraph 1; Section 9.1, Paragraph 3; Section 10.1,
-            Paragraph 1; Section 10.1, Paragraph 2
+            Paragraph 1; Section 9.1, Paragraph 2; Section 9.1,
+            Paragraph 3; Section 9.1, Paragraph 5; Section 10.1,
+            Paragraph 1; Section 10.1, Paragraph 2; Section 12,
+            Paragraph 2
 
 Author's Address
 
