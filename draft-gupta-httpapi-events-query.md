@@ -78,6 +78,7 @@ informative:
   RFC3724:
   RFC3935:
   RFC6202:
+  RFC7464:
   RFC7838:
   RFC8890:
   RFC9112:

@@ -1,0 +1,8 @@
+QUERY /foo HTTP/1.1
+Host: example.org
+Accept: application/json-seq
+Content-Type: example/events-query
+Events: duration=0
+
+events:
+  @context: activity+json
