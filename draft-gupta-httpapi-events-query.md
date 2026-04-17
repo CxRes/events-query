@@ -84,7 +84,6 @@ informative:
     format:
       PDF: https://roy.gbiv.com/pubs/dissertation/fielding_dissertation.pdf#G16.1026811
   RFC2046:
-  RFC3724:
   RFC3935:
   RFC6202:
   RFC7464:
