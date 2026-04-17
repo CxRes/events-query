@@ -9,15 +9,15 @@
 To receive multiple notifications, a client makes a QUERY request ({{HTTP-QUERY, Section 3}}) using a realization of the subscription data model that MUST include an interest in receiving a stream of event-notifications in a preferred form.
 
 {: #stream-request-conneg}
-Since the response transmits event-notifications within an encapsulating representation ({{stream-response}}), it follows that header fields cannot be used to negotiate the form of event-notifications as in the case of [Single Notification Request](#single-notification-request){:noabbrev}. Instead, header fields are useful for negotiating the representation that encapsulates event-notifications. The following examples illustrate subscription requests that negotiate a stream of event-notifications to be transferred respectively using a composite media type (`application/http`) and a discrete media type (`application/json-seq`):
+Since the response transmits event-notifications within an encapsulating representation ({{stream-response}}), it follows that header fields cannot be used to negotiate the form of event-notifications as in the case of [Single Notification Request](#single-notification-request){:noabbrev}. Instead, header fields are useful for negotiating the representation that encapsulates event-notifications. The following examples illustrate subscription requests that negotiate a stream of event-notifications to be transferred respectively using a composite media type (`multipart/mixed`) and a discrete media type (`application/json-seq`):
 
-{: #stream-request-http}
-The first example shows a subscription request for effectively a stream of discrete [Single Notifications](#single-notification){:noabbrev} to be transferred using `application/http` ({{-HTTP1, Section 10.2}}) as the encapsulating media type. The `events` property in this example indicates an interest in receiving event-notifications and its sub-properties describe the preferred form of notifications. Since the notifications are transferred as a pipeline of HTTP messages, these sub-properties are identical to [header fields](#single-notification-request-conneg){:noabbrev} used for specifying preconditions and content negotiation in a [Single Notification Request](#single-notification-request){:noabbrev}.
+{: #stream-request-multipart}
+The first example shows a subscription request for effectively a stream of discrete [Single Notifications](#single-notification){:noabbrev} to be transferred using `multipart/mixed` ({{RFC2046, Section 5.1.3}}) as the encapsulating media type. The `events` property in this example indicates an interest in receiving event-notifications and its sub-properties describe the preferred form of notifications. Since the notifications are transferred as a pipeline of HTTP messages, these sub-properties are identical to [header fields](#single-notification-request-conneg){:noabbrev} used for specifying preconditions and content negotiation in a [Single Notification Request](#single-notification-request){:noabbrev}.
 
 ~~~ http-message
 {::include examples/stream/events-request.http}
 ~~~
-{: sourcecode-name="stream-request-http-example.http" #stream-request-http-example title="Request for HTTP Notifications Stream"}
+{: sourcecode-name="stream-request-multipart-example.http" #stream-request-multipart-example title="Request for Multipart Notifications Stream"}
 
 {: #stream-request-json}
 The second example shows a subscription request for a stream of JSON notifications to be transferred using `application/json-seq` ({{RFC7464}}) as the encapsulating media type. The `events` property in this example is being used to communicate the preferred schema for the requested event-notifications.
@@ -30,7 +30,7 @@ The second example shows a subscription request for a stream of JSON notificatio
 ## Response {#stream-response}
 
 {: #stream-response-encapsulation}
-The response stream transmits multiple event-notifications in an encapsulating media type. The following illustrates event-notifications streamed in both a composite media type (`application/http`) and a discrete media type (`application/json-seq`) in response to the example [requests](#stream-request) in {{stream-request}}.
+The response stream transmits multiple event-notifications in an encapsulating media type. The following illustrates event-notifications streamed in both a composite media type (`multipart/mixed`) and a discrete media type (`application/json-seq`) in response to the example [requests](#stream-request) in {{stream-request}}.
 
 ### Headers {#stream-response-headers}
 
@@ -48,25 +48,39 @@ The `Incremental` header field ({{INCREMENTAL-HTTP-MESSAGES, Section 3}}) set to
 
 ~~~ http-message
 {::include examples/stream/response-headers.http}
-
 ~~~
 {: sourcecode-name="stream-response-headers-example.http" #stream-response-headers-example title="Notifications Stream Response Headers"}
 
-{:aside}
-> Since the `Content-Type` header field varies in response to the requests in {{stream-request-http-example}} and {{stream-request-json-example}}, it has been omitted here.
+{: #stream-response-multipart-content-type-field}
+The `Content-type` header field in response to the request in the first example is:
+
+~~~ http-message
+Content-type: multipart/mixed; boundary="THIS_STRING_SEPARATES"
+
+~~~
+{: sourcecode-name="stream-response-multipart-content-header-example.http" #stream-response-multipart-content-header-example title="Notifications Stream Multipart Content Response Header"}
+
+{: #stream-response-json-content-type-field}
+whereas in response to the request in the second example is:
+
+~~~ http-message
+Content-type: application/json-seq
+
+~~~
+{: sourcecode-name="stream-response-json-content-header-example.http" #stream-response-json-content-header-example title="Notifications Stream JSON Content Response Headers"}
 
 ### Notifications {#stream-response-body}
 
 {: #stream-response-event}
 Subsequently, when event(s) occur, the server transmits a notification.
 
-{: #stream-update-event-http}
-An event-notification transferred in an `application/http` response stream is identical to the [Single Notification Response](#single-notification-response){:noabbrev}, except fields which are redundant with the response headers ({{stream-response-headers}}) are omitted.
+{: #stream-update-event-multipart}
+An event-notification transferred in a `multipart/mixed` response stream is identical to the [Single Notification Response](#single-notification-response){:noabbrev}, except that non "Content-*" fields are excluded as required by {{RFC2046, Section 5.1}}: 
 
 ~~~ http-message
-{::include examples/notifications/update.http.txt}
+{::include examples/notifications/update.multipart.txt}
 ~~~
-{: sourcecode-name="stream-update-notification-http-example.http" #stream-update-notification-http-example title="HTTP Update Notification"}
+{: sourcecode-name="stream-update-notification-multipart-example.http" #stream-update-notification-multipart-example title="Multipart Update Notification"}
 
 {: #stream-update-event-json}
 The same event-notification when transferred in an `application/json-seq` response stream is as follows:
@@ -79,16 +93,16 @@ The same event-notification when transferred in an `application/json-seq` respon
 {: #stream-response-terminal-event}
 A server MUST end the response immediately after transmitting the event-notification that signals the deletion of a resource.
 
-{: #stream-delete-event-http}
-The notification for a delete event expressed as an HTTP message might be as follows:
+{: #stream-delete-event-multipart}
+The notification for a delete event expressed inside a multipart message might be as follows:
 
 ~~~ http-message
-{::include examples/notifications/delete.http.txt}
+{::include examples/notifications/delete.multipart.txt}
 ~~~
-{: sourcecode-name="stream-delete-notification-http-example.http" #stream-delete-event-http-example title="HTTP Delete Notification"}
+{: sourcecode-name="stream-delete-notification-multipart-example.http" #stream-delete-event-multipart-example title="Multipart Delete Notification"}
 
 {: #stream-delete-event-json}
-The same notification for a delete event in JSON would be as follows:
+The same notification for a delete event as JSON would be as follows:
 
 ~~~
 {::include examples/notifications/delete.json.txt}

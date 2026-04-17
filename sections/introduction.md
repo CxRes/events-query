@@ -22,7 +22,7 @@ With the help of a suitable composite media type parser, {{&protocol}} responses
 const response = await fetch("http://example.com/foo", {
   method: "QUERY",
   headers: {
-    Accept: "application/http",
+    Accept: "multipart/mixed",
     "Content-Type": "example/events-query"
   },
   body: JSON.stringify({
