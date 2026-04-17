@@ -4,7 +4,7 @@
 HTTP was originally designed as a stateless, request/response protocol for transferring hypermedia documents on the web ({{HTTP, Section 1.2}}). This design was adequate for web pages that were mostly static and written by hand.
 
 {: #intro-real-time-needs}
-But web applications have evolved over time to provide increasingly dynamic and interactive experiences, requiring near-instantaneous updates. HTTP does not automatically inform clients of changes to a resource. Developers have employed various techniques, such as Comet {{COMET}} and Server-Sent Events {{SSE}} to work around this constraint, but these can be suboptimal for many applications.
+But web applications have evolved over time to provide increasingly dynamic and interactive experiences, requiring near-instantaneous updates. HTTP does not automatically inform clients of changes to a resource. Developers have employed various techniques, such as Comet {{COMET}} and Server-Sent Events ({{HTML}}, Section 9.2) to work around this constraint, but these can be suboptimal for many applications.
 
 {: #intro-alternate-protocols}
 For this reason, web programmers often prefer implementing custom messaging systems over alternate protocols such as WebSocket {{WS}} and WebSub {{WEBSUB}}. Not only does this approach require additional layers of code, involving multiple Web APIs and/or userland libraries such as [socket.io](https://socket.io/), it demands extra coordination effort to synchronize representation and notifications across multiple protocols. The dual-protocol approach thus compounds the development and maintenance overhead. Furthermore, deployment at scale is challenging with the notifications traffic now opaque to network intermediaries.

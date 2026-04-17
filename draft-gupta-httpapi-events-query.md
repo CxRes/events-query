@@ -53,11 +53,19 @@ informative:
     title: Fetch
     author:
       -
-        ins: A. van Kesteren
-        name: Anne van Kesteren
+        name: WHATWG
     seriesinfo:
       WHATWG: Living Standard
     date: Last Updated 28 May 2025
+  HTML:
+    target: https://html.spec.whatwg.org
+    title: HTML
+    author:
+      -
+        name: WHATWG
+    seriesinfo:
+      WHATWG: Living Standard
+    date: Last Updated 15 April 2026
   HTTP-CACHING: RFC9111
   REST:
     target: https://roy.gbiv.com/pubs/dissertation/rest_arch_style.htm
@@ -82,11 +90,7 @@ informative:
   RFC7464:
   RFC7838:
   RFC8890:
-  RFC9112:
-    -: HTTP1
-    display: HTTP/1.1
   RFC9205:
-  SSE: W3C.eventsource
   WEBSUB: W3C.websub
   WS: W3C.websockets
 
