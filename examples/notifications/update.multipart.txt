@@ -1,5 +1,5 @@
-HTTP/1.1 200 OK                                  | Notification
-Content-Length: 31                               |
+--THIS_STRING_SEPARATES
+Content-Length: 31                               | Notification
 Content-Type: example/event-notification         |
                                                  |
 published: 2025-01-02T10:11:12.345Z              |

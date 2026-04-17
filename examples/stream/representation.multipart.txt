@@ -1,5 +1,5 @@
-HTTP/1.1 200 OK                                  | Representation
-Content-Length: 14                               |
+--THIS_STRING_SEPARATES                                 
+Content-Length: 14                               | Representation
 Content-Type: text/plain                         |
                                                  |
 Hello World!                                     |

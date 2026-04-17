@@ -1,6 +1,6 @@
 QUERY /foo HTTP/1.1
 Host: example.org
-Accept: application/http
+Accept: multipart/mixed
 Content-Type: example/events-query
 
 state:

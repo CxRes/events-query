@@ -5,28 +5,28 @@ Some examples used in this specification are consolidated below. Chunks have bee
 ## Representation and Notifications {#example-representation}
 
 {: #example-description}
-The following example illustrates a complete request and response for representation and notifications transferred with the `application/http` media-type as described in {{representation}}: {{<<representation}}.
+The following example illustrates a complete request and response for representation and notifications transferred with the `multipart/mixed` media-type as described in {{representation}}: {{<<representation}}.
 
-### Request {#example-representation-request-http}
+### Request {#example-multipart-representation-request}
 
 ~~~ http-message
 {::include examples/stream/state-request.http}
 ~~~
-{: sourcecode-name="representation-request-http-example.http" #representation-request-http-complete-example title="Request for Representation and Notifications"}
+{: sourcecode-name="representation-request-multipart-example.http" #representation-request-multipart-complete-example title="Request for Representation and Notifications"}
 
-### Response {#example-http-representation-response}
+### Response {#example-multipart-representation-response}
 
 ~~~ http-message
 {::include examples/stream/response-headers.http}
-Content-Type: application/http
+Content-Type: multipart/mixed; boundary="THIS_STRING_SEPARATES"
 
-{::include examples/stream/representation.http.txt}
+{::include examples/stream/representation.multipart.txt}
 
-{::include examples/notifications/update.http.txt}
+{::include examples/notifications/update.multipart.txt}
 
-{::include examples/notifications/delete.http.txt}
+{::include examples/notifications/delete.multipart.txt}
 ~~~
-{: sourcecode-name="representation-response-http-complete-example.http" #representation-response-http-complete-example title="Response with Representation and Notifications"}
+{: sourcecode-name="representation-response-multipart-complete-example.http" #representation-response-multipart-complete-example title="Response with Representation and Notifications"}
 
 ## Notifications Stream {#example-stream}
 
