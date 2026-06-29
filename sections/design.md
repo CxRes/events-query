@@ -82,16 +82,20 @@ Specific representations for the response stream with multiple notifications.
 {: #limitation--connection-limits}
 Browsers cap the number of persistent HTTP/1.1 connections per host, limiting the suitability of {{&protocol}} for web applications in the browser that require simultaneous event-notifications from multiple resources on the same host. This limitation is identical to that of other HTTP-based streaming protocols, such as Server-Sent Events ({{HTML}}, Section 9.2). Implementations are strongly encouraged to adopt HTTP/2 (or later). HTTP/1.1 servers might consider setting up a reverse proxy over HTTP/2 (or later) or implement mitigation strategies, such as, maximizing the number of concurrent connections and providing alternate hosts for resources. Implementations might alternatively consider using endpoints to provide event-notifications for multiple resources as previously described. Clients on a browser requesting event-notifications over an HTTP/1.1 connection are advised to exercise caution when simultaneously opening multiple persistent connections to a given host.
 
-## Comparison with Server-Sent Events
+## Comparison with Server-Sent Events {#sse-comparison}
 
+{: #sse-defacto}
 At the time of writing, Server-Sent Events (SSE) has emerged as the de facto mechanism for transferring event-notifications over HTTP. 
 
+{: #sse-standardization}
 Server-Sent Events is standardized as part of HTML Living Standard by the WHATWG[^EventSource_Obsolecense] through the EventSource API ({{HTML}}, Section 9.2.2) on user agents and the `text/event-stream` media type ({{HTML}}, Section 17.7) to transmit event-notifications. This approach is fundamentally inconsistent with terminology defined in HTTP Semantics ({{HTTP, Section 3.2}}), transferring a sequence of asynchronous messages instead of a representation "intended to reflect a past, current, or desired state of a given resource". Practically, the `text/event-stream` media type being limited to only textual content forces developers to opt for alternative protocols such as WebSockets {{WS}}, despite the increased complexity. The EventSource API does not even allow for headers to be sent with requests.
 
 [^EventSource_Obsolecense]: As of October 2022, HTML Living Standard maintainer Anne van Kesteren has [stated](https://github.com/whatwg/html/issues/8297#issuecomment-1291658863) that WHATWG does not intend to extend the EventSource API, with reasons for the decision cited in a subsequent [comment](https://github.com/whatwg/html/issues/8297#issuecomment-1291658863).
 
+{: #sse-non-standard}
 This has led to a proliferation of non-standard implementations of Server-Sent Events[^hacks] that provide support for custom headers, such as for sending credentials, or use the POST method to communicate additional configuration in the request body.
 
 [^hacks]: such as [this](https://www.npmjs.com/package/event-source-plus), [this](https://www.npmjs.com/package/@microsoft/fetch-event-source), [this](https://www.npmjs.com/package/fetch-event-stream), [this](https://www.npmjs.com/package/extended-eventsource), [this](https://www.npmjs.com/package/ngx-sse-client) and [this](https://www.npmjs.com/package/sse.js)
 
+{: #benefits-over-sse}
 {{&protocol}} takes a principled approach to event-notifications, as established in {{terminology}}. In particular, the definition of an event-notification as a "representation" of event(s) ({{notification}}) admits the use of arbitrary media types for event-notifications. Clients can use content negotiation as well as preconditions in a subscription request. Further, {{&protocol}} not only lets clients receive both the representation and notifications over the same protocol, viz. HTTP, but these can be encapsulated within a single HTTP response. Clients do not need to, say, authenticate multiple times, possibly with different mechanisms, to obtain data that is logically from the same resource. Clients also do not have to coordinate and synchronize multiple response streams carrying a representation and notifications from the same effective resource.
