@@ -10,7 +10,7 @@ But web applications have evolved over time to provide increasingly dynamic and 
 For this reason, web programmers often prefer implementing custom messaging systems over alternate protocols such as WebSocket {{WS}} and WebSub {{WEBSUB}}. Not only does this approach require additional layers of code, involving multiple Web APIs and/or userland libraries such as [socket.io](https://socket.io/), it demands extra coordination effort to synchronize representation and notifications across multiple protocols. The dual-protocol approach thus compounds the development and maintenance overhead. Furthermore, deployment at scale is challenging with the notifications traffic now opaque to network intermediaries.
 
 {: #intro-events-query}
-{{&protocol}} is a minimal protocol built on top of the Hypertext Transfer Protocol {{HTTP}} that allows applications to request event-notifications directly from a resource of interest using the `QUERY` method ({{HTTP-QUERY, Section 3}}).
+{{&protocol}} is a minimal protocol built on top of the Hypertext Transfer Protocol {{HTTP}} that allows applications to request event-notifications directly from a resource of interest using the `QUERY` method ({{HTTP-QUERY, Section 2}}).
 
 {: #intro-convenience}
 The objective of this specification is to make the request and receipt of event-notifications extremely convenient for consumers. {{&protocol}} allows programmers to incorporate real-time functionality in their web applications without the need to switch to another protocol. Further, {{&protocol}} can deliver representation and notifications from a resource in a single response, obviating any need for coordination and saving on unnecessary round trips.
