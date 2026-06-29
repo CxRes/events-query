@@ -3,9 +3,9 @@
 
 
 Building Blocks for HTTP APIs                                   R. Gupta
-Internet-Draft                                             17 April 2026
+Internet-Draft                                              29 June 2026
 Intended status: Standards Track                                        
-Expires: 19 October 2026
+Expires: 31 December 2026
 
 
                            HTTP Events Query
@@ -15,9 +15,11 @@ Abstract
 
    Events Query is a minimal protocol built on top of HTTP that allows
    user agents to receive event notifications directly from any resource
-   of interest.  The Events Query Protocol (EQP) is predicated on the
-   idea that the most intuitive source for event notifications is the
-   resource itself.
+   of interest.  It uses the QUERY method [RFC10008] to request
+   (optionally) the current representation and subsequent event
+   notifications within a single response.  The Events Query Protocol
+   (EQP) is predicated on the idea that the most intuitive source for
+   event notifications is the resource itself.
 
 About This Document
 
@@ -51,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 October 2026.
+   This Internet-Draft will expire on 31 December 2026.
 
 Copyright Notice
 
@@ -298,6 +300,13 @@ Table of Contents
 
    4.  Specific representations for the response stream with multiple
        notifications.
+
+   5.  Event versioning.  Implementations can adopt a versioning scheme
+       suited to their application (or none at all).
+
+   6.  A mechanism for replaying or resuming notifications from a prior
+       event.  These may be added through additional specifications that
+       extend the QUERY data-model defined here.
 
 2.4.  Limitations
 
@@ -1032,11 +1041,9 @@ Table of Contents
               <https://www.rfc-editor.org/rfc/rfc9110>.
 
    [HTTP-QUERY]
-              Reschke, J., Snell, J. M., and M. Bishop, "The HTTP QUERY
-              Method", Work in Progress, Internet-Draft, draft-ietf-
-              httpbis-safe-method-w-body-12, 29 September 2025,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
-              safe-method-w-body-12>.
+              Reschke, J., Snell, J.M., and M. Bishop, "The HTTP QUERY
+              Method", RFC 10008, DOI 10.17487/RFC10008, June 2026,
+              <https://www.rfc-editor.org/rfc/rfc10008>.
 
    [HTTP-SF]  Nottingham, M. and P. Kamp, "Structured Field Values for
               HTTP", RFC 9651, DOI 10.17487/RFC9651, September 2024,
@@ -1260,6 +1267,7 @@ Index
       E
 
          event  Section 2, Paragraph 1; Section 2.3, Paragraph 4.2.1;
+            Section 2.3, Paragraph 4.5.1; Section 2.3, Paragraph 4.6.1;
             Section 2.4, Paragraph 1; Section 2.5, Paragraph 4;
             *_Section 4.1_*; Section 4.2, Paragraph 1; Section 4.2,
             Paragraph 2; Section 4.2, Paragraph 3; Section 4.3,
@@ -1277,34 +1285,34 @@ Index
             Paragraph 2.5.1; Section 2.2, Paragraph 2.2.1; Section 2.3,
             Paragraph 2.2.1; Section 2.3, Paragraph 2.3.1; Section 2.3,
             Paragraph 4.1.1; Section 2.3, Paragraph 4.2.1; Section 2.3,
-            Paragraph 4.3.1; Section 2.3, Paragraph 4.4.1; Section 2.4,
-            Paragraph 1; Section 2.4, Paragraph 2; Section 2.5,
-            Paragraph 1; Section 2.5, Paragraph 2; Section 2.5,
-            Paragraph 4; Section 4.2, Paragraph 3; *_Section 4.3_*;
-            Section 4.3, Paragraph 1; Section 4.3, Paragraph 2;
-            Section 4.3, Paragraph 3; Section 4.4, Paragraph 1;
-            Section 4.4, Paragraph 2; Section 4.4, Paragraph 3;
-            Section 5, Paragraph 2; Section 5, Paragraph 3; Section 5.1,
-            Paragraph 2; Section 5.1, Paragraph 3; Section 6, Paragraph
-            3.1.1; Section 6, Paragraph 5; Section 7, Paragraph 4.2;
-            Section 8, Paragraph 1; Section 8.1, Paragraph 1;
-            Section 8.1, Paragraph 2; Section 8.2, Paragraph 1;
-            Section 9, Paragraph 1; Section 9.1, Paragraph 1;
-            Section 9.1, Paragraph 2; Section 9.1, Paragraph 3;
-            Section 9.1, Paragraph 5; Section 9.2, Paragraph 1;
-            Section 9.2.1, Paragraph 1; Section 9.2.1, Paragraph 2.1.1;
-            Section 9.2.1, Paragraph 2.1.2.1.1; Section 9.2.2, Paragraph
-            1; Section 9.2.2, Paragraph 2; Section 9.2.2, Paragraph 4;
-            Section 9.2.2, Paragraph 6; Section 9.2.2, Paragraph 7;
-            Section 9.2.2, Paragraph 9; Section 10, Paragraph 1;
-            Section 10.1, Paragraph 1; Section 10.1, Paragraph 2;
-            Section 10.2, Paragraph 1; Section 10.2, Paragraph 2;
-            Section 10.2, Paragraph 5; Section 10.2, Paragraph 6;
-            Section 11, Paragraph 2.2.1; Section 11, Paragraph 2.3.1;
-            Section 12, Paragraph 2; Section 14, Paragraph 2;
-            Section 14, Paragraph 3; Section 14, Paragraph 4;
-            Section 14, Paragraph 5; Appendix A.1, Paragraph 1;
-            Appendix A.2, Paragraph 1
+            Paragraph 4.3.1; Section 2.3, Paragraph 4.4.1; Section 2.3,
+            Paragraph 4.6.1; Section 2.4, Paragraph 1; Section 2.4,
+            Paragraph 2; Section 2.5, Paragraph 1; Section 2.5,
+            Paragraph 2; Section 2.5, Paragraph 4; Section 4.2,
+            Paragraph 3; *_Section 4.3_*; Section 4.3, Paragraph 1;
+            Section 4.3, Paragraph 2; Section 4.3, Paragraph 3;
+            Section 4.4, Paragraph 1; Section 4.4, Paragraph 2;
+            Section 4.4, Paragraph 3; Section 5, Paragraph 2; Section 5,
+            Paragraph 3; Section 5.1, Paragraph 2; Section 5.1,
+            Paragraph 3; Section 6, Paragraph 3.1.1; Section 6,
+            Paragraph 5; Section 7, Paragraph 4.2; Section 8, Paragraph
+            1; Section 8.1, Paragraph 1; Section 8.1, Paragraph 2;
+            Section 8.2, Paragraph 1; Section 9, Paragraph 1;
+            Section 9.1, Paragraph 1; Section 9.1, Paragraph 2;
+            Section 9.1, Paragraph 3; Section 9.1, Paragraph 5;
+            Section 9.2, Paragraph 1; Section 9.2.1, Paragraph 1;
+            Section 9.2.1, Paragraph 2.1.1; Section 9.2.1, Paragraph
+            2.1.2.1.1; Section 9.2.2, Paragraph 1; Section 9.2.2,
+            Paragraph 2; Section 9.2.2, Paragraph 4; Section 9.2.2,
+            Paragraph 6; Section 9.2.2, Paragraph 7; Section 9.2.2,
+            Paragraph 9; Section 10, Paragraph 1; Section 10.1,
+            Paragraph 1; Section 10.1, Paragraph 2; Section 10.2,
+            Paragraph 1; Section 10.2, Paragraph 2; Section 10.2,
+            Paragraph 5; Section 10.2, Paragraph 6; Section 11,
+            Paragraph 2.2.1; Section 11, Paragraph 2.3.1; Section 12,
+            Paragraph 2; Section 14, Paragraph 2; Section 14, Paragraph
+            3; Section 14, Paragraph 4; Section 14, Paragraph 5;
+            Appendix A.1, Paragraph 1; Appendix A.2, Paragraph 1
          events (header field)  *_Section 5_*; Section 9.2.1, Paragraph
             2.1.1; Section 9.2.2, Paragraph 11; Section 11, Paragraph
             2.1.1; Table 1; Section 13.2, Paragraph 1; Section 13.2.1,
@@ -1326,33 +1334,33 @@ Index
             Paragraph 2.5.1; Section 2.2, Paragraph 2.2.1; Section 2.3,
             Paragraph 2.2.1; Section 2.3, Paragraph 2.3.1; Section 2.3,
             Paragraph 4.1.1; Section 2.3, Paragraph 4.2.1; Section 2.3,
-            Paragraph 4.3.1; Section 2.3, Paragraph 4.4.1; Section 2.4,
-            Paragraph 1; Section 2.4, Paragraph 2; Section 2.5,
-            Paragraph 1; Section 2.5, Paragraph 2; Section 2.5,
-            Paragraph 4; Section 4.2, Paragraph 3; *_Section 4.3_*;
-            Section 4.3, Paragraph 1; Section 4.4, Paragraph 1;
-            Section 4.4, Paragraph 2; Section 4.4, Paragraph 3;
-            Section 5, Paragraph 2; Section 5, Paragraph 3; Section 5.1,
-            Paragraph 2; Section 5.1, Paragraph 3; Section 6, Paragraph
-            3.1.1; Section 6, Paragraph 5; Section 7, Paragraph 4.2;
-            Section 8, Paragraph 1; Section 8.1, Paragraph 1;
-            Section 8.1, Paragraph 2; Section 8.2, Paragraph 1;
-            Section 9, Paragraph 1; Section 9.1, Paragraph 1;
-            Section 9.1, Paragraph 2; Section 9.1, Paragraph 3;
-            Section 9.1, Paragraph 5; Section 9.2, Paragraph 1;
-            Section 9.2.1, Paragraph 1; Section 9.2.1, Paragraph 2.1.1;
-            Section 9.2.1, Paragraph 2.1.2.1.1; Section 9.2.2, Paragraph
-            1; Section 9.2.2, Paragraph 2; Section 9.2.2, Paragraph 4;
-            Section 9.2.2, Paragraph 6; Section 9.2.2, Paragraph 7;
-            Section 9.2.2, Paragraph 9; Section 10, Paragraph 1;
-            Section 10.1, Paragraph 1; Section 10.1, Paragraph 2;
-            Section 10.2, Paragraph 1; Section 10.2, Paragraph 2;
-            Section 10.2, Paragraph 5; Section 10.2, Paragraph 6;
-            Section 11, Paragraph 2.2.1; Section 11, Paragraph 2.3.1;
-            Section 12, Paragraph 2; Section 14, Paragraph 2;
-            Section 14, Paragraph 3; Section 14, Paragraph 4;
-            Section 14, Paragraph 5; Appendix A.1, Paragraph 1;
-            Appendix A.2, Paragraph 1
+            Paragraph 4.3.1; Section 2.3, Paragraph 4.4.1; Section 2.3,
+            Paragraph 4.6.1; Section 2.4, Paragraph 1; Section 2.4,
+            Paragraph 2; Section 2.5, Paragraph 1; Section 2.5,
+            Paragraph 2; Section 2.5, Paragraph 4; Section 4.2,
+            Paragraph 3; *_Section 4.3_*; Section 4.3, Paragraph 1;
+            Section 4.4, Paragraph 1; Section 4.4, Paragraph 2;
+            Section 4.4, Paragraph 3; Section 5, Paragraph 2; Section 5,
+            Paragraph 3; Section 5.1, Paragraph 2; Section 5.1,
+            Paragraph 3; Section 6, Paragraph 3.1.1; Section 6,
+            Paragraph 5; Section 7, Paragraph 4.2; Section 8, Paragraph
+            1; Section 8.1, Paragraph 1; Section 8.1, Paragraph 2;
+            Section 8.2, Paragraph 1; Section 9, Paragraph 1;
+            Section 9.1, Paragraph 1; Section 9.1, Paragraph 2;
+            Section 9.1, Paragraph 3; Section 9.1, Paragraph 5;
+            Section 9.2, Paragraph 1; Section 9.2.1, Paragraph 1;
+            Section 9.2.1, Paragraph 2.1.1; Section 9.2.1, Paragraph
+            2.1.2.1.1; Section 9.2.2, Paragraph 1; Section 9.2.2,
+            Paragraph 2; Section 9.2.2, Paragraph 4; Section 9.2.2,
+            Paragraph 6; Section 9.2.2, Paragraph 7; Section 9.2.2,
+            Paragraph 9; Section 10, Paragraph 1; Section 10.1,
+            Paragraph 1; Section 10.1, Paragraph 2; Section 10.2,
+            Paragraph 1; Section 10.2, Paragraph 2; Section 10.2,
+            Paragraph 5; Section 10.2, Paragraph 6; Section 11,
+            Paragraph 2.2.1; Section 11, Paragraph 2.3.1; Section 12,
+            Paragraph 2; Section 14, Paragraph 2; Section 14, Paragraph
+            3; Section 14, Paragraph 4; Section 14, Paragraph 5;
+            Appendix A.1, Paragraph 1; Appendix A.2, Paragraph 1
 
       O
 
