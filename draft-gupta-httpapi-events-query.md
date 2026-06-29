@@ -96,7 +96,7 @@ informative:
 
 --- abstract
 
-Events Query is a minimal protocol built on top of HTTP that allows user agents to receive event-notifications directly from any resource of interest. The Events Query Protocol (EQP) is predicated on the idea that the most intuitive source for event-notifications is the resource itself.
+Events Query is a minimal protocol built on top of HTTP that allows user agents to receive event-notifications directly from any resource of interest. It uses the QUERY method [RFC10008] to request (optionally) the current representation and subsequent event-notifications within a single response. The Events Query Protocol (EQP) is predicated on the idea that the most intuitive source for event-notifications is the resource itself.
 
 
 --- middle
