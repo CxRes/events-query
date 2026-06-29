@@ -23,7 +23,7 @@ The "=duration=" property is an Integer ({{HTTP-SF, Section 3.3.1}}) or Decimal 
 In a request, the =duration= property indicates the duration for which a client wants to receive event-notifications. A server MAY ignore this property.
 
 {: #duration-property-response}
-In a response, the =duration= property specifies the maximum duration for which a server intends to serve event-notifications. This property is merely advisory, and a server MAY close the response stream before this duration.
+In a response, the =duration= property specifies the maximum duration for which a server intends to serve event-notifications. This property is merely advisory, and a server MAY end the response before this duration.
 
 {: #duration-property-stipulations}
 Only positive values are valid. A value of `0` indicates an indefinite duration. A sender MUST conform to these stipulations when generating the =duration= property. If the value of the =duration= property fails to conform to these stipulations, it MUST be ignored by the recipient.
