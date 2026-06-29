@@ -35,7 +35,7 @@ normative:
   HTTP: RFC9110
   HTTP-SF: RFC9651
   HTTP-QUERY: RFC10008
-  INCREMENTAL-HTTP-MESSAGES: I-D.ietf-httpbis-incremental-00
+  INCREMENTAL-HTTP-MESSAGES: I-D.ietf-httpbis-incremental-04
   RFC8126:
 informative:
   COMET:
