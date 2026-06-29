@@ -52,10 +52,10 @@ The `Incremental` header field ({{INCREMENTAL-HTTP-MESSAGES, Section 3}}) set to
 {: sourcecode-name="stream-response-headers-example.http" #stream-response-headers-example title="Notifications Stream Response Headers"}
 
 {: #stream-response-multipart-content-type-field}
-The `Content-type` header field in response to the request in the first example is:
+The `Content-Type` header field in response to the request in the first example is:
 
 ~~~ http-message
-Content-type: multipart/mixed; boundary="THIS_STRING_SEPARATES"
+Content-Type: multipart/mixed; boundary="THIS_STRING_SEPARATES"
 
 ~~~
 {: sourcecode-name="stream-response-multipart-content-header-example.http" #stream-response-multipart-content-header-example title="Notifications Stream Multipart Content Response Header"}
@@ -64,7 +64,7 @@ Content-type: multipart/mixed; boundary="THIS_STRING_SEPARATES"
 whereas in response to the request in the second example is:
 
 ~~~ http-message
-Content-type: application/json-seq
+Content-Type: application/json-seq
 
 ~~~
 {: sourcecode-name="stream-response-json-content-header-example.http" #stream-response-json-content-header-example title="Notifications Stream JSON Content Response Headers"}

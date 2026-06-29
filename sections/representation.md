@@ -29,7 +29,7 @@ Again, the `multipart-mixed` media type ({{RFC2046, Section 5.1.3}}) is used for
 
 ~~~ http-message
 {::include examples/stream/response-headers.http}
-Content-type: multipart/mixed; boundary="THIS_STRING_SEPARATES"
+Content-Type: multipart/mixed; boundary="THIS_STRING_SEPARATES"
 
 {::include examples/stream/representation.multipart.txt}
 ~~~
