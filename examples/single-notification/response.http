@@ -2,6 +2,7 @@ HTTP/1.1 200 OK
 Date: Thu, 02 Jan 2025 10:10:10 GMT
 Accept-Query: example/events-query
 Content-Type: example/event-notification
+Events: duration=240
 Incremental: ?1
 
 published: 2025-01-02T10:11:12.345Z

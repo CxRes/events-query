@@ -17,15 +17,15 @@ The order of keys in the =Events= header field is insignificant. Senders SHOULD 
 ## `duration` Property {#duration-property}
 
 {: #duration-property-intro}
-The "=duration=" property is an Integer ({{HTTP-SF, Section 3.3.1}}) or Decimal ({{HTTP-SF, Section 3.3.2}}) valued Dictionary key specified on the =Events= header field to communicate the response duration in seconds.
+The "=duration=" property is an Integer ({{HTTP-SF, Section 3.3.1}}) or Decimal ({{HTTP-SF, Section 3.3.2}}) valued Dictionary key specified on the =Events= header field to communicate the response duration in seconds. Only non-negative values are valid.
 
 {: #duration-property-request}
-In a request, the =duration= property indicates the duration for which a client wants to receive event-notifications. A server MAY ignore this property.
+In a request, the =duration= property indicates the duration for which a client wants to receive event-notifications. A value of `0` indicates that the client does not have a preference for the response duration. A server MAY ignore this property.
 
 {: #duration-property-response}
 In a response, the =duration= property specifies the maximum duration for which a server intends to serve event-notifications. This property is merely advisory, and a server MAY end the response before this duration.
 
 {: #duration-property-stipulations}
-Only positive values are valid. A value of `0` indicates an indefinite duration. A sender MUST conform to these stipulations when generating the =duration= property. If the value of the =duration= property fails to conform to these stipulations, it MUST be ignored by the recipient.
+A sender MUST conform to these stipulations when generating the =duration= property. If the value of the =duration= property fails to conform to these stipulations, it MUST be ignored by the recipient.
 
 *[=duration=]: #duration-property (((duration (property) ))) `duration`
