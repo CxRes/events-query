@@ -1050,7 +1050,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Gupta</td>
-<td class="center">Expires 31 December 2026</td>
+<td class="center">Expires 1 January 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1063,12 +1063,12 @@ svg {
 <dd class="internet-draft">draft-gupta-httpapi-events-query-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-06-29" class="published">29 June 2026</time>
+<time datetime="2026-06-30" class="published">30 June 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-12-31">31 December 2026</time></dd>
+<dd class="expires"><time datetime="2027-01-01">1 January 2027</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1117,7 +1117,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 31 December 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 1 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1549,7 +1549,7 @@ for await (const notification of splitResponse) {
 </div>
 </section>
 </div>
-<div id="comparison-with-server-sent-events">
+<div id="sse-comparison">
 <section id="section-2.5">
         <h3 id="name-comparison-with-server-sent">
 <a href="#section-2.5" class="section-number selfRef">2.5. </a><a href="#name-comparison-with-server-sent" class="section-name selfRef">Comparison with Server-Sent Events</a>
@@ -1691,7 +1691,7 @@ appear in all capitals, as shown here.<a href="#section-3.2-1" class="pilcrow">�
 <p id="section-5.1-2">In a request, the <code>duration</code> property indicates the duration for which a client wants to receive <span id="iref-notification-158" class="iref"></span><span id="iref-event-notification-159" class="iref"></span><a href="#notification" class="internal xref">event notifications</a>. A server <span class="bcp14">MAY</span> ignore this property.<a href="#section-5.1-2" class="pilcrow">¶</a></p>
 </div>
 <div id="duration-property-response">
-<p id="section-5.1-3">In a response, the <code>duration</code> property specifies the maximum duration for which a server intends to serve <span id="iref-notification-160" class="iref"></span><span id="iref-event-notification-161" class="iref"></span><a href="#notification" class="internal xref">event notifications</a>. This property is merely advisory, and a server <span class="bcp14">MAY</span> close the response stream before this duration.<a href="#section-5.1-3" class="pilcrow">¶</a></p>
+<p id="section-5.1-3">In a response, the <code>duration</code> property specifies the maximum duration for which a server intends to serve <span id="iref-notification-160" class="iref"></span><span id="iref-event-notification-161" class="iref"></span><a href="#notification" class="internal xref">event notifications</a>. This property is merely advisory, and a server <span class="bcp14">MAY</span> end the response before this duration.<a href="#section-5.1-3" class="pilcrow">¶</a></p>
 </div>
 <div id="duration-property-stipulations">
 <p id="section-5.1-4">Only positive values are valid. A value of <code>0</code> indicates an indefinite duration. A sender <span class="bcp14">MUST</span> conform to these stipulations when generating the <code>duration</code> property. If the value of the <code>duration</code> property fails to conform to these stipulations, it <span class="bcp14">MUST</span> be ignored by the recipient.<a href="#section-5.1-4" class="pilcrow">¶</a></p>
@@ -1832,8 +1832,8 @@ Events: duration=0
         <h3 id="name-response">
 <a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-response" class="section-name selfRef">Response</a>
         </h3>
-<div id="single-notification-response-close">
-<p id="section-8.2-1">When a single <span id="iref-event-notification-185" class="iref"></span><span id="iref-notification-186" class="iref"></span><a href="#notification" class="internal xref">notification</a> is requested, the server <span class="bcp14">MUST</span> close the connection immediately after sending the <span id="iref-notification-187" class="iref"></span><span id="iref-event-notification-188" class="iref"></span><a href="#notification" class="internal xref">event notification</a>.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
+<div id="single-notification-response-end">
+<p id="section-8.2-1">When a single <span id="iref-event-notification-185" class="iref"></span><span id="iref-notification-186" class="iref"></span><a href="#notification" class="internal xref">notification</a> is requested, the server <span class="bcp14">MUST</span> end the response immediately after sending the <span id="iref-notification-187" class="iref"></span><span id="iref-event-notification-188" class="iref"></span><a href="#notification" class="internal xref">event notification</a>.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
 </div>
 <span id="name-single-event-notification-re"></span><div id="single-notification-response-example">
 <figure id="figure-6">
@@ -1858,7 +1858,7 @@ type: update
 <div id="no-hogging">
 <aside id="section-8.2-4">
           <p id="section-8.2-4.1"><strong>Implementation Advice</strong><a href="#section-8.2-4.1" class="pilcrow">¶</a></p>
-<p id="section-8.2-4.2">When a user navigates away from a website or an application using Events Query, user agents are strongly encouraged to properly close the response and release the connection.<a href="#section-8.2-4.2" class="pilcrow">¶</a></p>
+<p id="section-8.2-4.2">When a user navigates away from a website or an application using Events Query, user agents are strongly encouraged to promptly abort the response stream, freeing connection resources at both the client and the server.<a href="#section-8.2-4.2" class="pilcrow">¶</a></p>
 </aside>
 </div>
 </section>
@@ -1959,7 +1959,7 @@ events:
             </li>
 <li id="section-9.2.1-2.2" class="normal">
 <div class="normal" id="stream-response-incremental-field">
-              <p id="section-9.2.1-2.2.1">The <code>Incremental</code> header field (<span>[<a href="#INCREMENTAL-HTTP-MESSAGES" class="cite xref">INCREMENTAL-HTTP-MESSAGES</a>], <a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-incremental-00#section-3" class="relref">Section 3</a></span>) set to <code>?1</code> to indicate that the response is to be immediately forwarded by intermediaries and not buffered.<a href="#section-9.2.1-2.2.1" class="pilcrow">¶</a></p>
+              <p id="section-9.2.1-2.2.1">The <code>Incremental</code> header field (<span>[<a href="#INCREMENTAL-HTTP-MESSAGES" class="cite xref">INCREMENTAL-HTTP-MESSAGES</a>], <a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-incremental-04#section-3" class="relref">Section 3</a></span>) set to <code>?1</code> to indicate that the response is to be immediately forwarded by intermediaries and not buffered.<a href="#section-9.2.1-2.2.1" class="pilcrow">¶</a></p>
 </div>
           </li>
 </ul>
@@ -1980,13 +1980,13 @@ Transfer-Encoding: chunked
             </figcaption></figure>
 </div>
 <div id="stream-response-multipart-content-type-field">
-<p id="section-9.2.1-4">The <code>Content-type</code> header field in response to the request in the first example is:<a href="#section-9.2.1-4" class="pilcrow">¶</a></p>
+<p id="section-9.2.1-4">The <code>Content-Type</code> header field in response to the request in the first example is:<a href="#section-9.2.1-4" class="pilcrow">¶</a></p>
 </div>
 <span id="name-notifications-stream-multip"></span><div id="stream-response-multipart-content-header-example">
 <figure id="figure-10">
             <div class="lang-http-message sourcecode" id="section-9.2.1-5.1">
 <pre>
-Content-type: multipart/mixed; boundary="THIS_STRING_SEPARATES"
+Content-Type: multipart/mixed; boundary="THIS_STRING_SEPARATES"
 
 </pre>
 </div>
@@ -2001,7 +2001,7 @@ Content-type: multipart/mixed; boundary="THIS_STRING_SEPARATES"
 <figure id="figure-11">
             <div class="lang-http-message sourcecode" id="section-9.2.1-7.1">
 <pre>
-Content-type: application/json-seq
+Content-Type: application/json-seq
 
 </pre>
 </div>
@@ -2049,7 +2049,7 @@ type: update                                     |
 ␞{                                              | Notification
   "published": "2025-01-02T10:11:12.345Z",       |
   "event-id": 456,                               |
-  "type": "Update"                               |
+  "type": "update"                               |
 }                                                |
 </pre>
 </div>
@@ -2172,7 +2172,7 @@ Accept-Query: example/events-query
 Events: duration=600
 Incremental: ?1
 Transfer-Encoding: chunked
-Content-type: multipart/mixed; boundary="THIS_STRING_SEPARATES"
+Content-Type: multipart/mixed; boundary="THIS_STRING_SEPARATES"
 
 --THIS_STRING_SEPARATES
 Content-Length: 14                               | Representation
@@ -2372,7 +2372,7 @@ Hello World!                                     |
 <p id="section-14-1"><span class="cref" id="End_User">"The mission of the IETF is to produce high quality, relevant technical and engineering documents that influence the way people design, use, and manage the Internet in such a way as to make the Internet work better" <span>[<a href="#RFC3935" class="cite xref">RFC3935</a>]</span>. The mission statement further goes on to state, "We want the Internet to be useful for communities that share our commitment to openness and fairness. We embrace technical concepts such as decentralized control, edge-user empowerment and sharing of resources, because those concepts resonate with the core values of the IETF community." <span>[<a href="#RFC3935" class="cite xref">RFC3935</a>]</span>. The Internet Architecture Board says that the "Internet is for end users" and "argues that the IETF should favor their interests over those of other parties" <span>[<a href="#RFC8890" class="cite xref">RFC8890</a>]</span>. It logically follows that technical documents produced by the IETF ought to consider their impact on the Internet end user. For this reason, I suggest that specifications include a considerations section where authors assess the technical decisions and trade-off in their proposals based on their ramifications on the interests of end users.</span><a href="#section-14-1" class="pilcrow">¶</a></p>
 <p id="section-14-2">End users of the HTTP protocol can be classified into two groups: publishers and consumers. Consumers have an incentive to subscribe to <span id="iref-notification-291" class="iref"></span><span id="iref-event-notification-292" class="iref"></span><a href="#notification" class="internal xref">event notifications</a> from many resources and to hold on to a connection for as long as possible. Whereas publishers bear the cost of server infrastructure. Consumers also typically outnumber publishers, in many cases by multiple orders of magnitude. This creates an imbalance in the effort to subscribe versus effort to deliver; consumers can easily place a disproportionate burden on servers, reminiscent of a denial-of-service attack.<a href="#section-14-2" class="pilcrow">¶</a></p>
 <p id="section-14-3">At the outset, requiring that clients subscribe to <span id="iref-notification-293" class="iref"></span><span id="iref-event-notification-294" class="iref"></span><a href="#notification" class="internal xref">event notifications</a> per resource serves as an effective filtering mechanism that limits the burden on servers. Compare this to the typical implementation of protocols such as WebSockets <span>[<a href="#WS" class="cite xref">WS</a>]</span>, where clients connect to dedicated endpoints to receive <span id="iref-event-notification-295" class="iref"></span><span id="iref-notification-296" class="iref"></span><a href="#notification" class="internal xref">notifications</a>; the server either has to broadcast <span id="iref-event-notification-297" class="iref"></span><span id="iref-notification-298" class="iref"></span><a href="#notification" class="internal xref">notifications</a> for multiple resources or track resources of interest for each client to filter <span id="iref-notification-299" class="iref"></span><span id="iref-event-notification-300" class="iref"></span><a href="#notification" class="internal xref">event notifications</a> accordingly.<a href="#section-14-3" class="pilcrow">¶</a></p>
-<p id="section-14-4">Events Query empowers servers to decide the content and the duration for which <span id="iref-notification-301" class="iref"></span><span id="iref-event-notification-302" class="iref"></span><a href="#notification" class="internal xref">event notifications</a> are served on any given resource, as well as allowing servers to close the response stream at any time. Servers may also limit <span id="iref-notification-303" class="iref"></span><span id="iref-event-notification-304" class="iref"></span><a href="#notification" class="internal xref">event notifications</a> and/or their content, except for authenticated consumers. Such authenticated consumers might, for example, be asked to share the cost burden with publishers in return for a higher quality of service.<a href="#section-14-4" class="pilcrow">¶</a></p>
+<p id="section-14-4">Events Query empowers servers to decide the content and the duration for which <span id="iref-notification-301" class="iref"></span><span id="iref-event-notification-302" class="iref"></span><a href="#notification" class="internal xref">event notifications</a> are served on any given resource, as well as allowing servers to end the response at any time. Servers may also limit <span id="iref-notification-303" class="iref"></span><span id="iref-event-notification-304" class="iref"></span><a href="#notification" class="internal xref">event notifications</a> and/or their content, except for authenticated consumers. Such authenticated consumers might, for example, be asked to share the cost burden with publishers in return for a higher quality of service.<a href="#section-14-4" class="pilcrow">¶</a></p>
 <p id="section-14-5">The use of HTTP Semantics also enables intermediation of <span id="iref-notification-305" class="iref"></span><span id="iref-event-notification-306" class="iref"></span><a href="#notification" class="internal xref">event notifications</a>, unlike existing mechanisms built with protocols such as WebSockets <span>[<a href="#WS" class="cite xref">WS</a>]</span> or WebSub <span>[<a href="#WEBSUB" class="cite xref">WEBSUB</a>]</span>. Intermediaries can help with improving the latency and reliability of transmission of <span id="iref-notification-307" class="iref"></span><span id="iref-event-notification-308" class="iref"></span><a href="#notification" class="internal xref">event notifications</a> as well as scaling of the <span id="iref-notification-309" class="iref"></span><span id="iref-event-notification-310" class="iref"></span><a href="#notification" class="internal xref">event notification</a> traffic to reach a significantly larger base of consumers. On the flip side, economies of scale will likely lead to greater consolidation of intermediary service providers (though not centralization) with the attendant risk of anti-consumer behaviour. In the opinion of the authors, policies designed to treat network traffic as a public utility might provide better outcomes for the end user.<a href="#section-14-5" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2401,7 +2401,7 @@ Hello World!                                     |
 <dd class="break"></dd>
 <dt id="INCREMENTAL-HTTP-MESSAGES">[INCREMENTAL-HTTP-MESSAGES]</dt>
         <dd>
-<span class="refAuthor">Oku, K.</span>, <span class="refAuthor">Pauly, T.</span>, and <span class="refAuthor">M. Thomson</span>, <span class="refTitle">"Incremental HTTP Messages"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-httpbis-incremental-00</span>, <time datetime="2025-04-29" class="refDate">29 April 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-incremental-00">https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-incremental-00</a>&gt;</span>. </dd>
+<span class="refAuthor">Oku, K.</span>, <span class="refAuthor">Pauly, T.</span>, and <span class="refAuthor">M. Thomson</span>, <span class="refTitle">"Incremental Forwarding of HTTP Messages"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-httpbis-incremental-04</span>, <time datetime="2026-03-02" class="refDate">2 March 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-incremental-04">https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-incremental-04</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
         <dd>
@@ -2629,7 +2629,7 @@ Content-Type: application/json-seq
 ␞{                                              | Notification
   "published": "2025-01-02T10:11:12.345Z",       |
   "event-id": 456,                               |
-  "type": "Update"                               |
+  "type": "update"                               |
 }                                                |
 ␞{                                              | Notification
   "published": "2025-01-02T11:12:13.456Z",       |
@@ -2785,7 +2785,7 @@ Content-Type: application/json-seq
 <a href="#single-notification-description" class="auto internal xref">Section 8, Paragraph 1</a>; 
 <a href="#single-notification-procedure" class="auto internal xref">Section 8.1, Paragraph 1</a>; 
 <a href="#single-notification-request-conneg" class="auto internal xref">Section 8.1, Paragraph 2</a>; 
-<a href="#single-notification-response-close" class="auto internal xref">Section 8.2, Paragraph 1</a>; 
+<a href="#single-notification-response-end" class="auto internal xref">Section 8.2, Paragraph 1</a>; 
 <a href="#stream-description" class="auto internal xref">Section 9, Paragraph 1</a>; 
 <a href="#stream-request-procedure" class="auto internal xref">Section 9.1, Paragraph 1</a>; 
 <a href="#stream-request-conneg" class="auto internal xref">Section 9.1, Paragraph 2</a>; 
@@ -2909,7 +2909,7 @@ Content-Type: application/json-seq
 <a href="#single-notification-description" class="auto internal xref">Section 8, Paragraph 1</a>; 
 <a href="#single-notification-procedure" class="auto internal xref">Section 8.1, Paragraph 1</a>; 
 <a href="#single-notification-request-conneg" class="auto internal xref">Section 8.1, Paragraph 2</a>; 
-<a href="#single-notification-response-close" class="auto internal xref">Section 8.2, Paragraph 1</a>; 
+<a href="#single-notification-response-end" class="auto internal xref">Section 8.2, Paragraph 1</a>; 
 <a href="#stream-description" class="auto internal xref">Section 9, Paragraph 1</a>; 
 <a href="#stream-request-procedure" class="auto internal xref">Section 9.1, Paragraph 1</a>; 
 <a href="#stream-request-conneg" class="auto internal xref">Section 9.1, Paragraph 2</a>; 

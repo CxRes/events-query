@@ -3,9 +3,9 @@
 
 
 Building Blocks for HTTP APIs                                   R. Gupta
-Internet-Draft                                              29 June 2026
+Internet-Draft                                              30 June 2026
 Intended status: Standards Track                                        
-Expires: 31 December 2026
+Expires: 1 January 2027
 
 
                            HTTP Events Query
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 31 December 2026.
+   This Internet-Draft will expire on 1 January 2027.
 
 Copyright Notice
 
@@ -500,8 +500,8 @@ Table of Contents
 
    In a response, the duration property specifies the maximum duration
    for which a server intends to serve event notifications.  This
-   property is merely advisory, and a server MAY close the response
-   stream before this duration.
+   property is merely advisory, and a server MAY end the response before
+   this duration.
 
    Only positive values are valid.  A value of 0 indicates an indefinite
    duration.  A sender MUST conform to these stipulations when
@@ -597,8 +597,8 @@ Table of Contents
 
 8.2.  Response
 
-   When a single notification is requested, the server MUST close the
-   connection immediately after sending the event notification.
+   When a single notification is requested, the server MUST end the
+   response immediately after sending the event notification.
 
    HTTP/1.1 200 OK
    Date: Thu, 02 Jan 2025 10:10:10 GMT
@@ -617,7 +617,8 @@ Table of Contents
       |  
       |  When a user navigates away from a website or an application
       |  using Events Query, user agents are strongly encouraged to
-      |  properly close the response and release the connection.
+      |  promptly abort the response stream, freeing connection
+      |  resources at both the client and the server.
 
 9.  Notifications Stream
 
@@ -712,16 +713,16 @@ Table of Contents
 
               Figure 9: Notifications Stream Response Headers
 
-   The Content-type header field in response to the request in the first
+   The Content-Type header field in response to the request in the first
    example is:
 
-   Content-type: multipart/mixed; boundary="THIS_STRING_SEPARATES"
+   Content-Type: multipart/mixed; boundary="THIS_STRING_SEPARATES"
 
      Figure 10: Notifications Stream Multipart Content Response Header
 
    whereas in response to the request in the second example is:
 
-   Content-type: application/json-seq
+   Content-Type: application/json-seq
 
        Figure 11: Notifications Stream JSON Content Response Headers
 
@@ -751,7 +752,7 @@ Table of Contents
    ␞{                                              | Notification
      "published": "2025-01-02T10:11:12.345Z",       |
      "event-id": 456,                               |
-     "type": "Update"                               |
+     "type": "update"                               |
    }                                                |
 
                     Figure 13: JSON Update Notification
@@ -846,7 +847,7 @@ Table of Contents
    Events: duration=600
    Incremental: ?1
    Transfer-Encoding: chunked
-   Content-type: multipart/mixed; boundary="THIS_STRING_SEPARATES"
+   Content-Type: multipart/mixed; boundary="THIS_STRING_SEPARATES"
 
    --THIS_STRING_SEPARATES
    Content-Length: 14                               | Representation
@@ -1013,11 +1014,11 @@ Table of Contents
 
    Events Query empowers servers to decide the content and the duration
    for which event notifications are served on any given resource, as
-   well as allowing servers to close the response stream at any time.
-   Servers may also limit event notifications and/or their content,
-   except for authenticated consumers.  Such authenticated consumers
-   might, for example, be asked to share the cost burden with publishers
-   in return for a higher quality of service.
+   well as allowing servers to end the response at any time.  Servers
+   may also limit event notifications and/or their content, except for
+   authenticated consumers.  Such authenticated consumers might, for
+   example, be asked to share the cost burden with publishers in return
+   for a higher quality of service.
 
    The use of HTTP Semantics also enables intermediation of event
    notifications, unlike existing mechanisms built with protocols such
@@ -1050,11 +1051,11 @@ Table of Contents
               <https://www.rfc-editor.org/rfc/rfc9651>.
 
    [INCREMENTAL-HTTP-MESSAGES]
-              Oku, K., Pauly, T., and M. Thomson, "Incremental HTTP
-              Messages", Work in Progress, Internet-Draft, draft-ietf-
-              httpbis-incremental-00, 29 April 2025,
+              Oku, K., Pauly, T., and M. Thomson, "Incremental
+              Forwarding of HTTP Messages", Work in Progress, Internet-
+              Draft, draft-ietf-httpbis-incremental-04, 2 March 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
-              incremental-00>.
+              incremental-04>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -1234,7 +1235,7 @@ A.2.2.  Response
    ␞{                                              | Notification
      "published": "2025-01-02T10:11:12.345Z",       |
      "event-id": 456,                               |
-     "type": "Update"                               |
+     "type": "update"                               |
    }                                                |
    ␞{                                              | Notification
      "published": "2025-01-02T11:12:13.456Z",       |
