@@ -619,9 +619,9 @@ Table of Contents
 8.1.  Request
 
    To receive a single notification, a client MUST send a realization of
-   the subscription data model that excludes an interest in receiving a
-   stream of event notifications in a request using the QUERY method
-   ([HTTP-QUERY], Section 3).
+   the subscription data model that does not specify an interest in
+   receiving a stream of event notifications in a request using the
+   QUERY method ([HTTP-QUERY], Section 3).
 
    Since the content of the response is an event notification, a client
    can negotiate its form with header fields in the usual manner.
