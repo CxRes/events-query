@@ -5,8 +5,14 @@ The simplest {{&protocol}} is to request a notification for the next event(s) on
 
 ## Request {#single-notification-request}
 
-{: #single-notification-procedure}
-To receive a single notification, a client makes a `QUERY` request ({{HTTP-QUERY, Section 2}}) using a realization of the subscription data model that MUST NOT include an interest in receiving a stream of event notifications.
+{: #single-notification-request-procedure}
+To receive a single notification, a client MUST:
+
++ {: #single-notification-request-procedure--data-model} 
+send a realization of the subscription data model that does not include an interest in receiving a stream of event notifications,
+
++ {: #single-notification-request-procedure--method} 
+using the `QUERY` method ({{HTTP-QUERY, Section 2}}).
 
 {: #single-notification-request-conneg}
 Since the content of the response is an event-notification, a client can negotiate its form with header fields in the usual manner.
