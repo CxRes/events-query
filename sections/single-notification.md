@@ -6,7 +6,7 @@ The simplest {{&protocol}} is to request a notification for the next event(s) on
 ## Request {#single-notification-request}
 
 {: #single-notification-procedure}
-To receive a single notification, a client makes a `QUERY` request ({{HTTP-QUERY, Section 3}}) using a realization of the subscription data model that MUST NOT include an interest in receiving a stream of event notifications.
+To receive a single notification, a client makes a `QUERY` request ({{HTTP-QUERY, Section 2}}) using a realization of the subscription data model that MUST NOT include an interest in receiving a stream of event notifications.
 
 {: #single-notification-request-conneg}
 Since the content of the response is an event-notification, a client can negotiate its form with header fields in the usual manner.
@@ -18,8 +18,8 @@ Since the content of the response is an event-notification, a client can negotia
 
 ## Response {#single-notification-response}
 
-{: #single-notification-response-close}
-When a single notification is requested, the server MUST close the connection immediately after sending the event-notification.
+{: #single-notification-response-end}
+When a single notification is requested, the server MUST end the response immediately after sending the event-notification.
 
 ~~~ http-message
 {::include examples/single-notification/response.http}
@@ -31,4 +31,4 @@ When a single notification is requested, the server MUST close the connection im
 {:aside #no-hogging}
 > **Implementation Advice**
 >
-> When a user navigates away from a website or an application using {{&protocol}}, user agents are strongly encouraged to properly close the response and release the connection.
+> When a user navigates away from a website or an application using {{&protocol}}, user agents are strongly encouraged to promptly abort the response stream, freeing connection resources at both the client and the server.

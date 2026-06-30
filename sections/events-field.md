@@ -10,7 +10,7 @@ In a request, the =Events= header field allows a client to indicate its preferen
 In a response, the =Events= header field allows a server to specify the properties of a response stream carrying event-notifications.
 
 {: #events-field-stipulations}
-The order of keys in the =Events= header field is insignificant. Senders SHOULD NOT generate keys not registered with the HTTP Event Field Registry (with the exception made to allow experimentation). Recipients MAY ignore keys that they are unaware of.
+The order of keys in the =Events= header field is insignificant. Senders SHOULD NOT generate keys not registered with the HTTP Events Field Registry (the exception is only for experimentation). Recipients MAY ignore keys that they are unaware of.
 
 *[=Events=]: #events-field (((events (header field) ))) `Events`
 
@@ -23,7 +23,7 @@ The "=duration=" property is an Integer ({{HTTP-SF, Section 3.3.1}}) or Decimal 
 In a request, the =duration= property indicates the duration for which a client wants to receive event-notifications. A server MAY ignore this property.
 
 {: #duration-property-response}
-In a response, the =duration= property specifies the maximum duration for which a server intends to serve event-notifications. This property is merely advisory, and a server MAY close the response stream before this duration.
+In a response, the =duration= property specifies the maximum duration for which a server intends to serve event-notifications. This property is merely advisory, and a server MAY end the response before this duration.
 
 {: #duration-property-stipulations}
 Only positive values are valid. A value of `0` indicates an indefinite duration. A sender MUST conform to these stipulations when generating the =duration= property. If the value of the =duration= property fails to conform to these stipulations, it MUST be ignored by the recipient.

@@ -1,12 +1,12 @@
 # Representation {#representation}
 
 {: #representation-description}
-{{&protocol}} enables a user agent to ask and receive the current representation and subsequent event-notifications in a single request/response. When compared to using, say, Fetch {{FETCH}} and EventSource ({{HTML}}, Section 9.2.2) in conjunction, {{&protocol}} not only saves on an extra round trip, but relieves a user agent from the burden of synchronizing the representation with event-notifications.
+{{&protocol}} enables a user agent to ask and receive the current representation and subsequent event-notifications in a single request/response. When compared to using, say, Fetch {{FETCH}} and EventSource ({{HTML}}, Section 9.2.2) in conjunction, {{&protocol}} not only saves on an extra round trip, but also relieves a user agent from the burden of synchronizing the representation with event-notifications.
 
 ## Request {#representation-request}
 
 {: #representation-request-procedure}
-To receive a representation of the resource alongside notifications, a client makes a QUERY request ({{HTTP-QUERY, Section 3}}) using a realization of the subscription data model that MUST also include an interest in receiving the representation in a preferred form.
+To receive a representation of the resource alongside notifications, a client makes a `QUERY` request ({{HTTP-QUERY, Section 2}}) using a realization of the subscription data model that MUST also include an interest in receiving the representation in a preferred form.
 
 {: #representation-request-example-description}
 The following example shows a subscription request for the current representation along with the subsequent event-notifications transmitted using the `multipart/mixed` media type. The `state` property indicates interest in receiving representation and its sub-properties describe the preferred form of notifications. Since the representation is being transferred in an HTTP message pipeline, these sub-properties are identical to header fields used for specifying preconditions and content negotiation in a GET request on the said resource.
@@ -29,14 +29,14 @@ Again, the `multipart-mixed` media type ({{RFC2046, Section 5.1.3}}) is used for
 
 ~~~ http-message
 {::include examples/stream/response-headers.http}
-Content-type: multipart/mixed; boundary="THIS_STRING_SEPARATES"
+Content-Type: multipart/mixed; boundary="THIS_STRING_SEPARATES"
 
 {::include examples/stream/representation.multipart.txt}
 ~~~
 {: sourcecode-name="representation-response-before-notifications-multipart-example.http" #representation-response-before-notifications-multipart-example title="Representation Response before Notifications"}
 
 {: #representation-response-non-standard}
-While this is default behaviour, there is no requirement that a representation is the first message or that representations are sent only once. In such cases, the encapsulated message needs to indicate if it is a representation and not an event-notification. Such a mechanism is not defined in this specification.
+While this is default behavior, there is no requirement that a representation is the first message or that representations are sent only once. In such cases, the encapsulated message needs to indicate if it is a representation and not an event-notification. Such a mechanism is not defined in this specification.
 
 {: #representation-response-notifications}
 Notifications are transmitted just as in the case of [regular streaming](#stream-response). See {{example-representation}} for a complete example of a response with representation and notifications.

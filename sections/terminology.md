@@ -6,7 +6,7 @@
 An event is the instantaneous effect of the (normal or abnormal) termination of the invocation of an operation on an object of interest {{DESIGN-FRAMEWORK}}. The entity invoking an operation is termed the **(((!invoker)))invoker**{:noabbrev}.
 
 {: #events-in-HTTP}
-In the specific context of HTTP, the object of interest is data scoped to some resource. When the operation is an HTTP method, the invoker is a user agent. However, an operation need not be limited to an HTTP method, it might just as easily have been invoked using another mechanism or protocol. !Events are then an extension of resource state (See {{HTTP, Section 3.2}}) in the temporal dimension.
+In the specific context of HTTP, the object of interest is data scoped to some resource. When the operation is an HTTP method, the invoker is a user agent. However, an operation need not be limited to an HTTP method; it might just as easily have been invoked using another mechanism or protocol. !Events are then an extension of resource state (see {{HTTP, Section 3.2}}) in the temporal dimension.
 
 ## Observation {#observation}
 
