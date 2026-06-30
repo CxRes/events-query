@@ -9,10 +9,13 @@
 To aid the development of real-time applications, it is imperative that the {{&protocol}} Protocol reduces the complexity of both servers and clients implementing event-notifications. With this in mind, the goals of the {{&protocol}} Protocol are:
 
 1. {: #goal--http-only}
-to provide reliable and in-order transfer of event-notifications using the Hypertext Transfer Protocol {{HTTP}}. Clients fetching resources over HTTP need not switch to another protocol for receiving event-notifications.
+to serve event-notifications using the Hypertext Transfer Protocol {{HTTP}}. Clients already fetching resources over HTTP need not switch to another protocol for receiving event-notifications.
 
 1. {: #goal--unified-source-of-truth}
 to send updates directly from a resource of interest, obviating the need for additional resources to be specifically dedicated as notification endpoints. In contrast to existing approaches, this frees up the client from the burden of coordinating the response from the resource of interest with notifications from an endpoint.
+
+1. {: #goal--reliable-and-order}
+to provide reliable and in-order transfer of event-notifications. The transfer of notifications directly from a resource ensures this for the duration of the response stream. Recovery across errors and loss of connection can be layered (see {{out-of-scope--temporal-coordination}}).
 
 1. {: #goal--unified-request}
 to deliver the representation and notifications in response to a single request, minimizing round trips between clients and servers. It also eliminates the need to synchronize the delivery of the representation and notifications.
