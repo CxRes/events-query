@@ -1,7 +1,7 @@
 # Representation {#representation}
 
 {: #representation-description}
-{{&protocol}} enables a user agent to ask and receive the current representation and subsequent event-notifications in a single request/response. When compared to using, say, Fetch {{FETCH}} and EventSource ({{HTML}}, Section 9.2.2) in conjunction, {{&protocol}} not only saves on an extra round trip, but relieves a user agent from the burden of synchronizing the representation with event-notifications.
+{{&protocol}} enables a user agent to ask and receive the current representation and subsequent event-notifications in a single request/response. When compared to using, say, Fetch {{FETCH}} and EventSource ({{HTML}}, Section 9.2.2) in conjunction, {{&protocol}} not only saves on an extra round trip, but also relieves a user agent from the burden of synchronizing the representation with event-notifications.
 
 ## Request {#representation-request}
 
@@ -36,7 +36,7 @@ Content-Type: multipart/mixed; boundary="THIS_STRING_SEPARATES"
 {: sourcecode-name="representation-response-before-notifications-multipart-example.http" #representation-response-before-notifications-multipart-example title="Representation Response before Notifications"}
 
 {: #representation-response-non-standard}
-While this is default behaviour, there is no requirement that a representation is the first message or that representations are sent only once. In such cases, the encapsulated message needs to indicate if it is a representation and not an event-notification. Such a mechanism is not defined in this specification.
+While this is default behavior, there is no requirement that a representation is the first message or that representations are sent only once. In such cases, the encapsulated message needs to indicate if it is a representation and not an event-notification. Such a mechanism is not defined in this specification.
 
 {: #representation-response-notifications}
 Notifications are transmitted just as in the case of [regular streaming](#stream-response). See {{example-representation}} for a complete example of a response with representation and notifications.

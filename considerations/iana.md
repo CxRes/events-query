@@ -6,7 +6,7 @@ The change controller for the following registrations is: "IETF (iesg@ietf.org) 
 ## HTTP Field Registration {#field-registration}
 
 {: #field-registration-instruction}
-IANA is requested to add the following entry in the "[Hypertext Transfer Protocol (HTTP) Field Name Registry](https://www.iana.org/assignments/http-fields/)" (See {{Section 16.1.1 of HTTP}}):
+IANA is requested to add the following entry in the "[Hypertext Transfer Protocol (HTTP) Field Name Registry](https://www.iana.org/assignments/http-fields/)" (see {{Section 16.1.1 of HTTP}}):
 
 | Header Field Names  | Status     | Structured-Type  | Reference         |
 |-

@@ -10,7 +10,7 @@ In a request, the =Events= header field allows a client to indicate its preferen
 In a response, the =Events= header field allows a server to specify the properties of a response stream carrying event-notifications.
 
 {: #events-field-stipulations}
-The order of keys in the =Events= header field is insignificant. Senders SHOULD NOT generate keys not registered with the HTTP Event Field Registry (with the exception made to allow experimentation). Recipients MAY ignore keys that they are unaware of.
+The order of keys in the =Events= header field is insignificant. Senders SHOULD NOT generate keys not registered with the HTTP Events Field Registry (the exception is only for experimentation). Recipients MAY ignore keys that they are unaware of.
 
 *[=Events=]: #events-field (((events (header field) ))) `Events`
 

@@ -6,7 +6,7 @@ Some examples used in this specification are consolidated below. Chunks have bee
 ## Representation and Notifications {#example-representation}
 
 {: #example-representation-description}
-The following example illustrates a complete request and response for representation and notifications transferred with the `multipart/mixed` media-type as described in {{representation}}: {{<<representation}}.
+The following example illustrates a complete request and response for representation and notifications transferred with the `multipart/mixed` media-type as described in {{representation}}:
 
 ### Request {#example-multipart-representation-request}
 
@@ -32,7 +32,7 @@ Content-Type: multipart/mixed; boundary="THIS_STRING_SEPARATES"
 ## Notifications Stream {#example-stream}
 
 {: #example-stream-description}
-This following example illustrates complete request and response for JSON formatted notifications transferred with the `application/json-seq` media-type as described in {{<<stream}}: {{<<stream}}.
+The following example illustrates complete request and response for JSON formatted notifications transferred with the `application/json-seq` media-type as described in {{stream}}:
 
 ### Request {#example-json-stream-request}
 
