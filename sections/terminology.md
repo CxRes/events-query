@@ -56,8 +56,10 @@ The subscription in the form of a query affords the user agent the opportunity t
 *[Observation]: #observation (((observation)))
 
 *[Event-Notification]: #notification (((notification))) (((event notification))) Event Notification
+*[Event-notification]: #notification (((notification))) (((event notification))) Event notification
 *[event-notification]: #notification (((notification))) (((event notification))) event notification
 *[Event-Notifications]: #notification (((notification))) (((event notification))) Event Notifications
+*[Event-notifications]: #notification (((notification))) (((event notification))) Event notifications
 *[event-notifications]: #notification (((notification))) (((event notification))) event notifications
 
 *[Notification]: #notification (((event notification))) (((notification))) Notification

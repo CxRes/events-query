@@ -9,10 +9,13 @@
 To aid the development of real-time applications, it is imperative that the {{&protocol}} Protocol reduces the complexity of both servers and clients implementing event-notifications. With this in mind, the goals of the {{&protocol}} Protocol are:
 
 1. {: #goal--http-only}
-to provide reliable and in-order transfer of event-notifications using the Hypertext Transfer Protocol {{HTTP}}. Clients fetching resources over HTTP need not switch to another protocol for receiving event-notifications.
+to serve event-notifications using the Hypertext Transfer Protocol {{HTTP}}. Clients already fetching resources over HTTP need not switch to another protocol for receiving event-notifications.
 
 1. {: #goal--unified-source-of-truth}
 to send updates directly from a resource of interest, obviating the need for additional resources to be specifically dedicated as notification endpoints. In contrast to existing approaches, this frees up the client from the burden of coordinating the response from the resource of interest with notifications from an endpoint.
+
+1. {: #goal--reliable-and-order}
+to provide reliable and in-order transfer of event-notifications. The transfer of notifications directly from a resource ensures this for the duration of the response stream. Recovery across errors and loss of connection can be layered (see {{out-of-scope--temporal-coordination}}).
 
 1. {: #goal--unified-request}
 to deliver the representation and notifications in response to a single request, minimizing round trips between clients and servers. It also eliminates the need to synchronize the delivery of the representation and notifications.
@@ -41,7 +44,7 @@ conforms to {{<<REST}}, best practices for {{<<RFC9205}} {{RFC9205}}, and {{<<RF
 ## Scope {#scope}
 
 {: #in-scope}
-The {{&protocol}} Protocol specifies:
+{{&protocol}} specifies a minimal protocol surface for transferring notifications over HTTP that includes:
 
 1. {: #scope--discovery}
 A mechanism to discover support for {{&protocol}} on a resource ({{discovery}}).
@@ -52,27 +55,56 @@ A mechanism to request event-notifications from a resource (Sections {{<single-n
 1. {: #scope--query-data-model}
 An abstract data model for requesting event-notifications ({{data-model}}).
 
-1. {:noabbrev #scope--single-response-semantics}
+1. {: #scope--single-response-semantics}
 Response semantics for a [single notification](#single-notification-response){:noabbrev}.
 
-1. {:noabbrev #scope--streaming-response-semantics}
+1. {: #scope--streaming-response-semantics}
 Response semantics for a stream carrying the [representation](#representation-response) (if requested) and [multiple event notifications](#stream-response){:noabbrev}.
 
+## Out of Scope {#out-of-scope}
 
-{: #out-of-scope}
-The {{&protocol}} Protocol does not specify:
+### Event Semantics {#out-of-scope--event-semantics}
 
-1. {: #no-scope--specific-data-model}
-A realization of the abstract data model used for requesting event-notifications.
+{: #no-event-semantics}
+Implementations require flexibility to generate event-notifications for the applications they wish to support on any given resource. It follows that the {{&protocol}} Protocol does not specify event semantics, including:
 
-1. {: #no-scope--specific-events}
-The events for which a notification might be generated. This can be varied per resource.
+1. {: #no-event-semantics--specific-events}
+The events for which a notification might be generated.
 
-1. {: #no-scope--notification-format}
-The form or content of an event-notification. Implementations have the flexibility to generate event-notifications for the applications they wish to support on a resource.
+1. {: #no-event-semantics--notification-content}
+The content of an event-notification.
 
-1. {: #no-scope--stream-representation}
-Specific representations for the response stream with multiple notifications.
+### Realizations and Formats {#out-of-scope--realizations}
+
+{: #no-format}
+Since transferred data is subject to content negotiation between clients and server, the {{&protocol}} Protocol does not commit to a specific: 
+
+1. {: #no-format--request-data-model}
+Realization of the abstract data model ({{data-model}}) used for requesting event-notifications.
+
+1. {: #no-format--stream-representation}
+Representation for the response stream encapsulating [multiple event notifications](#stream-response){:noabbrev}.
+
+1. {: #no-format--event-notification}
+Form of event-notifications within the response stream.
+
+### Temporal Coordination {#out-of-scope--temporal-coordination}
+
+{: #no-sync} 
+Event-notifications are typically implemented along with temporal coordination mechanisms, ranging in complexity from resumability on reconnection to real-time state synchronization. Implementations adopt these mechanisms based on application requirements. For this reason, the {{&protocol}} Protocol itself does not specify temporal coordination across responses. Instead, implementations shall be able to extend the {{<<data-model}} with additional specifications that provide:
+
+1. {: #no-sync--versioning}
+A scheme for versioning events occurring on a resource. 
+
+1. {: #no-sync--replay}
+Replay or resumption of event-notifications from a prior event. This can, for example, help clients recover upon reconnection without refetching the representation.
+
+1. {: #no-sync--representation}
+Identification of resource representations, separate from event-notifications, within the [response stream](#representation-response). This is useful for a first fetch before a client starts receiving notifications or for periodic reconciliation during state synchronization.
+
+1. {: #no-sync--merge-types}
+The Conflict-free Replicated Data Types (CRDT) or Operational Transforms (OT) 
+strategy to be implemented by a client for synchronizing the representation using event-notifications.
 
 ## Limitations {#limitations}
 

@@ -36,7 +36,7 @@ Content-Type: multipart/mixed; boundary="THIS_STRING_SEPARATES"
 {: sourcecode-name="representation-response-before-notifications-multipart-example.http" #representation-response-before-notifications-multipart-example title="Representation Response before Notifications"}
 
 {: #representation-response-non-standard}
-While this is default behavior, there is no requirement that a representation is the first message or that representations are sent only once. In such cases, the encapsulated message needs to indicate if it is a representation and not an event-notification. Such a mechanism is not defined in this specification.
+While this is default behavior, there is no requirement that a representation is the first message or that representations are sent only once. In such cases, the encapsulated message needs to indicate if it is a representation and not an event-notification. Such a mechanism is beyond the scope of this specification (see {{out-of-scope--temporal-coordination}}).
 
 {: #representation-response-notifications}
 Notifications are transmitted just as in the case of [regular streaming](#stream-response). See {{example-representation}} for a complete example of a response with representation and notifications.
