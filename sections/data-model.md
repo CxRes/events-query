@@ -13,7 +13,7 @@ an interest in receiving a stream of event-notifications from a resource in a pr
 an interest in receiving a representation of a resource in a preferred form.
 
 {: #data-model-realization}
-Implementations can choose appropriate media types to realize the subscription data model. Implementations are free to extend the data model to include additional data. A specific realization of the data model is outside the scope of this specification.
+Implementations can choose appropriate media types to realize the subscription data model. Implementations are free to extend the data model to include additional data. A specific realization of the data model is beyond the scope of this specification (see {{out-of-scope--realizations}}).
 
 {: #data-model-example}
 The following example shows the body of a subscription request wherein the `state` and `events` properties are used to specify request headers for representation and event-notifications respectively in a YAML-like syntax.
