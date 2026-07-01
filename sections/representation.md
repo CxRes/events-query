@@ -6,7 +6,19 @@
 ## Request {#representation-request}
 
 {: #representation-request-procedure}
-To receive a representation of the resource alongside notifications, a client makes a `QUERY` request ({{HTTP-QUERY, Section 2}}) using a realization of the subscription data model that MUST also include an interest in receiving the representation in a preferred form.
+To receive a representation of the resource alongside notifications, a client MUST:
+
++ {: #representation-request-procedure--data-model}
+send a realization of the subscription data model that includes an interest in receiving a stream containing:
+
+    + {: #representation-request-procedure--data-model-representation}
+    the representation(s) in a preferred form, and 
+
+    + {: #representation-request-procedure--data-model-notifications}
+    event notifications in a preferred form,
+
++ {: #representation-request-procedure--method}   
+using the `QUERY` method ({{HTTP-QUERY, Section 2}}).
 
 {: #representation-request-example-description}
 The following example shows a subscription request for the current representation along with the subsequent event-notifications transmitted using the `multipart/mixed` media type. The `state` property indicates interest in receiving representation and its sub-properties describe the preferred form of notifications. Since the representation is being transferred in an HTTP message pipeline, these sub-properties are identical to header fields used for specifying preconditions and content negotiation in a GET request on the said resource.
