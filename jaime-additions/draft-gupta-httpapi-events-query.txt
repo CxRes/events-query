@@ -155,11 +155,11 @@ Table of Contents
    network intermediaries.
 
    With the rise of AIs, autonomous agents acting on behalf of a user
-   has emerged as a significant class of consumer.  Agents often need to
-   observe HTTP resource, to monitor the outcome of existing actions and
-   as a trigger further actions.  But existing mechanisms that were
-   designed for humans are unsuited to agents observing a resource as
-   part of its normal interaction with it.
+   have emerged as a significant class of consumer.  Agents often need
+   to observe HTTP resources, to monitor the outcome of prior actions
+   and trigger new ones.  But the friction involved in observing a
+   resource an agent is already interacting with makes existing
+   mechanisms a poor fit for such agentic workflows.
 
    Events Query is a minimal protocol built on top of the Hypertext
    Transfer Protocol [HTTP] that allows applications to request event
@@ -261,7 +261,7 @@ Table of Contents
        say, in comparison to existing HTTP-based messaging protocols
        such as Server-Sent Events ([HTML], Section 9.2).
 
-   6.  to specify transparent notification semantics that empowers
+   6.  to specify transparent notification semantics that empower
        intermediaries to scale event notifications, improve reliability
        and reduce latency.  Intermediaries shall also be able to
        proactively update caches in real-time.
@@ -318,8 +318,8 @@ Table of Contents
 
    2.  The content of an event notification.
 
-   Implementations can further provide mechanisms to filter
-   notifications by events or to filter the content of notifications.
+   Implementations can further provide mechanisms to filter the events
+   generating notifications or to select the content of notifications.
    Affordances for such mechanisms can be exposed to clients by
    extending the abstract Subscription Data Model with additional
    specifications.
@@ -561,11 +561,13 @@ Table of Contents
    property is merely advisory, and a server MAY end the response before
    this duration.
 
-   A server SHOULD not set a response duration longer than the period
-   for which an authorization is valid (A server may not always know the
-   remaining validity, for example a token may be revoked early, or the
-   access control may be changed).  Once the request's authorization
-   expires, the server MUST NOT send any more notifications.
+   A server SHOULD NOT set a response duration longer than the period
+   for which an authorization is valid.  This is to ensure that a server
+   does not send notifications to clients after their authorization
+   expires, while accommodating clients with valid authorizations where
+   the server is unable to determine the authorization period in
+   advance.  Once the request's authorization expires or is revoked, the
+   server MUST NOT send any more notifications.
 
    A sender MUST conform to these stipulations when generating the
    duration property.  If the value of the duration property fails to
@@ -971,11 +973,12 @@ Table of Contents
 
    A second, independent implementation by Jaime Jimenez that applies
    Events Query in an agent-ready mock for the CAMARA (Global Telco API
-   Alliance) HTTP APIs is available at https://camara.jaime.win.  The
-   CAMARA sandbox uses Events Query to simulate the SIM-swap detection
-   capability.  An agent can observe changes to the SIM-swap state in-
-   band as a JSON Sequence by sending a QUERY request to a resource, to
-   which it would otherwise POST for a Webhooks subscription.
+   Alliance) (https://camaraproject.org) HTTP APIs is available at
+   https://camara.jaime.win.  The CAMARA sandbox uses Events Query to
+   simulate the SIM-swap detection capability.  An agent can observe
+   changes to the SIM-swap state in-band as a JSON Sequence by sending a
+   QUERY request to a resource, rather than setting up a separate
+   Webhooks subscription.
 
 12.  Security Considerations
 
