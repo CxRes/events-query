@@ -564,10 +564,10 @@ Table of Contents
    A server SHOULD NOT set a response duration longer than the period
    for which an authorization is valid.  This is to ensure that a server
    does not send notifications to clients after their authorization
-   expires, while accommodating clients with valid authorizations where
-   the server is unable to determine the authorization period in
-   advance.  Once the request's authorization expires or is revoked, the
-   server MUST NOT send any more notifications.
+   expires, while accommodating valid authorizations where the server is
+   unable to determine the authorization period in advance.  Once the
+   request's authorization expires or is revoked, the server MUST NOT
+   send any more notifications.
 
    A sender MUST conform to these stipulations when generating the
    duration property.  If the value of the duration property fails to
