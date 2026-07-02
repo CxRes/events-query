@@ -976,10 +976,10 @@ Table of Contents
    Events Query in an agent-ready mock for the CAMARA (Global Telco API
    Alliance) (https://camaraproject.org) HTTP APIs is available at
    https://camara.jaime.win.  The CAMARA sandbox uses Events Query to
-   simulate the SIM-swap detection capability.  An agent can observe
-   changes to the SIM-swap state in-band as a JSON Sequence by sending a
-   QUERY request to a resource, rather than setting up a separate
-   Webhooks subscription.
+   notify clients of SIM-swaps.  An agent can observe changes to the
+   SIM-swap state in-band as a JSON Sequence by sending a QUERY request
+   to a resource, rather than setting up a separate Webhooks
+   subscription.
 
 12.  Security Considerations
 
