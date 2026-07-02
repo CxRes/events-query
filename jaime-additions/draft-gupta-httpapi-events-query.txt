@@ -106,6 +106,8 @@ Table of Contents
      10.1.  Request
      10.2.  Response
    11. Implementation Status
+     11.1.  Express Demo
+     11.2.  CAMARA API Demo
    12. Security Considerations
    13. IANA Considerations
      13.1.  HTTP Field Registration
@@ -944,6 +946,8 @@ Table of Contents
 
 11.  Implementation Status
 
+11.1.  Express Demo
+
    A toy server built in Express.js demonstrating the Events Query
    Protocol is available at https://github.com/CxRes/events-query-
    express-demo.  This demo is powered by the following libraries:
@@ -962,6 +966,16 @@ Table of Contents
    The demonstration and libraries are Free and Open Source Software,
    released under the Mozilla Public License, v. 2.0.  Please contact
    the author for more information about these programs.
+
+11.2.  CAMARA API Demo
+
+   A second, independent implementation by Jaime Jimenez that applies
+   Events Query in an agent-ready mock for the CAMARA (Global Telco API
+   Alliance) HTTP APIs is available at https://camara.jaime.win.  The
+   CAMARA sandbox uses Events Query to simulate the SIM-swap detection
+   capability.  An agent can observe changes to the SIM-swap state in-
+   band as a JSON Sequence by sending a QUERY request to a resource, to
+   which it would otherwise POST for a Webhooks subscription.
 
 12.  Security Considerations
 
@@ -1345,8 +1359,8 @@ Index
             2.1.1; Section 9.1, Paragraph 2.1.1; Section 10.1, Paragraph
             2.1.1
          duration (property)  *_Section 5.1_*; Section 9.2.1, Paragraph
-            2.1.2.1.1; Section 9.2.2, Paragraph 11; Section 11,
-            Paragraph 2.1.1; Section 11, Paragraph 2.3.1; Table 2
+            2.1.2.1.1; Section 9.2.2, Paragraph 11; Section 11.1,
+            Paragraph 2.1.1; Section 11.1, Paragraph 2.3.1; Table 2
 
       E
 
@@ -1361,7 +1375,7 @@ Index
             4.2; Section 8, Paragraph 1; Section 8.1, Paragraph 2.1.1;
             Section 9.2.2, Paragraph 1; Section 9.2.2, Paragraph 7;
             Section 9.2.2, Paragraph 9; Section 10.1, Paragraph 2.3.1;
-            Section 11, Paragraph 2.2.1
+            Section 11.1, Paragraph 2.2.1
          event notification  Section Abstract, Paragraph 1; Section 1,
             Paragraph 3; Section 1, Paragraph 5; Section 1, Paragraph 6;
             Section 1, Paragraph 9; Section 1, Paragraph 10; Section 2,
@@ -1400,14 +1414,14 @@ Index
             Section 10.1, Paragraph 1; Section 10.1, Paragraph 2.3.1;
             Section 10.1, Paragraph 3; Section 10.2, Paragraph 1;
             Section 10.2, Paragraph 2; Section 10.2, Paragraph 5;
-            Section 10.2, Paragraph 6; Section 11, Paragraph 2.2.1;
-            Section 11, Paragraph 2.3.1; Section 12, Paragraph 2;
+            Section 10.2, Paragraph 6; Section 11.1, Paragraph 2.2.1;
+            Section 11.1, Paragraph 2.3.1; Section 12, Paragraph 2;
             Section 12, Paragraph 3; Section 14, Paragraph 2;
             Section 14, Paragraph 3; Section 14, Paragraph 4;
             Section 14, Paragraph 5; Appendix A.1, Paragraph 1;
             Appendix A.2, Paragraph 1
          events (header field)  *_Section 5_*; Section 9.2.1, Paragraph
-            2.1.1; Section 9.2.2, Paragraph 11; Section 11, Paragraph
+            2.1.1; Section 9.2.2, Paragraph 11; Section 11.1, Paragraph
             2.1.1; Table 1; Section 13.2, Paragraph 1; Section 13.2.1,
             Paragraph 1; Section 13.2.1, Paragraph 2.1.1
 
@@ -1455,8 +1469,8 @@ Index
             Section 10.1, Paragraph 1; Section 10.1, Paragraph 2.3.1;
             Section 10.1, Paragraph 3; Section 10.2, Paragraph 1;
             Section 10.2, Paragraph 2; Section 10.2, Paragraph 5;
-            Section 10.2, Paragraph 6; Section 11, Paragraph 2.2.1;
-            Section 11, Paragraph 2.3.1; Section 12, Paragraph 2;
+            Section 10.2, Paragraph 6; Section 11.1, Paragraph 2.2.1;
+            Section 11.1, Paragraph 2.3.1; Section 12, Paragraph 2;
             Section 12, Paragraph 3; Section 14, Paragraph 2;
             Section 14, Paragraph 3; Section 14, Paragraph 4;
             Section 14, Paragraph 5; Appendix A.1, Paragraph 1;
@@ -1464,7 +1478,7 @@ Index
 
       O
 
-         observation  *_Section 4.2_*; Section 11, Paragraph 2.2.1
+         observation  *_Section 4.2_*; Section 11.1, Paragraph 2.2.1
          observer  *_Section 4.2, Paragraph 1_*; Section 4.2, Paragraph
             2; Section 4.2, Paragraph 3; Section 4.3, Paragraph 1;
             Section 4.4, Paragraph 1
@@ -1478,8 +1492,8 @@ Index
             Paragraph 5; Section 8.1, Paragraph 2.1.1; Section 9.1,
             Paragraph 2.1.1; Section 9.1, Paragraph 3; Section 9.1,
             Paragraph 4; Section 9.1, Paragraph 6; Section 10.1,
-            Paragraph 2.1.1; Section 10.1, Paragraph 3; Section 12,
-            Paragraph 2
+            Paragraph 2.1.1; Section 10.1, Paragraph 3; Section 11.2,
+            Paragraph 1; Section 12, Paragraph 2
 
 Author's Address
 
