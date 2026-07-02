@@ -875,9 +875,9 @@ Table of Contents
    *  send a realization of the subscription data model that includes an
       interest in receiving a stream containing:
 
-   *  the representation(s) in a preferred form, and
+      -  the representation(s) in a preferred form, and
 
-   *  event notifications in a preferred form,
+      -  event notifications in a preferred form,
 
    *  using the QUERY method ([HTTP-QUERY], Section 2).
 
@@ -971,7 +971,7 @@ Table of Contents
 
 11.2.  CAMARA API Demo
 
-   A second, independent implementation by Jaime Jimenez that applies
+   A second, independent implementation by Jaime Jiménez that applies
    Events Query in an agent-ready mock for the CAMARA (Global Telco API
    Alliance) (https://camaraproject.org) HTTP APIs is available at
    https://camara.jaime.win.  The CAMARA sandbox uses Events Query to
@@ -999,11 +999,14 @@ Table of Contents
    repeated requests from the same origin within a short interval of
    time.
 
-   Resource authorization can change mid-stream.  It is incumbent on a
-   server implementing access-control on a resource to ensure that
-   notification are no longer sent when the authorization carried by the
-   request get revoked.  The server ought to close the response stream
-   as quickly as possible.
+   Resource authorization can change during the lifetime of a response.
+   A server that enforces access control on a resource must ensure that
+   it does not transmit notifications once the authorization carried by
+   the request has expired or been revoked.  If the authorization can be
+   revoked mid-response, the server ought to check the validity of the
+   authorization before each notification is sent.  The server must end
+   the response immediately upon discovering that the authorization is
+   invalid.
 
 13.  IANA Considerations
 
@@ -1377,8 +1380,8 @@ Index
             Paragraph 3; Section 5, Paragraph 4; Section 7, Paragraph
             4.2; Section 8, Paragraph 1; Section 8.1, Paragraph 2.1.1;
             Section 9.2.2, Paragraph 1; Section 9.2.2, Paragraph 7;
-            Section 9.2.2, Paragraph 9; Section 10.1, Paragraph 2.3.1;
-            Section 11.1, Paragraph 2.2.1
+            Section 9.2.2, Paragraph 9; Section 10.1, Paragraph
+            2.1.2.2.1; Section 11.1, Paragraph 2.2.1
          event notification  Section Abstract, Paragraph 1; Section 1,
             Paragraph 3; Section 1, Paragraph 5; Section 1, Paragraph 6;
             Section 1, Paragraph 9; Section 1, Paragraph 10; Section 2,
@@ -1414,13 +1417,13 @@ Index
             1; Section 9.2.2, Paragraph 2; Section 9.2.2, Paragraph 4;
             Section 9.2.2, Paragraph 6; Section 9.2.2, Paragraph 7;
             Section 9.2.2, Paragraph 9; Section 10, Paragraph 1;
-            Section 10.1, Paragraph 1; Section 10.1, Paragraph 2.3.1;
-            Section 10.1, Paragraph 3; Section 10.2, Paragraph 1;
-            Section 10.2, Paragraph 2; Section 10.2, Paragraph 5;
-            Section 10.2, Paragraph 6; Section 11.1, Paragraph 2.2.1;
-            Section 11.1, Paragraph 2.3.1; Section 12, Paragraph 2;
-            Section 12, Paragraph 3; Section 14, Paragraph 2;
-            Section 14, Paragraph 3; Section 14, Paragraph 4;
+            Section 10.1, Paragraph 1; Section 10.1, Paragraph
+            2.1.2.2.1; Section 10.1, Paragraph 3; Section 10.2,
+            Paragraph 1; Section 10.2, Paragraph 2; Section 10.2,
+            Paragraph 5; Section 10.2, Paragraph 6; Section 11.1,
+            Paragraph 2.2.1; Section 11.1, Paragraph 2.3.1; Section 12,
+            Paragraph 2; Section 12, Paragraph 3; Section 14, Paragraph
+            2; Section 14, Paragraph 3; Section 14, Paragraph 4;
             Section 14, Paragraph 5; Appendix A.1, Paragraph 1;
             Appendix A.2, Paragraph 1
          events (header field)  *_Section 5_*; Section 9.2.1, Paragraph
@@ -1469,13 +1472,13 @@ Index
             1; Section 9.2.2, Paragraph 2; Section 9.2.2, Paragraph 4;
             Section 9.2.2, Paragraph 6; Section 9.2.2, Paragraph 7;
             Section 9.2.2, Paragraph 9; Section 10, Paragraph 1;
-            Section 10.1, Paragraph 1; Section 10.1, Paragraph 2.3.1;
-            Section 10.1, Paragraph 3; Section 10.2, Paragraph 1;
-            Section 10.2, Paragraph 2; Section 10.2, Paragraph 5;
-            Section 10.2, Paragraph 6; Section 11.1, Paragraph 2.2.1;
-            Section 11.1, Paragraph 2.3.1; Section 12, Paragraph 2;
-            Section 12, Paragraph 3; Section 14, Paragraph 2;
-            Section 14, Paragraph 3; Section 14, Paragraph 4;
+            Section 10.1, Paragraph 1; Section 10.1, Paragraph
+            2.1.2.2.1; Section 10.1, Paragraph 3; Section 10.2,
+            Paragraph 1; Section 10.2, Paragraph 2; Section 10.2,
+            Paragraph 5; Section 10.2, Paragraph 6; Section 11.1,
+            Paragraph 2.2.1; Section 11.1, Paragraph 2.3.1; Section 12,
+            Paragraph 2; Section 12, Paragraph 3; Section 14, Paragraph
+            2; Section 14, Paragraph 3; Section 14, Paragraph 4;
             Section 14, Paragraph 5; Appendix A.1, Paragraph 1;
             Appendix A.2, Paragraph 1
 

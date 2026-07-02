@@ -2251,21 +2251,23 @@ type: delete                                     |
 <li id="section-10.1-2.1" class="normal">
 <div class="normal" id="representation-request-procedure--data-model">
             <p id="section-10.1-2.1.1">send a realization of the <span id="iref-subscription-277" class="iref"></span><a href="#subscription" class="internal xref">subscription</a> <span id="iref-data-model-278" class="iref"></span><a href="#data-model" class="internal xref">data model</a> that includes an interest in receiving a stream containing:<a href="#section-10.1-2.1.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li id="section-10.1-2.1.2.1" class="normal">
+<div class="normal" id="representation-request-procedure--data-model-representation">
+                <p id="section-10.1-2.1.2.1.1">the representation(s) in a preferred form, and<a href="#section-10.1-2.1.2.1.1" class="pilcrow">¶</a></p>
+</div>
+              </li>
+<li id="section-10.1-2.1.2.2" class="normal">
+<div class="normal" id="representation-request-procedure--data-model-notifications">
+                <p id="section-10.1-2.1.2.2.1"><span id="iref-event-279" class="iref"></span><a href="#event" class="internal xref">event</a> <span id="iref-event-notification-280" class="iref"></span><span id="iref-notification-281" class="iref"></span><a href="#notification" class="internal xref">notifications</a> in a preferred form,<a href="#section-10.1-2.1.2.2.1" class="pilcrow">¶</a></p>
+</div>
+            </li>
+</ul>
 </div>
           </li>
 <li id="section-10.1-2.2" class="normal">
-<div class="normal" id="representation-request-procedure--data-model-representation">
-            <p id="section-10.1-2.2.1">the representation(s) in a preferred form, and<a href="#section-10.1-2.2.1" class="pilcrow">¶</a></p>
-</div>
-          </li>
-<li id="section-10.1-2.3" class="normal">
-<div class="normal" id="representation-request-procedure--data-model-notifications">
-            <p id="section-10.1-2.3.1"><span id="iref-event-279" class="iref"></span><a href="#event" class="internal xref">event</a> <span id="iref-event-notification-280" class="iref"></span><span id="iref-notification-281" class="iref"></span><a href="#notification" class="internal xref">notifications</a> in a preferred form,<a href="#section-10.1-2.3.1" class="pilcrow">¶</a></p>
-</div>
-          </li>
-<li id="section-10.1-2.4" class="normal">
 <div class="normal" id="representation-request-procedure--method">
-            <p id="section-10.1-2.4.1">using the <code>QUERY</code> method (<span>[<a href="#HTTP-QUERY" class="cite xref">HTTP-QUERY</a>], <a href="https://rfc-editor.org/rfc/rfc10008#section-2" class="relref">Section 2</a></span>).<a href="#section-10.1-2.4.1" class="pilcrow">¶</a></p>
+            <p id="section-10.1-2.2.1">using the <code>QUERY</code> method (<span>[<a href="#HTTP-QUERY" class="cite xref">HTTP-QUERY</a>], <a href="https://rfc-editor.org/rfc/rfc10008#section-2" class="relref">Section 2</a></span>).<a href="#section-10.1-2.2.1" class="pilcrow">¶</a></p>
 </div>
         </li>
 </ul>
@@ -2381,7 +2383,7 @@ Hello World!                                     |
         <h3 id="name-camara-api-demo">
 <a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-camara-api-demo" class="section-name selfRef">CAMARA API Demo</a>
         </h3>
-<p id="section-11.2-1">A second, independent implementation by Jaime Jimenez that applies Events Query in an agent-ready mock for the <a href="https://camaraproject.org">CAMARA (Global Telco API Alliance)</a> HTTP APIs is available at <span><a href="https://camara.jaime.win">https://camara.jaime.win</a></span>. The CAMARA sandbox uses Events Query to simulate the SIM-swap detection capability. An agent can observe changes to the SIM-swap state in-band as a JSON Sequence by sending a QUERY request to a resource, rather than setting up a separate Webhooks <span id="iref-subscription-306" class="iref"></span><a href="#subscription" class="internal xref">subscription</a>.<a href="#section-11.2-1" class="pilcrow">¶</a></p>
+<p id="section-11.2-1">A second, independent implementation by Jaime Jiménez that applies Events Query in an agent-ready mock for the <a href="https://camaraproject.org">CAMARA (Global Telco API Alliance)</a> HTTP APIs is available at <span><a href="https://camara.jaime.win">https://camara.jaime.win</a></span>. The CAMARA sandbox uses Events Query to simulate the SIM-swap detection capability. An agent can observe changes to the SIM-swap state in-band as a JSON Sequence by sending a QUERY request to a resource, rather than setting up a separate Webhooks <span id="iref-subscription-306" class="iref"></span><a href="#subscription" class="internal xref">subscription</a>.<a href="#section-11.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2398,7 +2400,7 @@ Hello World!                                     |
 <p id="section-12-2">When serving <span id="iref-notification-307" class="iref"></span><span id="iref-event-notification-308" class="iref"></span><a href="#notification" class="internal xref">event notifications</a>, servers are required to keep the response stream open for an extended period of time. Since the effort required to request <span id="iref-event-notification-309" class="iref"></span><span id="iref-notification-310" class="iref"></span><a href="#notification" class="internal xref">notifications</a> is tiny compared to the time, memory, and bandwidth consumed attempting to serve the <span id="iref-event-notification-311" class="iref"></span><span id="iref-notification-312" class="iref"></span><a href="#notification" class="internal xref">notifications</a>, servers implementing Events Query have increased susceptibility to Denial-of-Service attacks. Servers ought to ignore, coalesce, or reject egregious <span id="iref-subscription-313" class="iref"></span><a href="#subscription" class="internal xref">subscription</a> requests, such as repeated requests from the same origin within a short interval of time.<a href="#section-12-2" class="pilcrow">¶</a></p>
 </div>
 <div id="security-considerations-authz">
-<p id="section-12-3">Resource authorization can change mid-stream. It is incumbent on a server implementing access-control on a resource to ensure that <span id="iref-event-notification-314" class="iref"></span><span id="iref-notification-315" class="iref"></span><a href="#notification" class="internal xref">notification</a> are no longer sent when the authorization carried by the request get revoked. The server ought to close the response stream as quickly as possible.<a href="#section-12-3" class="pilcrow">¶</a></p>
+<p id="section-12-3">Resource authorization can change during the lifetime of a response. A server that enforces access control on a resource must ensure that it does not transmit <span id="iref-event-notification-314" class="iref"></span><span id="iref-notification-315" class="iref"></span><a href="#notification" class="internal xref">notifications</a> once the authorization carried by the request has expired or been revoked. If the authorization can be revoked mid-response, the server ought to check the validity of the authorization before each <span id="iref-event-notification-316" class="iref"></span><span id="iref-notification-317" class="iref"></span><a href="#notification" class="internal xref">notification</a> is sent. The server must end the response immediately upon discovering that the authorization is invalid.<a href="#section-12-3" class="pilcrow">¶</a></p>
 </div>
 </section>
 </div>
@@ -2435,7 +2437,7 @@ Hello World!                                     |
           <tbody>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">
-                <span id="iref-events-header-field-316" class="iref"></span><a href="#events-field" class="internal xref"><code>Events</code></a>
+                <span id="iref-events-header-field-318" class="iref"></span><a href="#events-field" class="internal xref"><code>Events</code></a>
 </td>
               <td class="text-left" rowspan="1" colspan="1">Permanent</td>
               <td class="text-left" rowspan="1" colspan="1">Dictionary</td>
@@ -2454,7 +2456,7 @@ Hello World!                                     |
 <a href="#section-13.2" class="section-number selfRef">13.2. </a><a href="#name-the-http-events-field-regis" class="section-name selfRef">The HTTP Events Field Registry</a>
         </h3>
 <div id="registry-registration-instruction">
-<p id="section-13.2-1">IANA is requested to create a new registry, "HTTP Events Field Registry", under the <a href="https://www.iana.org/assignments/http-parameters/">Hypertext Transfer Protocol (HTTP) Parameters</a> registry to register properties for use in the <span id="iref-events-header-field-317" class="iref"></span><a href="#events-field" class="internal xref"><code>Events</code></a> header field. New registrations will use the Specification Required policy (<span>[<a href="#RFC8126" class="cite xref">RFC8126</a>], <a href="https://rfc-editor.org/rfc/rfc8126#section-4.6" class="relref">Section 4.6</a></span>).<a href="#section-13.2-1" class="pilcrow">¶</a></p>
+<p id="section-13.2-1">IANA is requested to create a new registry, "HTTP Events Field Registry", under the <a href="https://www.iana.org/assignments/http-parameters/">Hypertext Transfer Protocol (HTTP) Parameters</a> registry to register properties for use in the <span id="iref-events-header-field-319" class="iref"></span><a href="#events-field" class="internal xref"><code>Events</code></a> header field. New registrations will use the Specification Required policy (<span>[<a href="#RFC8126" class="cite xref">RFC8126</a>], <a href="https://rfc-editor.org/rfc/rfc8126#section-4.6" class="relref">Section 4.6</a></span>).<a href="#section-13.2-1" class="pilcrow">¶</a></p>
 </div>
 <div id="events-field-registry-template">
 <section id="section-13.2.1">
@@ -2462,12 +2464,12 @@ Hello World!                                     |
 <a href="#section-13.2.1" class="section-number selfRef">13.2.1. </a><a href="#name-template" class="section-name selfRef">Template</a>
           </h4>
 <div id="events-field-registry-template-required-list">
-<p id="section-13.2.1-1">The registration of an <span id="iref-events-header-field-318" class="iref"></span><a href="#events-field" class="internal xref"><code>Events</code></a> property <span class="bcp14">MUST</span> include the following fields:<a href="#section-13.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-13.2.1-1">The registration of an <span id="iref-events-header-field-320" class="iref"></span><a href="#events-field" class="internal xref"><code>Events</code></a> property <span class="bcp14">MUST</span> include the following fields:<a href="#section-13.2.1-1" class="pilcrow">¶</a></p>
 </div>
 <ul class="normal">
 <li id="section-13.2.1-2.1" class="normal">
 <div class="normal" id="events-field-registry-template--property-name">
-              <p id="section-13.2.1-2.1.1">Property Name: A Dictionary (<span>[<a href="#HTTP-SF" class="cite xref">HTTP-SF</a>], <a href="https://rfc-editor.org/rfc/rfc9651#section-3.2" class="relref">Section 3.2</a></span>) key to be used in the <span id="iref-events-header-field-319" class="iref"></span><a href="#events-field" class="internal xref"><code>Events</code></a> header field.<a href="#section-13.2.1-2.1.1" class="pilcrow">¶</a></p>
+              <p id="section-13.2.1-2.1.1">Property Name: A Dictionary (<span>[<a href="#HTTP-SF" class="cite xref">HTTP-SF</a>], <a href="https://rfc-editor.org/rfc/rfc9651#section-3.2" class="relref">Section 3.2</a></span>) key to be used in the <span id="iref-events-header-field-321" class="iref"></span><a href="#events-field" class="internal xref"><code>Events</code></a> header field.<a href="#section-13.2.1-2.1.1" class="pilcrow">¶</a></p>
 </div>
             </li>
 <li id="section-13.2.1-2.2" class="normal">
@@ -2522,7 +2524,7 @@ Hello World!                                     |
             <tbody>
               <tr>
                 <td class="text-left" rowspan="1" colspan="1">
-                  <span id="iref-duration-property-320" class="iref"></span><a href="#duration-property" class="internal xref"><code>duration</code></a>
+                  <span id="iref-duration-property-322" class="iref"></span><a href="#duration-property" class="internal xref"><code>duration</code></a>
 </td>
                 <td class="text-left" rowspan="1" colspan="1">Integer or Decimal Item</td>
                 <td class="text-left" rowspan="1" colspan="1">
@@ -2545,16 +2547,16 @@ Hello World!                                     |
       </h2>
 <p id="section-14-1"><span class="cref" id="End_User">"The mission of the IETF is to produce high quality, relevant technical and engineering documents that influence the way people design, use, and manage the Internet in such a way as to make the Internet work better" <span>[<a href="#RFC3935" class="cite xref">RFC3935</a>]</span>. The mission statement further goes on to state, "We want the Internet to be useful for communities that share our commitment to openness and fairness. We embrace technical concepts such as decentralized control, edge-user empowerment and sharing of resources, because those concepts resonate with the core values of the IETF community." <span>[<a href="#RFC3935" class="cite xref">RFC3935</a>]</span>. The Internet Architecture Board says that the "Internet is for end users" and "argues that the IETF should favor their interests over those of other parties" <span>[<a href="#RFC8890" class="cite xref">RFC8890</a>]</span>. It logically follows that technical documents produced by the IETF ought to consider their impact on the Internet end user. For this reason, I suggest that specifications include a considerations section where authors assess the technical decisions and trade-offs in their proposals based on their ramifications on the interests of end users.</span><a href="#section-14-1" class="pilcrow">¶</a></p>
 <div id="end-user-classification">
-<p id="section-14-2">End users of the HTTP protocol can be classified into two groups: publishers and consumers. Consumers have an incentive to subscribe to <span id="iref-notification-321" class="iref"></span><span id="iref-event-notification-322" class="iref"></span><a href="#notification" class="internal xref">event notifications</a> from many resources and to hold on to a connection for as long as possible; whereas publishers bear the cost of server infrastructure. Consumers also typically outnumber publishers, in many cases by multiple orders of magnitude. This creates an imbalance in the effort to subscribe versus effort to deliver; consumers can easily place a disproportionate burden on servers, reminiscent of a denial-of-service attack.<a href="#section-14-2" class="pilcrow">¶</a></p>
+<p id="section-14-2">End users of the HTTP protocol can be classified into two groups: publishers and consumers. Consumers have an incentive to subscribe to <span id="iref-notification-323" class="iref"></span><span id="iref-event-notification-324" class="iref"></span><a href="#notification" class="internal xref">event notifications</a> from many resources and to hold on to a connection for as long as possible; whereas publishers bear the cost of server infrastructure. Consumers also typically outnumber publishers, in many cases by multiple orders of magnitude. This creates an imbalance in the effort to subscribe versus effort to deliver; consumers can easily place a disproportionate burden on servers, reminiscent of a denial-of-service attack.<a href="#section-14-2" class="pilcrow">¶</a></p>
 </div>
 <div id="end-user-filter">
-<p id="section-14-3">At the outset, requiring that clients subscribe to <span id="iref-notification-323" class="iref"></span><span id="iref-event-notification-324" class="iref"></span><a href="#notification" class="internal xref">event notifications</a> per resource serves as an effective filtering mechanism that limits the burden on servers. Compare this to the typical implementation of protocols such as WebSockets <span>[<a href="#WS" class="cite xref">WS</a>]</span>, where clients connect to dedicated endpoints to receive <span id="iref-event-notification-325" class="iref"></span><span id="iref-notification-326" class="iref"></span><a href="#notification" class="internal xref">notifications</a>; the server either has to broadcast <span id="iref-event-notification-327" class="iref"></span><span id="iref-notification-328" class="iref"></span><a href="#notification" class="internal xref">notifications</a> for multiple resources or track resources of interest for each client to filter <span id="iref-notification-329" class="iref"></span><span id="iref-event-notification-330" class="iref"></span><a href="#notification" class="internal xref">event notifications</a> accordingly.<a href="#section-14-3" class="pilcrow">¶</a></p>
+<p id="section-14-3">At the outset, requiring that clients subscribe to <span id="iref-notification-325" class="iref"></span><span id="iref-event-notification-326" class="iref"></span><a href="#notification" class="internal xref">event notifications</a> per resource serves as an effective filtering mechanism that limits the burden on servers. Compare this to the typical implementation of protocols such as WebSockets <span>[<a href="#WS" class="cite xref">WS</a>]</span>, where clients connect to dedicated endpoints to receive <span id="iref-event-notification-327" class="iref"></span><span id="iref-notification-328" class="iref"></span><a href="#notification" class="internal xref">notifications</a>; the server either has to broadcast <span id="iref-event-notification-329" class="iref"></span><span id="iref-notification-330" class="iref"></span><a href="#notification" class="internal xref">notifications</a> for multiple resources or track resources of interest for each client to filter <span id="iref-notification-331" class="iref"></span><span id="iref-event-notification-332" class="iref"></span><a href="#notification" class="internal xref">event notifications</a> accordingly.<a href="#section-14-3" class="pilcrow">¶</a></p>
 </div>
 <div id="end-user-server-sets-limits">
-<p id="section-14-4">Events Query empowers servers to decide the content and the duration for which <span id="iref-notification-331" class="iref"></span><span id="iref-event-notification-332" class="iref"></span><a href="#notification" class="internal xref">event notifications</a> are served on any given resource, as well as allowing servers to end the response at any time. Servers may also limit <span id="iref-notification-333" class="iref"></span><span id="iref-event-notification-334" class="iref"></span><a href="#notification" class="internal xref">event notifications</a> and/or their content, except for authenticated consumers. Such authenticated consumers might, for example, be asked to share the cost burden with publishers in return for a higher quality of service.<a href="#section-14-4" class="pilcrow">¶</a></p>
+<p id="section-14-4">Events Query empowers servers to decide the content and the duration for which <span id="iref-notification-333" class="iref"></span><span id="iref-event-notification-334" class="iref"></span><a href="#notification" class="internal xref">event notifications</a> are served on any given resource, as well as allowing servers to end the response at any time. Servers may also limit <span id="iref-notification-335" class="iref"></span><span id="iref-event-notification-336" class="iref"></span><a href="#notification" class="internal xref">event notifications</a> and/or their content, except for authenticated consumers. Such authenticated consumers might, for example, be asked to share the cost burden with publishers in return for a higher quality of service.<a href="#section-14-4" class="pilcrow">¶</a></p>
 </div>
 <div id="end-user-intermediation">
-<p id="section-14-5">The use of HTTP Semantics also enables intermediation of <span id="iref-notification-335" class="iref"></span><span id="iref-event-notification-336" class="iref"></span><a href="#notification" class="internal xref">event notifications</a>, unlike existing mechanisms built with protocols such as WebSockets <span>[<a href="#WS" class="cite xref">WS</a>]</span> or WebSub <span>[<a href="#WEBSUB" class="cite xref">WEBSUB</a>]</span>. Intermediaries can help with improving the latency and reliability of transmission of <span id="iref-notification-337" class="iref"></span><span id="iref-event-notification-338" class="iref"></span><a href="#notification" class="internal xref">event notifications</a> as well as scaling of the <span id="iref-notification-339" class="iref"></span><span id="iref-event-notification-340" class="iref"></span><a href="#notification" class="internal xref">event notification</a> traffic to reach a significantly larger base of consumers. On the flip side, economies of scale will likely lead to greater consolidation of intermediary service providers (though not centralization) with the attendant risk of anti-consumer behavior. In the opinion of the authors, policies designed to treat network traffic as a public utility might provide better outcomes for the end user.<a href="#section-14-5" class="pilcrow">¶</a></p>
+<p id="section-14-5">The use of HTTP Semantics also enables intermediation of <span id="iref-notification-337" class="iref"></span><span id="iref-event-notification-338" class="iref"></span><a href="#notification" class="internal xref">event notifications</a>, unlike existing mechanisms built with protocols such as WebSockets <span>[<a href="#WS" class="cite xref">WS</a>]</span> or WebSub <span>[<a href="#WEBSUB" class="cite xref">WEBSUB</a>]</span>. Intermediaries can help with improving the latency and reliability of transmission of <span id="iref-notification-339" class="iref"></span><span id="iref-event-notification-340" class="iref"></span><a href="#notification" class="internal xref">event notifications</a> as well as scaling of the <span id="iref-notification-341" class="iref"></span><span id="iref-event-notification-342" class="iref"></span><a href="#notification" class="internal xref">event notification</a> traffic to reach a significantly larger base of consumers. On the flip side, economies of scale will likely lead to greater consolidation of intermediary service providers (though not centralization) with the attendant risk of anti-consumer behavior. In the opinion of the authors, policies designed to treat network traffic as a public utility might provide better outcomes for the end user.<a href="#section-14-5" class="pilcrow">¶</a></p>
 </div>
 </section>
 </div>
@@ -2685,7 +2687,7 @@ Hello World!                                     |
 <a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-representation-and-notifica" class="section-name selfRef">Representation and Notifications</a>
         </h3>
 <div id="example-representation-description">
-<p id="appendix-A.1-1">The following example illustrates a complete request and response for representation and <span id="iref-event-notification-341" class="iref"></span><span id="iref-notification-342" class="iref"></span><a href="#notification" class="internal xref">notifications</a> transferred with the <code>multipart/mixed</code> media-type as described in <a href="#representation" class="auto internal xref">Section 10</a>: <a href="#representation" class="internal xref">Representation</a>.<a href="#appendix-A.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.1-1">The following example illustrates a complete request and response for representation and <span id="iref-event-notification-343" class="iref"></span><span id="iref-notification-344" class="iref"></span><a href="#notification" class="internal xref">notifications</a> transferred with the <code>multipart/mixed</code> media-type as described in <a href="#representation" class="auto internal xref">Section 10</a>: <a href="#representation" class="internal xref">Representation</a>.<a href="#appendix-A.1-1" class="pilcrow">¶</a></p>
 </div>
 <div id="example-multipart-representation-request">
 <section id="appendix-A.1.1">
@@ -2769,7 +2771,7 @@ type: delete                                     |
 <a href="#appendix-A.2" class="section-number selfRef">A.2. </a><a href="#name-notifications-stream-2" class="section-name selfRef">Notifications Stream</a>
         </h3>
 <div id="example-stream-description">
-<p id="appendix-A.2-1">This following example illustrates complete request and response for JSON formatted <span id="iref-event-notification-343" class="iref"></span><span id="iref-notification-344" class="iref"></span><a href="#notification" class="internal xref">notifications</a> transferred with the <code>application/json-seq</code> media-type as described in <a href="#stream" class="internal xref">Notifications Stream</a>: <a href="#stream" class="internal xref">Notifications Stream</a>.<a href="#appendix-A.2-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.2-1">This following example illustrates complete request and response for JSON formatted <span id="iref-event-notification-345" class="iref"></span><span id="iref-notification-346" class="iref"></span><a href="#notification" class="internal xref">notifications</a> transferred with the <code>application/json-seq</code> media-type as described in <a href="#stream" class="internal xref">Notifications Stream</a>: <a href="#stream" class="internal xref">Notifications Stream</a>.<a href="#appendix-A.2-1" class="pilcrow">¶</a></p>
 </div>
 <div id="example-json-stream-request">
 <section id="appendix-A.2.1">
@@ -2926,7 +2928,7 @@ Content-Type: application/json-seq
 <a href="#stream-response-event" class="auto internal xref">Section 9.2.2, Paragraph 1</a>; 
 <a href="#stream-delete-event-multipart" class="auto internal xref">Section 9.2.2, Paragraph 7</a>; 
 <a href="#stream-delete-event-json" class="auto internal xref">Section 9.2.2, Paragraph 9</a>; 
-<a href="#section-10.1-2.3.1" class="auto internal xref">Section 10.1, Paragraph 2.3.1</a>; 
+<a href="#section-10.1-2.1.2.2.1" class="auto internal xref">Section 10.1, Paragraph 2.1.2.2.1</a>; 
 <a href="#section-11.1-2.2.1" class="auto internal xref">Section 11.1, Paragraph 2.2.1</a><a href="#appendix-C-2.2.2.1.1.2.1" class="pilcrow">¶</a></p>
 </dd>
                 <dd class="break"></dd>
@@ -3005,7 +3007,7 @@ Content-Type: application/json-seq
 <a href="#stream-delete-event-json" class="auto internal xref">Section 9.2.2, Paragraph 9</a>; 
 <a href="#representation-description" class="auto internal xref">Section 10, Paragraph 1</a>; 
 <a href="#representation-request-procedure" class="auto internal xref">Section 10.1, Paragraph 1</a>; 
-<a href="#section-10.1-2.3.1" class="auto internal xref">Section 10.1, Paragraph 2.3.1</a>; 
+<a href="#section-10.1-2.1.2.2.1" class="auto internal xref">Section 10.1, Paragraph 2.1.2.2.1</a>; 
 <a href="#representation-request-example-description" class="auto internal xref">Section 10.1, Paragraph 3</a>; 
 <a href="#representation-not-available" class="auto internal xref">Section 10.2, Paragraph 1</a>; 
 <a href="#representation-response-body" class="auto internal xref">Section 10.2, Paragraph 2</a>; 
@@ -3141,7 +3143,7 @@ Content-Type: application/json-seq
 <a href="#stream-delete-event-json" class="auto internal xref">Section 9.2.2, Paragraph 9</a>; 
 <a href="#representation-description" class="auto internal xref">Section 10, Paragraph 1</a>; 
 <a href="#representation-request-procedure" class="auto internal xref">Section 10.1, Paragraph 1</a>; 
-<a href="#section-10.1-2.3.1" class="auto internal xref">Section 10.1, Paragraph 2.3.1</a>; 
+<a href="#section-10.1-2.1.2.2.1" class="auto internal xref">Section 10.1, Paragraph 2.1.2.2.1</a>; 
 <a href="#representation-request-example-description" class="auto internal xref">Section 10.1, Paragraph 3</a>; 
 <a href="#representation-not-available" class="auto internal xref">Section 10.2, Paragraph 1</a>; 
 <a href="#representation-response-body" class="auto internal xref">Section 10.2, Paragraph 2</a>; 
