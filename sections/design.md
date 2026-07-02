@@ -24,7 +24,7 @@ to deliver the representation and notifications in response to a single request,
 to enable the transfer of event-notifications using arbitrary formats that might be content-negotiated. This allows implementers to serve notifications that are more expressive, say, in comparison to existing HTTP-based messaging protocols such as Server-Sent Events ({{HTML}}, Section 9.2).
 
 1. {: #goal--intermediation}
-to specify transparent notification semantics that empowers intermediaries to scale event-notifications, improve reliability and reduce latency. Intermediaries shall also be able to proactively update caches in real-time.
+to specify transparent notification semantics that empower intermediaries to scale event-notifications, improve reliability and reduce latency. Intermediaries shall also be able to proactively update caches in real-time.
 
 ## Constraints {#constraints}
 
@@ -73,6 +73,8 @@ The events for which a notification might be generated.
 
 1. {: #no-event-semantics--notification-content}
 The content of an event-notification.
+
+Implementations can further provide mechanisms to filter the events generating notifications or to select the content of notifications. Affordances for such mechanisms can be exposed to clients by extending the abstract {{<<data-model}} with additional specifications. 
 
 ### Realizations and Formats {#out-of-scope--realizations}
 
