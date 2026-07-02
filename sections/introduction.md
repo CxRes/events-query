@@ -9,6 +9,9 @@ But web applications have evolved over time to provide increasingly dynamic and 
 {: #intro-alternate-protocols}
 For this reason, web programmers often prefer implementing custom messaging systems over alternate protocols such as WebSocket {{WS}} and WebSub {{WEBSUB}}. Not only does this approach require additional layers of code, involving multiple Web APIs and/or userland libraries such as [socket.io](https://socket.io/), it demands extra coordination effort to synchronize representation and notifications across multiple protocols. The dual-protocol approach thus compounds the development and maintenance overhead. Furthermore, deployment at scale is challenging with the notifications traffic now opaque to network intermediaries.
 
+{: #intro-agents}
+With the rise of AIs, autonomous agents acting on behalf of a user have emerged as a significant class of consumer. Agents often need to observe HTTP resources, to monitor the outcome of prior actions and trigger new ones. But the friction involved in observing a resource an agent is already interacting with makes existing mechanisms a poor fit for such agentic workflows.
+
 {: #intro-events-query}
 {{&protocol}} is a minimal protocol built on top of the Hypertext Transfer Protocol {{HTTP}} that allows applications to request event-notifications directly from a resource of interest using the `QUERY` method ({{HTTP-QUERY, Section 2}}).
 
