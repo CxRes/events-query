@@ -540,8 +540,8 @@ Table of Contents
    properties of a response stream carrying event notifications.
 
    The order of keys in the Events header field is insignificant.
-   Senders SHOULD NOT generate keys not registered with the HTTP Event
-   Field Registry (with the exception made to allow experimentation).
+   Senders SHOULD NOT generate keys not registered with the HTTP Events
+   Field Registry (the exception is only for experimentation).
    Recipients MAY ignore keys that they are unaware of.
 
 5.1.  duration Property
@@ -627,8 +627,8 @@ Table of Contents
       |  
       |  Servers are advised against enabling event notifications on
       |  long-lived resources over HTTP.  A resource might be considered
-      |  long-lived, if a server determines a low probability of an
-      |  event on the resource in the duration of the response.  In such
+      |  long-lived if a server determines a low probability of an event
+      |  on the resource in the duration of the response.  In such
       |  instances, servers are strongly advised to respond with the
       |  Cache-Control ([HTTP-CACHING], Section 5) header field and the
       |  max-age parameter ([HTTP-CACHING], Section 5.2.2.1) set in it.
@@ -864,8 +864,9 @@ Table of Contents
    representation and subsequent event notifications in a single
    request/response.  When compared to using, say, Fetch [FETCH] and
    EventSource ([HTML], Section 9.2.2) in conjunction, Events Query not
-   only saves on an extra round trip, but relieves a user agent from the
-   burden of synchronizing the representation with event notifications.
+   only saves on an extra round trip, but also relieves a user agent
+   from the burden of synchronizing the representation with event
+   notifications.
 
 10.1.  Request
 
@@ -1003,10 +1004,9 @@ Table of Contents
    A server that enforces access control on a resource must ensure that
    it does not transmit notifications once the authorization carried by
    the request has expired or been revoked.  If the authorization can be
-   revoked mid-response, the server ought to check the validity of the
-   authorization before each notification is sent.  The server must end
-   the response immediately upon discovering that the authorization is
-   invalid.
+   revoked mid-response, the server must check the validity of the
+   authorization before each notification is sent and immediately end
+   the response upon discovering that the authorization is invalid.
 
 13.  IANA Considerations
 
@@ -1113,13 +1113,14 @@ Table of Contents
    resources of interest for each client to filter event notifications
    accordingly.
 
-   Events Query empowers servers to decide the content and the duration
-   for which event notifications are served on any given resource, as
-   well as allowing servers to end the response at any time.  Servers
-   may also limit event notifications and/or their content, except for
-   authenticated consumers.  Such authenticated consumers might, for
-   example, be asked to share the cost burden with publishers in return
-   for a higher quality of service.
+   Events Query empowers servers to decide, for any given resource, the
+   events for which notifications are served and the content of the
+   notifications.  Servers are able to choose the duration for which
+   they wish to serve notifications and are also free to end the
+   response at any time.  Servers implementing Events Query might, thus,
+   be able to offer differentiated service to consumers.  Authenticated
+   consumers, for example, might be asked to share the cost burden with
+   publishers in return for a higher quality of service.
 
    The use of HTTP Semantics also enables intermediation of event
    notifications, unlike existing mechanisms built with protocols such
@@ -1252,7 +1253,7 @@ A.1.  Representation and Notifications
 
    The following example illustrates a complete request and response for
    representation and notifications transferred with the multipart/mixed
-   media-type as described in Section 10: Representation.
+   media-type as described in Section 10:
 
 A.1.1.  Request
 
@@ -1306,10 +1307,9 @@ A.1.2.  Response
 
 A.2.  Notifications Stream
 
-   This following example illustrates complete request and response for
+   The following example illustrates complete request and response for
    JSON formatted notifications transferred with the application/json-
-   seq media-type as described in Notifications Stream: Notifications
-   Stream.
+   seq media-type as described in Section 9:
 
 A.2.1.  Request
 
@@ -1377,11 +1377,11 @@ Index
             *_Section 4.1_*; Section 4.2, Paragraph 1; Section 4.2,
             Paragraph 2; Section 4.2, Paragraph 3; Section 4.3,
             Paragraph 1; Section 4.3, Paragraph 2; Section 4.3,
-            Paragraph 3; Section 5, Paragraph 4; Section 7, Paragraph
-            4.2; Section 8, Paragraph 1; Section 8.1, Paragraph 2.1.1;
-            Section 9.2.2, Paragraph 1; Section 9.2.2, Paragraph 7;
-            Section 9.2.2, Paragraph 9; Section 10.1, Paragraph
-            2.1.2.2.1; Section 11.1, Paragraph 2.2.1
+            Paragraph 3; Section 7, Paragraph 4.2; Section 8, Paragraph
+            1; Section 8.1, Paragraph 2.1.1; Section 9.2.2, Paragraph 1;
+            Section 9.2.2, Paragraph 7; Section 9.2.2, Paragraph 9;
+            Section 10.1, Paragraph 2.1.2.2.1; Section 11.1, Paragraph
+            2.2.1; Section 14, Paragraph 4
          event notification  Section Abstract, Paragraph 1; Section 1,
             Paragraph 3; Section 1, Paragraph 5; Section 1, Paragraph 6;
             Section 1, Paragraph 9; Section 1, Paragraph 10; Section 2,
