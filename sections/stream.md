@@ -50,7 +50,7 @@ The =Events= header field, to communicate the properties of the notifications st
     The =duration= property, set to the maximum duration for which the server intends to serve event-notifications.
 
 + {: #stream-response-incremental-field}
-The `Incremental` header field ({{INCREMENTAL-HTTP-MESSAGES, Section 3}}) set to `?1` to indicate that the response is to be immediately forwarded by intermediaries and not buffered.
+The `Incremental` header field ({{RFC10036, Section 3}}) set to `?1` to indicate that the response is to be immediately forwarded by intermediaries and not buffered.
 
 ~~~ http-message
 {::include examples/stream/response-headers.http}
