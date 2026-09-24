@@ -26,7 +26,7 @@ The first example shows a subscription request for effectively a stream of discr
 {: sourcecode-name="stream-request-multipart-example.http" #stream-request-multipart-example title="Request for Multipart Notifications Stream"}
 
 {: #stream-request-json}
-The second example shows a subscription request for a stream of JSON notifications to be transferred using `application/json-seq` ({{RFC7464}}) as the encapsulating media type. The `events` property in this example is being used to communicate the preferred schema for the requested event-notifications.
+The second example shows a subscription request for a stream of JSON notifications to be transferred using `application/json-seq` ({{RFC7464}}) as the encapsulating media type. The `events` property in this example is being used to communicate the preferred vocabulary for the requested event-notifications.
 
 ~~~ http-message
 {::include examples/stream/json-events-request.http}

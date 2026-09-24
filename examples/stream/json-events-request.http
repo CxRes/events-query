@@ -5,4 +5,4 @@ Content-Type: example/events-query
 Events: duration=0
 
 events:
-  @context: activity+json
+  "@context": https://www.w3.org/ns/activitystreams
