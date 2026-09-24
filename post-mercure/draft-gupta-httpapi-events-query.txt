@@ -3,9 +3,9 @@
 
 
 Building Blocks for HTTP APIs                                   R. Gupta
-Internet-Draft                                               5 July 2026
+Internet-Draft                                         24 September 2026
 Intended status: Standards Track                                        
-Expires: 6 January 2027
+Expires: 28 March 2027
 
 
                            HTTP Events Query
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 January 2027.
+   This Internet-Draft will expire on 28 March 2027.
 
 Copyright Notice
 
@@ -395,28 +395,30 @@ Table of Contents
    At the time of writing, Server-Sent Events (SSE) has emerged as the
    de facto mechanism for transferring event notifications over HTTP.
 
-   Server-Sent Events is standardized as part of HTML Living Standard by
-   the WHATWG
+   The HTML Living Standard standardizes Server-Sent Events ([HTML],
+   Section 9.2) with the EventSource Interface
    // As of October 2022, HTML Living Standard maintainer Anne van
    // Kesteren has stated (https://github.com/whatwg/html/
    // issues/8297#issuecomment-1291658863) that WHATWG does not intend
    // to extend the EventSource API, with reasons for the decision cited
    // in a subsequent comment (https://github.com/whatwg/html/
-   // issues/8297#issuecomment-1291658863). through the EventSource API
-   ([HTML], Section 9.2.2) on user agents and the text/event-stream
-   media type ([HTML], Section 17.7) to transmit event notifications.
-   This approach is fundamentally inconsistent with terminology defined
-   in HTTP Semantics ([HTTP], Section 3.2), transferring a sequence of
-   asynchronous messages instead of a representation "intended to
+   // issues/8297#issuecomment-1291658863).  ([HTML], Section 9.2.2) and
+   text/event-stream media type ([HTML], Section 17.7).  This approach
+   is fundamentally inconsistent with terminology defined in HTTP
+   Semantics ([HTTP], Section 3.2), transferring a sequence of
+   asynchronous messages instead of a _representation_ "intended to
    reflect a past, current, or desired state of a given resource".
-   Practically, the text/event-stream media type being limited to only
-   textual content forces developers to opt for alternative protocols
-   such as WebSockets [WS], despite the increased complexity.  The
-   EventSource API does not even allow for headers to be sent with
-   requests.
+   Practically, the EventSource API is extremely limited.  For example,
+   it does not even allow for custom HTTP header fields to be sent with
+   requests.  The response is only sent as text/event-stream, a text
+   format that splits messages by line breaks.  Not just binary content
+   but even multi-line text that requires line breaks to be preserved
+   must be encoded as Base 64 ([RFC4648], Section 4) for transmission,
+   which results in an additional burden for both the sender and the
+   recipient.
 
-   This has led to a proliferation of non-standard implementations of
-   Server-Sent Events
+   On one hand, these deficiencies have led to a proliferation of non-
+   standard implementations of Server-Sent Events
    // such as this (https://www.npmjs.com/package/event-source-plus),
    // this (https://www.npmjs.com/package/@microsoft/fetch-event-
    // source), this (https://www.npmjs.com/package/fetch-event-stream),
@@ -424,7 +426,9 @@ Table of Contents
    // (https://www.npmjs.com/package/ngx-sse-client) and this
    // (https://www.npmjs.com/package/sse.js) that provide support for
    custom headers, such as for sending credentials, or use the POST
-   method to communicate additional configuration in the request body.
+   method to communicate additional configuration in a request body.  On
+   the other, they have forced developers to adopt alternative protocols
+   such as WebSockets [WS], despite the increased complexity.
 
    Events Query takes a principled approach to event notifications, as
    established in Section 4.  In particular, the definition of an event
@@ -583,8 +587,11 @@ Table of Contents
    *  an interest in receiving a stream of event notifications from a
       resource in a preferred form.
 
-   *  an interest in receiving a representation of a resource in a
-      preferred form.
+   *  an interest in receiving a representation of a resource (that
+      would be sent in response to a GET request) in a preferred form.
+
+   A client MAY specify an interest specific to the representation it is
+   prepared to accept in response to the QUERY request.
 
    Implementations can choose appropriate media types to realize the
    subscription data model.  Implementations are free to extend the data
@@ -603,6 +610,24 @@ Table of Contents
 
           Figure 2: Events Query Data Model in a YAML-like syntax
 
+   The following modifies the previous example to express an interest in
+   receiving representation and notifications as linked data when the
+   response media type is JSON sequence ([RFC7464]).
+
+   application/json-seq:
+     state:
+       "@context": application/ld+json
+     events:
+       "@context": application/activity+json
+   "*/*":
+     state:
+       Accept: text/html
+     events:
+       Accept: example/event-notification
+
+       Figure 3: Events Query Data Model with Representation Specific
+                                  Interest
+
 7.  Discovery
 
    A user agent can discover if a server enables Events Query on a
@@ -614,14 +639,14 @@ Table of Contents
    HEAD /foo HTTP/1.1
    Host: example.org
 
-                        Figure 3: Discovery Request
+                        Figure 4: Discovery Request
 
    HTTP/1.1 200 OK
    Date: Thu, 02 Jan 2025 10:00:00 GMT
    Accept: text/html
    Accept-Query: "example/events-query"
 
-                        Figure 4: Discovery Response
+                        Figure 5: Discovery Response
 
       |  *Implementation Advice*
       |  
@@ -659,7 +684,7 @@ Table of Contents
 
    ---
 
-                Figure 5: Single Event Notification Request
+                Figure 6: Single Event Notification Request
 
 8.2.  Response
 
@@ -677,7 +702,7 @@ Table of Contents
    event-id: 456
    type: update
 
-                Figure 6: Single Event Notification Response
+                Figure 7: Single Event Notification Response
 
 
       |  *Implementation Advice*
@@ -732,7 +757,7 @@ Table of Contents
    events:
      Accept: example/event-notification
 
-            Figure 7: Request for Multipart Notifications Stream
+            Figure 8: Request for Multipart Notifications Stream
 
    The second example shows a subscription request for a stream of JSON
    notifications to be transferred using application/json-seq
@@ -749,7 +774,7 @@ Table of Contents
    events:
      @context: activity+json
 
-              Figure 8: Request for JSON Notifications Stream
+              Figure 9: Request for JSON Notifications Stream
 
 9.2.  Response
 
@@ -770,9 +795,9 @@ Table of Contents
       -  The duration property, set to the maximum duration for which
          the server intends to serve event notifications.
 
-   *  The Incremental header field ([INCREMENTAL-HTTP-MESSAGES],
-      Section 3) set to ?1 to indicate that the response is to be
-      immediately forwarded by intermediaries and not buffered.
+   *  The Incremental header field ([RFC10036], Section 3) set to ?1 to
+      indicate that the response is to be immediately forwarded by
+      intermediaries and not buffered.
 
    HTTP/1.1 200 OK
    Date: Thu, 02 Jan 2025 10:10:10 GMT
@@ -781,20 +806,20 @@ Table of Contents
    Incremental: ?1
    Transfer-Encoding: chunked
 
-              Figure 9: Notifications Stream Response Headers
+              Figure 10: Notifications Stream Response Headers
 
    The Content-Type header field in response to the request in the first
    example is:
 
    Content-Type: multipart/mixed; boundary="THIS_STRING_SEPARATES"
 
-     Figure 10: Notifications Stream Multipart Content Response Header
+     Figure 11: Notifications Stream Multipart Content Response Header
 
    whereas in response to the request in the second example is:
 
    Content-Type: application/json-seq
 
-       Figure 11: Notifications Stream JSON Content Response Headers
+       Figure 12: Notifications Stream JSON Content Response Headers
 
 9.2.2.  Notifications
 
@@ -814,7 +839,7 @@ Table of Contents
    event-id: 456                                    |
    type: update                                     |
 
-                  Figure 12: Multipart Update Notification
+                  Figure 13: Multipart Update Notification
 
    The same event notification when transferred in an application/json-
    seq response stream is as follows:
@@ -825,7 +850,7 @@ Table of Contents
      "type": "update"                               |
    }                                                |
 
-                    Figure 13: JSON Update Notification
+                    Figure 14: JSON Update Notification
 
    A server MUST end the response immediately after transmitting the
    event notification that signals the deletion of a resource.
@@ -842,7 +867,7 @@ Table of Contents
    type: delete                                     |
    --THIS_STRING_SEPARATES--
 
-                  Figure 14: Multipart Delete Notification
+                  Figure 15: Multipart Delete Notification
 
    The same notification for a delete event as JSON would be as follows:
 
@@ -852,7 +877,7 @@ Table of Contents
      "type": "delete"                               |
    }                                                |
 
-                    Figure 15: JSON Delete Notification
+                    Figure 16: JSON Delete Notification
 
    Otherwise, a server MUST end the response when the connection
    duration exceeds the period set in the duration property of the
@@ -903,7 +928,7 @@ Table of Contents
    events:
      Accept: example/event-notification
 
-          Figure 16: HTTP Representation and Notifications Request
+          Figure 17: HTTP Representation and Notifications Request
 
 10.2.  Response
 
@@ -934,7 +959,7 @@ Table of Contents
                                                     |
    Hello World!                                     |
 
-          Figure 17: Representation Response before Notifications
+          Figure 18: Representation Response before Notifications
 
    While this is default behavior, there is no requirement that a
    representation is the first message or that representations are sent
@@ -1152,13 +1177,6 @@ Table of Contents
               HTTP", RFC 9651, DOI 10.17487/RFC9651, September 2024,
               <https://www.rfc-editor.org/rfc/rfc9651>.
 
-   [INCREMENTAL-HTTP-MESSAGES]
-              Oku, K., Pauly, T., and M. Thomson, "Incremental
-              Forwarding of HTTP Messages", Work in Progress, Internet-
-              Draft, draft-ietf-httpbis-incremental-04, 2 March 2026,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
-              incremental-04>.
-
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
@@ -1172,6 +1190,11 @@ Table of Contents
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+   [RFC10036] Oku, K., Pauly, T., and M. Thomson, "Incremental
+              Forwarding of HTTP Messages", RFC 10036,
+              DOI 10.17487/RFC10036, August 2026,
+              <https://www.rfc-editor.org/rfc/rfc10036>.
 
 15.2.  Informative References
 
@@ -1215,6 +1238,10 @@ Table of Contents
    [RFC3935]  Alvestrand, H., "A Mission Statement for the IETF",
               BCP 95, RFC 3935, DOI 10.17487/RFC3935, October 2004,
               <https://www.rfc-editor.org/rfc/rfc3935>.
+
+   [RFC4648]  Josefsson, S., "The Base16, Base32, and Base64 Data
+              Encodings", RFC 4648, DOI 10.17487/RFC4648, October 2006,
+              <https://www.rfc-editor.org/rfc/rfc4648>.
 
    [RFC6202]  Loreto, S., Saint-Andre, P., Salsano, S., and G. Wilkins,
               "Known Issues and Best Practices for the Use of Long
@@ -1268,7 +1295,7 @@ A.1.1.  Request
    events:
      Accept: example/event-notification
 
-          Figure 18: Request for Representation and Notifications
+          Figure 19: Request for Representation and Notifications
 
 A.1.2.  Response
 
@@ -1303,7 +1330,7 @@ A.1.2.  Response
    type: delete                                     |
    --THIS_STRING_SEPARATES--
 
-         Figure 19: Response with Representation and Notifications
+         Figure 20: Response with Representation and Notifications
 
 A.2.  Notifications Stream
 
@@ -1322,7 +1349,7 @@ A.2.1.  Request
    events:
      @context: activity+json
 
-                 Figure 20: Request for JSON Notifications
+                 Figure 21: Request for JSON Notifications
 
 A.2.2.  Response
 
@@ -1345,7 +1372,7 @@ A.2.2.  Response
      "type": "delete"                               |
    }                                                |
 
-                Figure 21: Response with JSON Notifications
+                Figure 22: Response with JSON Notifications
 
 Acknowledgments
 
@@ -1398,15 +1425,15 @@ Index
             2.2.1; Section 2.4.3, Paragraph 2.3.1; Section 2.4.3,
             Paragraph 2.4.1; Section 2.5, Paragraph 1; Section 2.5,
             Paragraph 2; Section 2.6, Paragraph 1; Section 2.6,
-            Paragraph 2; Section 2.6, Paragraph 4; Section 4.2,
-            Paragraph 3; *_Section 4.3_*; Section 4.3, Paragraph 1;
-            Section 4.3, Paragraph 2; Section 4.3, Paragraph 3;
-            Section 4.4, Paragraph 1; Section 4.4, Paragraph 2;
-            Section 4.4, Paragraph 3; Section 5, Paragraph 2; Section 5,
-            Paragraph 3; Section 5.1, Paragraph 2; Section 5.1,
-            Paragraph 3; Section 5.1, Paragraph 4; Section 6, Paragraph
-            3.1.1; Section 6, Paragraph 5; Section 7, Paragraph 4.2;
-            Section 8, Paragraph 1; Section 8.1, Paragraph 1;
+            Paragraph 4; Section 4.2, Paragraph 3; *_Section 4.3_*;
+            Section 4.3, Paragraph 1; Section 4.3, Paragraph 2;
+            Section 4.3, Paragraph 3; Section 4.4, Paragraph 1;
+            Section 4.4, Paragraph 2; Section 4.4, Paragraph 3;
+            Section 5, Paragraph 2; Section 5, Paragraph 3; Section 5.1,
+            Paragraph 2; Section 5.1, Paragraph 3; Section 5.1,
+            Paragraph 4; Section 6, Paragraph 3.1.1; Section 6,
+            Paragraph 6; Section 6, Paragraph 8; Section 7, Paragraph
+            4.2; Section 8, Paragraph 1; Section 8.1, Paragraph 1;
             Section 8.1, Paragraph 2.1.1; Section 8.1, Paragraph 3;
             Section 8.2, Paragraph 1; Section 9, Paragraph 1;
             Section 9.1, Paragraph 1; Section 9.1, Paragraph 2.1.1;
@@ -1454,14 +1481,14 @@ Index
             2.2.1; Section 2.4.3, Paragraph 2.3.1; Section 2.4.3,
             Paragraph 2.4.1; Section 2.5, Paragraph 1; Section 2.5,
             Paragraph 2; Section 2.6, Paragraph 1; Section 2.6,
-            Paragraph 2; Section 2.6, Paragraph 4; Section 4.2,
-            Paragraph 3; *_Section 4.3_*; Section 4.3, Paragraph 1;
-            Section 4.4, Paragraph 1; Section 4.4, Paragraph 2;
-            Section 4.4, Paragraph 3; Section 5, Paragraph 2; Section 5,
-            Paragraph 3; Section 5.1, Paragraph 2; Section 5.1,
-            Paragraph 3; Section 5.1, Paragraph 4; Section 6, Paragraph
-            3.1.1; Section 6, Paragraph 5; Section 7, Paragraph 4.2;
-            Section 8, Paragraph 1; Section 8.1, Paragraph 1;
+            Paragraph 4; Section 4.2, Paragraph 3; *_Section 4.3_*;
+            Section 4.3, Paragraph 1; Section 4.4, Paragraph 1;
+            Section 4.4, Paragraph 2; Section 4.4, Paragraph 3;
+            Section 5, Paragraph 2; Section 5, Paragraph 3; Section 5.1,
+            Paragraph 2; Section 5.1, Paragraph 3; Section 5.1,
+            Paragraph 4; Section 6, Paragraph 3.1.1; Section 6,
+            Paragraph 6; Section 6, Paragraph 8; Section 7, Paragraph
+            4.2; Section 8, Paragraph 1; Section 8.1, Paragraph 1;
             Section 8.1, Paragraph 2.1.1; Section 8.1, Paragraph 3;
             Section 8.2, Paragraph 1; Section 9, Paragraph 1;
             Section 9.1, Paragraph 1; Section 9.1, Paragraph 2.1.1;
@@ -1494,8 +1521,8 @@ Index
          subscriber  Section 4.3, Paragraph 3; *_Section 4.4, Paragraph
             1_*; Section 4.4, Paragraph 2
          subscription  Section 2.6, Paragraph 4; *_Section 4.4_*;
-            Section 6, Paragraph 2; Section 6, Paragraph 4; Section 6,
-            Paragraph 5; Section 8.1, Paragraph 2.1.1; Section 9.1,
+            Section 6, Paragraph 2; Section 6, Paragraph 5; Section 6,
+            Paragraph 6; Section 8.1, Paragraph 2.1.1; Section 9.1,
             Paragraph 2.1.1; Section 9.1, Paragraph 3; Section 9.1,
             Paragraph 4; Section 9.1, Paragraph 6; Section 10.1,
             Paragraph 2.1.1; Section 10.1, Paragraph 3; Section 11.2,
