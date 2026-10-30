@@ -277,15 +277,15 @@ Table of Contents
        specifications.  Implementers shall be able to repurpose existing
        tools and libraries for implementing this specification.
 
-   2.  conforms to Representational State Transfer (REST) architectural
-       style ([REST], Chapter 5), best practices for Building Protocols
-       with HTTP [RFC9205], and Known Issues and Best Practices for the
-       Use of Long Polling and Streaming in Bidirectional HTTP
-       [RFC6202].  This specification can thus be used to extend the
-       capabilities of any existing or future resource to additionally
-       serve event notifications over HTTP.  This is to afford
-       implementers the opportunity to scale notifications with their
-       data and application.
+   2.  conforms to the Representational State Transfer (REST)
+       architectural style ([REST], Chapter 5), best practices for
+       Building Protocols with HTTP [RFC9205], and Known Issues and Best
+       Practices for the Use of Long Polling and Streaming in
+       Bidirectional HTTP [RFC6202].  This specification can thus be
+       used to extend the capabilities of any existing or future
+       resource to additionally serve event notifications over HTTP.
+       This is to afford implementers the opportunity to scale
+       notifications with their data and application.
 
 2.3.  Scope
 
