@@ -53,19 +53,21 @@ informative:
     title: Fetch
     author:
       -
-        name: WHATWG
+        org: WHATWG
     seriesinfo:
       WHATWG: Living Standard
-    date: Last Updated 28 May 2025
+    date: false
+    annotation: "Commit snapshot (19 October 2026): <https://fetch.spec.whatwg.org/commit-snapshots/59afe349913d56898c947576216f1c2579308be7/>"
   HTML:
     target: https://html.spec.whatwg.org
     title: HTML
     author:
       -
-        name: WHATWG
+        org: WHATWG
     seriesinfo:
       WHATWG: Living Standard
-    date: Last Updated 15 April 2026
+    date: false
+    annotation: "Commit snapshot (30 October 2026): <https://html.spec.whatwg.org/commit-snapshots/404b3eb14a7a936dddefb2d78e224dbeb01d2358/>"
   HTTP-CACHING: RFC9111
   REST:
     target: https://roy.gbiv.com/pubs/dissertation/rest_arch_style.htm
