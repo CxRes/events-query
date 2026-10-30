@@ -277,14 +277,15 @@ Table of Contents
        specifications.  Implementers shall be able to repurpose existing
        tools and libraries for implementing this specification.
 
-   2.  conforms to Representational State Transfer [REST, Chapter 5],
-       best practices for Building Protocols with HTTP [RFC9205], and
-       Known Issues and Best Practices for the Use of Long Polling and
-       Streaming in Bidirectional HTTP [RFC6202].  This specification
-       can thus be used to extend the capabilities of any existing or
-       future resource to additionally serve event notifications over
-       HTTP.  This is to afford implementers the opportunity to scale
-       notifications with their data and application.
+   2.  conforms to Representational State Transfer (REST) ([REST],
+       Chapter 5), best practices for Building Protocols with HTTP
+       [RFC9205], and Known Issues and Best Practices for the Use of
+       Long Polling and Streaming in Bidirectional HTTP [RFC6202].  This
+       specification can thus be used to extend the capabilities of any
+       existing or future resource to additionally serve event
+       notifications over HTTP.  This is to afford implementers the
+       opportunity to scale notifications with their data and
+       application.
 
 2.3.  Scope
 
@@ -372,27 +373,27 @@ Table of Contents
 
    APIs built on top of existing messaging protocols (see, for example,
    WebSocket [WS] and WebSub [WEBSUB]) typically transfer event
-   notifications originating from multiple resources in a single
-   response.  To replicate this functionality with Events Query,
-   applications can mint additional resources, each representing a
-   collection of other resources ([REST], Section 5.2.1.1), to serve as
-   endpoints for multi-resource notifications.
+   notifications for multiple resources from a single endpoint.  To
+   replicate this functionality with Events Query, applications can mint
+   additional resources, which represent a collection of other resources
+   ([REST], Section 5.2.1.1), to serve as endpoints for multi-resource
+   notifications.
 
-   The Events Query leaves the design of endpoints to additional
-   specifications, which can provide:
+   The Events Query Protocol leaves the design of endpoints to
+   additional specifications, which can provide:
 
    1.  A mechanism for a server to advertise an endpoint, and the
        resources whose events the endpoint can report.
 
    2.  A mechanism for a client to specify the resources from which it
        wants to receive event notifications, for example by extending
-       the Subscription Data Model (Section 6).
+       the Subscription Data Model.
 
    Subscribing to multiple resources with a single Events Query is,
    however, discouraged.  It mirrors methods that encapsulate multiple
    requests within a single message, such as MGET or MHEAD, which were
-   rejected during the design of HTTP/1.1 because they violate REST
-   constraints ([REST], Section 6.3.3.1).  Where per-resource
+   rejected during the design of HTTP/1.1 because they violate several
+   REST constraints ([REST], Section 6.3.3.1).  Where per-resource
    subscriptions are impractical, such as in limited environments or
    with legacy applications, endpoints can serve as an alternative.
 
@@ -409,7 +410,7 @@ Table of Contents
    strategies, such as, maximizing the number of concurrent connections
    and providing alternate hosts for resources.  Implementations might
    alternatively consider using endpoints to provide event notifications
-   for multiple resources as previously described.  Clients on a browser
+   for multiple resources (see Section 2.4.4).  Clients on a browser
    requesting event notifications over an HTTP/1.1 connection are
    advised to exercise caution when simultaneously opening multiple
    persistent connections to a given host.
@@ -1033,9 +1034,9 @@ Table of Contents
 11.3.  23signs Web Service
 
    Jaime Jiménez has also created a web service hosted at
-   https://web.23signs.org (https://web.23signs.org) that serves clean
-   Markdown representations of public web pages, with change
-   notifications delivered using Events Query.
+   https://web.23signs.org that serves clean Markdown representations of
+   public web pages, with change notifications delivered using Events
+   Query.
 
    This service demonstrates a third-party observer generating event
    notifications for resources that do not natively support Events
@@ -1260,8 +1261,8 @@ Table of Contents
 
    [REST]     Fielding, R. T., "Architectural Styles and the Design of
               Network-based Software Architectures", Doctoral
-              Dissertation, University of California, Irvine,
-              <https://roy.gbiv.com/pubs/dissertation/top.htm>.
+              Dissertation, University of California, Irvine, September
+              2000, <https://roy.gbiv.com/pubs/dissertation/top.htm>.
 
    [RFC2046]  Freed, N. and N. Borenstein, "Multipurpose Internet Mail
               Extensions (MIME) Part Two: Media Types", RFC 2046,
@@ -1420,7 +1421,6 @@ Index
 
       D
 
-         Data Model  Section 2.4.4, Paragraph 3.2.1
          data model  Section 2.3, Paragraph 2.3.1; Section 2.4.2,
             Paragraph 2.1.1; *_Section 6_*; Section 8.1, Paragraph
             2.1.1; Section 9.1, Paragraph 2.1.1; Section 10.1, Paragraph
@@ -1434,8 +1434,7 @@ Index
          event  Section 2, Paragraph 1; Section 2.4.1, Paragraph 1;
             Section 2.4.1, Paragraph 2.1.1; Section 2.4.1, Paragraph 3;
             Section 2.4.3, Paragraph 2.1.1; Section 2.4.3, Paragraph
-            2.2.1; Section 2.4.4, Paragraph 1; Section 2.4.4, Paragraph
-            3.1.1; Section 2.4.4, Paragraph 3.2.1; Section 2.6,
+            2.2.1; Section 2.4.4, Paragraph 3.1.1; Section 2.6,
             Paragraph 4; *_Section 4.1_*; Section 4.2, Paragraph 1;
             Section 4.2, Paragraph 2; Section 4.2, Paragraph 3;
             Section 4.3, Paragraph 1; Section 4.3, Paragraph 2;
@@ -1443,8 +1442,8 @@ Index
             Section 8, Paragraph 1; Section 8.1, Paragraph 2.1.1;
             Section 9.2.2, Paragraph 1; Section 9.2.2, Paragraph 7;
             Section 9.2.2, Paragraph 9; Section 10.1, Paragraph
-            2.1.2.2.1; Section 11.1, Paragraph 2.2.1; Section 11.3,
-            Paragraph 2; Section 14, Paragraph 4
+            2.1.2.2.1; Section 11.1, Paragraph 2.2.1; Section 14,
+            Paragraph 4
          event notification  Section Abstract, Paragraph 1; Section 1,
             Paragraph 3; Section 1, Paragraph 5; Section 1, Paragraph 6;
             Section 1, Paragraph 9; Section 1, Paragraph 10; Section 2,
@@ -1560,14 +1559,13 @@ Index
 
          subscriber  Section 4.3, Paragraph 3; *_Section 4.4, Paragraph
             1_*; Section 4.4, Paragraph 2
-         subscription  Section 2.4.4, Paragraph 3.2.1; Section 2.6,
-            Paragraph 4; *_Section 4.4_*; Section 6, Paragraph 2;
-            Section 6, Paragraph 5; Section 6, Paragraph 6; Section 8.1,
-            Paragraph 2.1.1; Section 9.1, Paragraph 2.1.1; Section 9.1,
-            Paragraph 3; Section 9.1, Paragraph 4; Section 9.1,
-            Paragraph 6; Section 10.1, Paragraph 2.1.1; Section 10.1,
-            Paragraph 3; Section 11.2, Paragraph 1; Section 12,
-            Paragraph 2
+         subscription  Section 2.6, Paragraph 4; *_Section 4.4_*;
+            Section 6, Paragraph 2; Section 6, Paragraph 5; Section 6,
+            Paragraph 6; Section 8.1, Paragraph 2.1.1; Section 9.1,
+            Paragraph 2.1.1; Section 9.1, Paragraph 3; Section 9.1,
+            Paragraph 4; Section 9.1, Paragraph 6; Section 10.1,
+            Paragraph 2.1.1; Section 10.1, Paragraph 3; Section 11.2,
+            Paragraph 1; Section 12, Paragraph 2
 
 Author's Address
 
