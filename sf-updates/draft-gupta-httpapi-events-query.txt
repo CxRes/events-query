@@ -3,9 +3,9 @@
 
 
 Building Blocks for HTTP APIs                                   R. Gupta
-Internet-Draft                                         24 September 2026
+Internet-Draft                                           30 October 2026
 Intended status: Standards Track                                        
-Expires: 28 March 2027
+Expires: 3 May 2027
 
 
                            HTTP Events Query
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 March 2027.
+   This Internet-Draft will expire on 3 May 2027.
 
 Copyright Notice
 
@@ -80,6 +80,7 @@ Table of Contents
        2.4.1.  Event Semantics
        2.4.2.  Realizations and Formats
        2.4.3.  Temporal Coordination
+       2.4.4.  Endpoints
      2.5.  Limitations
      2.6.  Comparison with Server-Sent Events
    3.  Conformance
@@ -108,6 +109,7 @@ Table of Contents
    11. Implementation Status
      11.1.  Express Demo
      11.2.  CAMARA API Demo
+     11.3.  23signs Web Service
    12. Security Considerations
    13. IANA Considerations
      13.1.  HTTP Field Registration
@@ -275,14 +277,15 @@ Table of Contents
        specifications.  Implementers shall be able to repurpose existing
        tools and libraries for implementing this specification.
 
-   2.  conforms to Representational State Transfer (REST), best
-       practices for Building Protocols with HTTP [RFC9205], and Known
-       Issues and Best Practices for the Use of Long Polling and
-       Streaming in Bidirectional HTTP [RFC6202].  This specification
-       can thus be used to extend the capabilities of any existing or
-       future resource to additionally serve event notifications over
-       HTTP.  This is to afford implementers the opportunity to scale
-       notifications with their data and application.
+   2.  conforms to Architectural Styles and the Design of Network-based
+       Software Architectures, best practices for Building Protocols
+       with HTTP [RFC9205], and Known Issues and Best Practices for the
+       Use of Long Polling and Streaming in Bidirectional HTTP
+       [RFC6202].  This specification can thus be used to extend the
+       capabilities of any existing or future resource to additionally
+       serve event notifications over HTTP.  This is to afford
+       implementers the opportunity to scale notifications with their
+       data and application.
 
 2.3.  Scope
 
@@ -349,7 +352,8 @@ Table of Contents
    able to extend the Subscription Data Model with additional
    specifications that provide:
 
-   1.  A scheme for versioning events occurring on a resource.
+   1.  A scheme for labeling events on a resource or versioning its
+       states.
 
    2.  Replay or resumption of event notifications from a prior event.
        This can, for example, help clients recover upon reconnection
@@ -365,14 +369,37 @@ Table of Contents
        Transforms (OT) strategy to be implemented by a client for
        synchronizing the representation using event notifications.
 
-2.5.  Limitations
+2.4.4.  Endpoints
 
-   Events Query only allows notifications to be sent for events on a
-   given resource.  To transfer event notifications originating from
-   multiple resources in a single response, implementations will need to
-   mint additional resources to serve as notification endpoints.  This
-   is no different from APIs built on top of existing messaging
-   protocols (see, for example, WebSocket [WS] and WebSub [WEBSUB]).
+   {#out-of-scope--endpoints}
+
+   APIs built on top of existing messaging protocols (see, for example,
+   WebSocket [WS] and WebSub [WEBSUB]) typically transfer event
+   notifications originating from multiple resources in a single
+   response.  To replicate this functionality with Events Query,
+   applications can mint additional resources, each representing a
+   collection of other resources ([REST], Section 5.2.1.1), to serve as
+   endpoints for multi-resource notifications.
+
+   The Events Query leaves the design of endpoints to additional
+   specifications, which can provide:
+
+   1.  A mechanism for a server to advertise an endpoint, and the
+       resources whose events the endpoint can report.
+
+   2.  A mechanism for a client to specify the resources from which it
+       wants to receive event notifications, for example by extending
+       the Subscription Data Model (Section 6).
+
+   Subscribing to multiple resources with a single Events Query is,
+   however, discouraged.  It mirrors methods that encapsulate multiple
+   requests within a single message, such as MGET or MHEAD, which were
+   rejected during the design of HTTP/1.1 because they violate REST
+   constraints ([REST], Section 6.3.3.1).  Where per-resource
+   subscriptions are impractical, such as in limited environments or
+   with legacy applications, endpoints can serve as an alternative.
+
+2.5.  Limitations
 
    Browsers cap the number of persistent HTTP/1.1 connections per host,
    limiting the suitability of Events Query for web applications in the
@@ -1006,6 +1033,17 @@ Table of Contents
    to a resource, rather than setting up a separate Webhooks
    subscription.
 
+11.3.  23signs Web Service
+
+   Jaime Jiménez has also created a web service hosted at
+   https://web.23signs.org (https://web.23signs.org) that serves clean
+   Markdown representations of public web pages, with change
+   notifications delivered using Events Query.
+
+   This service demonstrates a third-party observer generating event
+   notifications for resources that do not natively support Events
+   Query.
+
 12.  Security Considerations
 
    Events Query is subject to the security considerations of the HTTP
@@ -1223,12 +1261,10 @@ Table of Contents
               DOI 10.17487/RFC9111, June 2022,
               <https://www.rfc-editor.org/rfc/rfc9111>.
 
-   [REST]     Fielding, R., "Representational State Transfer (REST)",
-              Chapter 5, Architectural Styles and the Design of Network-
-              based Software Architectures, Doctoral
-              Dissertation University of California, Irvine,
-              <https://roy.gbiv.com/pubs/dissertation/
-              rest_arch_style.htm>.
+   [REST]     Fielding, R. T., "Architectural Styles and the Design of
+              Network-based Software Architectures", Doctoral
+              Dissertation, University of California, Irvine,
+              <https://roy.gbiv.com/pubs/dissertation/top.htm>.
 
    [RFC2046]  Freed, N. and N. Borenstein, "Multipurpose Internet Mail
               Extensions (MIME) Part Two: Media Types", RFC 2046,
@@ -1387,6 +1423,7 @@ Index
 
       D
 
+         Data Model  Section 2.4.4, Paragraph 4.2.1
          data model  Section 2.3, Paragraph 2.3.1; Section 2.4.2,
             Paragraph 2.1.1; *_Section 6_*; Section 8.1, Paragraph
             2.1.1; Section 9.1, Paragraph 2.1.1; Section 10.1, Paragraph
@@ -1400,15 +1437,17 @@ Index
          event  Section 2, Paragraph 1; Section 2.4.1, Paragraph 1;
             Section 2.4.1, Paragraph 2.1.1; Section 2.4.1, Paragraph 3;
             Section 2.4.3, Paragraph 2.1.1; Section 2.4.3, Paragraph
-            2.2.1; Section 2.5, Paragraph 1; Section 2.6, Paragraph 4;
-            *_Section 4.1_*; Section 4.2, Paragraph 1; Section 4.2,
-            Paragraph 2; Section 4.2, Paragraph 3; Section 4.3,
-            Paragraph 1; Section 4.3, Paragraph 2; Section 4.3,
-            Paragraph 3; Section 7, Paragraph 4.2; Section 8, Paragraph
-            1; Section 8.1, Paragraph 2.1.1; Section 9.2.2, Paragraph 1;
-            Section 9.2.2, Paragraph 7; Section 9.2.2, Paragraph 9;
-            Section 10.1, Paragraph 2.1.2.2.1; Section 11.1, Paragraph
-            2.2.1; Section 14, Paragraph 4
+            2.2.1; Section 2.4.4, Paragraph 2; Section 2.4.4, Paragraph
+            4.1.1; Section 2.4.4, Paragraph 4.2.1; Section 2.6,
+            Paragraph 4; *_Section 4.1_*; Section 4.2, Paragraph 1;
+            Section 4.2, Paragraph 2; Section 4.2, Paragraph 3;
+            Section 4.3, Paragraph 1; Section 4.3, Paragraph 2;
+            Section 4.3, Paragraph 3; Section 7, Paragraph 4.2;
+            Section 8, Paragraph 1; Section 8.1, Paragraph 2.1.1;
+            Section 9.2.2, Paragraph 1; Section 9.2.2, Paragraph 7;
+            Section 9.2.2, Paragraph 9; Section 10.1, Paragraph
+            2.1.2.2.1; Section 11.1, Paragraph 2.2.1; Section 11.3,
+            Paragraph 2; Section 14, Paragraph 4
          event notification  Section Abstract, Paragraph 1; Section 1,
             Paragraph 3; Section 1, Paragraph 5; Section 1, Paragraph 6;
             Section 1, Paragraph 9; Section 1, Paragraph 10; Section 2,
@@ -1423,34 +1462,36 @@ Index
             Section 2.4.2, Paragraph 2.1.1; Section 2.4.2, Paragraph
             2.3.1; Section 2.4.3, Paragraph 1; Section 2.4.3, Paragraph
             2.2.1; Section 2.4.3, Paragraph 2.3.1; Section 2.4.3,
-            Paragraph 2.4.1; Section 2.5, Paragraph 1; Section 2.5,
-            Paragraph 2; Section 2.6, Paragraph 1; Section 2.6,
-            Paragraph 4; Section 4.2, Paragraph 3; *_Section 4.3_*;
-            Section 4.3, Paragraph 1; Section 4.3, Paragraph 2;
-            Section 4.3, Paragraph 3; Section 4.4, Paragraph 1;
-            Section 4.4, Paragraph 2; Section 4.4, Paragraph 3;
-            Section 5, Paragraph 2; Section 5, Paragraph 3; Section 5.1,
-            Paragraph 2; Section 5.1, Paragraph 3; Section 5.1,
-            Paragraph 4; Section 6, Paragraph 3.1.1; Section 6,
-            Paragraph 6; Section 6, Paragraph 8; Section 7, Paragraph
-            4.2; Section 8, Paragraph 1; Section 8.1, Paragraph 1;
-            Section 8.1, Paragraph 2.1.1; Section 8.1, Paragraph 3;
-            Section 8.2, Paragraph 1; Section 9, Paragraph 1;
-            Section 9.1, Paragraph 1; Section 9.1, Paragraph 2.1.1;
-            Section 9.1, Paragraph 3; Section 9.1, Paragraph 4;
-            Section 9.1, Paragraph 6; Section 9.2, Paragraph 1;
-            Section 9.2.1, Paragraph 1; Section 9.2.1, Paragraph 2.1.1;
-            Section 9.2.1, Paragraph 2.1.2.1.1; Section 9.2.2, Paragraph
-            1; Section 9.2.2, Paragraph 2; Section 9.2.2, Paragraph 4;
-            Section 9.2.2, Paragraph 6; Section 9.2.2, Paragraph 7;
-            Section 9.2.2, Paragraph 9; Section 10, Paragraph 1;
-            Section 10.1, Paragraph 1; Section 10.1, Paragraph
-            2.1.2.2.1; Section 10.1, Paragraph 3; Section 10.2,
-            Paragraph 1; Section 10.2, Paragraph 2; Section 10.2,
-            Paragraph 5; Section 10.2, Paragraph 6; Section 11.1,
-            Paragraph 2.2.1; Section 11.1, Paragraph 2.3.1; Section 12,
-            Paragraph 2; Section 12, Paragraph 3; Section 14, Paragraph
-            2; Section 14, Paragraph 3; Section 14, Paragraph 4;
+            Paragraph 2.4.1; Section 2.4.4, Paragraph 2; Section 2.4.4,
+            Paragraph 4.2.1; Section 2.5, Paragraph 1; Section 2.6,
+            Paragraph 1; Section 2.6, Paragraph 4; Section 4.2,
+            Paragraph 3; *_Section 4.3_*; Section 4.3, Paragraph 1;
+            Section 4.3, Paragraph 2; Section 4.3, Paragraph 3;
+            Section 4.4, Paragraph 1; Section 4.4, Paragraph 2;
+            Section 4.4, Paragraph 3; Section 5, Paragraph 2; Section 5,
+            Paragraph 3; Section 5.1, Paragraph 2; Section 5.1,
+            Paragraph 3; Section 5.1, Paragraph 4; Section 6, Paragraph
+            3.1.1; Section 6, Paragraph 6; Section 6, Paragraph 8;
+            Section 7, Paragraph 4.2; Section 8, Paragraph 1;
+            Section 8.1, Paragraph 1; Section 8.1, Paragraph 2.1.1;
+            Section 8.1, Paragraph 3; Section 8.2, Paragraph 1;
+            Section 9, Paragraph 1; Section 9.1, Paragraph 1;
+            Section 9.1, Paragraph 2.1.1; Section 9.1, Paragraph 3;
+            Section 9.1, Paragraph 4; Section 9.1, Paragraph 6;
+            Section 9.2, Paragraph 1; Section 9.2.1, Paragraph 1;
+            Section 9.2.1, Paragraph 2.1.1; Section 9.2.1, Paragraph
+            2.1.2.1.1; Section 9.2.2, Paragraph 1; Section 9.2.2,
+            Paragraph 2; Section 9.2.2, Paragraph 4; Section 9.2.2,
+            Paragraph 6; Section 9.2.2, Paragraph 7; Section 9.2.2,
+            Paragraph 9; Section 10, Paragraph 1; Section 10.1,
+            Paragraph 1; Section 10.1, Paragraph 2.1.2.2.1;
+            Section 10.1, Paragraph 3; Section 10.2, Paragraph 1;
+            Section 10.2, Paragraph 2; Section 10.2, Paragraph 5;
+            Section 10.2, Paragraph 6; Section 11.1, Paragraph 2.2.1;
+            Section 11.1, Paragraph 2.3.1; Section 11.3, Paragraph 1;
+            Section 11.3, Paragraph 2; Section 12, Paragraph 2;
+            Section 12, Paragraph 3; Section 14, Paragraph 2;
+            Section 14, Paragraph 3; Section 14, Paragraph 4;
             Section 14, Paragraph 5; Appendix A.1, Paragraph 1;
             Appendix A.2, Paragraph 1
          events (header field)  *_Section 5_*; Section 9.2.1, Paragraph
@@ -1479,33 +1520,35 @@ Index
             Section 2.4.2, Paragraph 2.1.1; Section 2.4.2, Paragraph
             2.3.1; Section 2.4.3, Paragraph 1; Section 2.4.3, Paragraph
             2.2.1; Section 2.4.3, Paragraph 2.3.1; Section 2.4.3,
-            Paragraph 2.4.1; Section 2.5, Paragraph 1; Section 2.5,
-            Paragraph 2; Section 2.6, Paragraph 1; Section 2.6,
-            Paragraph 4; Section 4.2, Paragraph 3; *_Section 4.3_*;
-            Section 4.3, Paragraph 1; Section 4.4, Paragraph 1;
-            Section 4.4, Paragraph 2; Section 4.4, Paragraph 3;
-            Section 5, Paragraph 2; Section 5, Paragraph 3; Section 5.1,
-            Paragraph 2; Section 5.1, Paragraph 3; Section 5.1,
-            Paragraph 4; Section 6, Paragraph 3.1.1; Section 6,
-            Paragraph 6; Section 6, Paragraph 8; Section 7, Paragraph
-            4.2; Section 8, Paragraph 1; Section 8.1, Paragraph 1;
-            Section 8.1, Paragraph 2.1.1; Section 8.1, Paragraph 3;
-            Section 8.2, Paragraph 1; Section 9, Paragraph 1;
-            Section 9.1, Paragraph 1; Section 9.1, Paragraph 2.1.1;
-            Section 9.1, Paragraph 3; Section 9.1, Paragraph 4;
-            Section 9.1, Paragraph 6; Section 9.2, Paragraph 1;
-            Section 9.2.1, Paragraph 1; Section 9.2.1, Paragraph 2.1.1;
-            Section 9.2.1, Paragraph 2.1.2.1.1; Section 9.2.2, Paragraph
-            1; Section 9.2.2, Paragraph 2; Section 9.2.2, Paragraph 4;
-            Section 9.2.2, Paragraph 6; Section 9.2.2, Paragraph 7;
-            Section 9.2.2, Paragraph 9; Section 10, Paragraph 1;
-            Section 10.1, Paragraph 1; Section 10.1, Paragraph
-            2.1.2.2.1; Section 10.1, Paragraph 3; Section 10.2,
-            Paragraph 1; Section 10.2, Paragraph 2; Section 10.2,
-            Paragraph 5; Section 10.2, Paragraph 6; Section 11.1,
-            Paragraph 2.2.1; Section 11.1, Paragraph 2.3.1; Section 12,
-            Paragraph 2; Section 12, Paragraph 3; Section 14, Paragraph
-            2; Section 14, Paragraph 3; Section 14, Paragraph 4;
+            Paragraph 2.4.1; Section 2.4.4, Paragraph 2; Section 2.4.4,
+            Paragraph 4.2.1; Section 2.5, Paragraph 1; Section 2.6,
+            Paragraph 1; Section 2.6, Paragraph 4; Section 4.2,
+            Paragraph 3; *_Section 4.3_*; Section 4.3, Paragraph 1;
+            Section 4.4, Paragraph 1; Section 4.4, Paragraph 2;
+            Section 4.4, Paragraph 3; Section 5, Paragraph 2; Section 5,
+            Paragraph 3; Section 5.1, Paragraph 2; Section 5.1,
+            Paragraph 3; Section 5.1, Paragraph 4; Section 6, Paragraph
+            3.1.1; Section 6, Paragraph 6; Section 6, Paragraph 8;
+            Section 7, Paragraph 4.2; Section 8, Paragraph 1;
+            Section 8.1, Paragraph 1; Section 8.1, Paragraph 2.1.1;
+            Section 8.1, Paragraph 3; Section 8.2, Paragraph 1;
+            Section 9, Paragraph 1; Section 9.1, Paragraph 1;
+            Section 9.1, Paragraph 2.1.1; Section 9.1, Paragraph 3;
+            Section 9.1, Paragraph 4; Section 9.1, Paragraph 6;
+            Section 9.2, Paragraph 1; Section 9.2.1, Paragraph 1;
+            Section 9.2.1, Paragraph 2.1.1; Section 9.2.1, Paragraph
+            2.1.2.1.1; Section 9.2.2, Paragraph 1; Section 9.2.2,
+            Paragraph 2; Section 9.2.2, Paragraph 4; Section 9.2.2,
+            Paragraph 6; Section 9.2.2, Paragraph 7; Section 9.2.2,
+            Paragraph 9; Section 10, Paragraph 1; Section 10.1,
+            Paragraph 1; Section 10.1, Paragraph 2.1.2.2.1;
+            Section 10.1, Paragraph 3; Section 10.2, Paragraph 1;
+            Section 10.2, Paragraph 2; Section 10.2, Paragraph 5;
+            Section 10.2, Paragraph 6; Section 11.1, Paragraph 2.2.1;
+            Section 11.1, Paragraph 2.3.1; Section 11.3, Paragraph 1;
+            Section 11.3, Paragraph 2; Section 12, Paragraph 2;
+            Section 12, Paragraph 3; Section 14, Paragraph 2;
+            Section 14, Paragraph 3; Section 14, Paragraph 4;
             Section 14, Paragraph 5; Appendix A.1, Paragraph 1;
             Appendix A.2, Paragraph 1
 
@@ -1514,19 +1557,20 @@ Index
          observation  *_Section 4.2_*; Section 11.1, Paragraph 2.2.1
          observer  *_Section 4.2, Paragraph 1_*; Section 4.2, Paragraph
             2; Section 4.2, Paragraph 3; Section 4.3, Paragraph 1;
-            Section 4.4, Paragraph 1
+            Section 4.4, Paragraph 1; Section 11.3, Paragraph 2
 
       S
 
          subscriber  Section 4.3, Paragraph 3; *_Section 4.4, Paragraph
             1_*; Section 4.4, Paragraph 2
-         subscription  Section 2.6, Paragraph 4; *_Section 4.4_*;
-            Section 6, Paragraph 2; Section 6, Paragraph 5; Section 6,
-            Paragraph 6; Section 8.1, Paragraph 2.1.1; Section 9.1,
-            Paragraph 2.1.1; Section 9.1, Paragraph 3; Section 9.1,
-            Paragraph 4; Section 9.1, Paragraph 6; Section 10.1,
-            Paragraph 2.1.1; Section 10.1, Paragraph 3; Section 11.2,
-            Paragraph 1; Section 12, Paragraph 2
+         subscription  Section 2.4.4, Paragraph 4.2.1; Section 2.6,
+            Paragraph 4; *_Section 4.4_*; Section 6, Paragraph 2;
+            Section 6, Paragraph 5; Section 6, Paragraph 6; Section 8.1,
+            Paragraph 2.1.1; Section 9.1, Paragraph 2.1.1; Section 9.1,
+            Paragraph 3; Section 9.1, Paragraph 4; Section 9.1,
+            Paragraph 6; Section 10.1, Paragraph 2.1.1; Section 10.1,
+            Paragraph 3; Section 11.2, Paragraph 1; Section 12,
+            Paragraph 2
 
 Author's Address
 
