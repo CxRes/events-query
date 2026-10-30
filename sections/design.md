@@ -96,7 +96,7 @@ Form of event-notifications within the response stream.
 Event-notifications are typically implemented along with temporal coordination mechanisms, ranging in complexity from resumability on reconnection to real-time state synchronization. Implementations adopt these mechanisms based on application requirements. For this reason, the {{&protocol}} Protocol itself does not specify temporal coordination across responses. Instead, implementations shall be able to extend the {{<<data-model}} with additional specifications that provide:
 
 1. {: #no-sync--versioning}
-A scheme for versioning events occurring on a resource.
+A scheme for labeling events on a resource or versioning its states.
 
 1. {: #no-sync--replay}
 Replay or resumption of event-notifications from a prior event. This can, for example, help clients recover upon reconnection without refetching the representation.
