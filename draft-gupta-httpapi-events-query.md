@@ -70,21 +70,17 @@ informative:
     annotation: "Commit snapshot (30 October 2026): <https://html.spec.whatwg.org/commit-snapshots/404b3eb14a7a936dddefb2d78e224dbeb01d2358/>"
   HTTP-CACHING: RFC9111
   REST:
-    target: https://roy.gbiv.com/pubs/dissertation/rest_arch_style.htm
-    title: Representational State Transfer (REST)
+    target: https://roy.gbiv.com/pubs/dissertation/top.htm
+    title: Architectural Styles and the Design of Network-based Software Architectures
     author:
       -
-        ins: R. Fielding
+        ins: R.T. Fielding
         name: Roy Thomas Fielding
         org: University of California, Irvine
-    date:
-      month: September
-      year: 2000
-    refcontent: Chapter 5, Architectural Styles and the Design of Network-based Software Architectures
-    seriesinfo:
-      "Doctoral Dissertation": University of California, Irvine
+    refcontent: Doctoral Dissertation, University of California, Irvine
+    date: September 2000
     format:
-      PDF: https://roy.gbiv.com/pubs/dissertation/fielding_dissertation.pdf#G16.1026811
+      PDF: https://roy.gbiv.com/pubs/dissertation/fielding_dissertation.pdf
   RFC2046:
   RFC3935:
   RFC4648:

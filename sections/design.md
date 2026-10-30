@@ -35,7 +35,7 @@ To the extent feasible, the {{&protocol}}:
 adheres to established practices and conventions. In particular, every attempt has been made to reuse existing protocols and specifications. Implementers shall be able to repurpose existing tools and libraries for implementing this specification.
 
 1. {: #constraint--rest}
-conforms to {{<<REST}}, best practices for {{<<RFC9205}} {{RFC9205}}, and {{<<RFC6202}} {{RFC6202}}. This specification can thus be used to extend the capabilities of any existing or future resource to additionally serve event-notifications over HTTP. This is to afford implementers the opportunity to scale notifications with their data and application.
+conforms to the Representational State Transfer (REST) architectural style ({{REST}}, <xref target="REST" section="Chapter 5" relative="rest_arch_style.htm" sectionFormat="bare"/>), best practices for {{<<RFC9205}} {{RFC9205}}, and {{<<RFC6202}} {{RFC6202}}. This specification can thus be used to extend the capabilities of any existing or future resource to additionally serve event-notifications over HTTP. This is to afford implementers the opportunity to scale notifications with their data and application.
 <!--
   See my original comment on the solid/specification Gitter channel on 24 April 2020
   https://matrix.to/#/!PlIOdBsCTDRSCxsTGA:gitter.im/$VgCcuq2HbpLKJvxIw4witAUOsqcdhC98glgzqVI1WOY
@@ -108,13 +108,27 @@ Identification of resource representations, separate from event-notifications, w
 The Conflict-free Replicated Data Types (CRDT) or Operational Transforms (OT)
 strategy to be implemented by a client for synchronizing the representation using event-notifications.
 
+### Endpoints {#out-of-scope--endpoints}
+
+{: #no-endpoints--replication}
+APIs built on top of existing messaging protocols (see, for example, WebSocket {{WS}} and WebSub {{WEBSUB}}) typically transfer event-notifications for multiple resources from a single endpoint. To replicate this functionality with {{&protocol}}, an application can mint an additional resource, which represents a collection of other resources ({{REST}}, <xref target="REST" section="Section 5.2.1.1" relative="rest_arch_style.htm#sec_5_2_1_1" sectionFormat="bare"/>), to serve as an endpoint for multi-resource notifications.
+
+{: #no-endpoints--unspecified}
+The {{&protocol}} Protocol leaves the design of endpoints to additional specifications, which can provide:
+
+1. {: #no-endpoints--advertise-endpoint}
+A mechanism for a server to advertise an endpoint, and the resources whose events the endpoint can report.
+
+1. {: #no-endpoints--identify-resources}
+A mechanism for a client to specify the resources from which it wants to receive event-notifications, for example by extending the {{<<data-model}}.
+
+{: #no-endpoints--discouraged}
+Subscribing to multiple resources with a single {{&protocol}} is, however, discouraged. It mirrors methods that encapsulate multiple requests within a single message, such as MGET or MHEAD, which were rejected during the design of HTTP/1.1 because they violate several REST constraints ({{REST}}, <xref target="REST" section="Section 6.3.3.1" relative="evaluation.htm#sec_6_3_3_1" sectionFormat="bare"/>). Where per-resource subscriptions are impractical, such as in limited environments or with legacy applications, endpoints can serve as an alternative.
+
 ## Limitations {#limitations}
 
-{: #limitation--resource-specificity}
-{{&protocol}} only allows notifications to be sent for events on a given resource. To transfer event-notifications originating from multiple resources in a single response, implementations will need to mint additional resources to serve as notification endpoints. This is no different from APIs built on top of existing messaging protocols (see, for example, WebSocket {{WS}} and WebSub {{WEBSUB}}).
-
 {: #limitation--connection-limits}
-Browsers cap the number of persistent HTTP/1.1 connections per host, limiting the suitability of {{&protocol}} for web applications in the browser that require simultaneous event-notifications from multiple resources on the same host. This limitation is identical to that of other HTTP-based streaming protocols, such as Server-Sent Events ({{HTML}}, <xref target="HTML" section="Section 9.2" relative="#server-sent-events" sectionFormat="bare"/>). Implementations are strongly encouraged to adopt HTTP/2 (or later). HTTP/1.1 servers might consider setting up a reverse proxy over HTTP/2 (or later) or implement mitigation strategies, such as, maximizing the number of concurrent connections and providing alternate hosts for resources. Implementations might alternatively consider using endpoints to provide event-notifications for multiple resources as previously described. Clients on a browser requesting event-notifications over an HTTP/1.1 connection are advised to exercise caution when simultaneously opening multiple persistent connections to a given host.
+Browsers cap the number of persistent HTTP/1.1 connections per host, limiting the suitability of {{&protocol}} for web applications in the browser that require simultaneous event-notifications from multiple resources on the same host. This limitation is identical to that of other HTTP-based streaming protocols, such as Server-Sent Events ({{HTML}}, <xref target="HTML" section="Section 9.2" relative="#server-sent-events" sectionFormat="bare"/>). Implementations are strongly encouraged to adopt HTTP/2 (or later). HTTP/1.1 servers might consider setting up a reverse proxy over HTTP/2 (or later) or implement mitigation strategies, such as, maximizing the number of concurrent connections and providing alternate hosts for resources. Implementations might alternatively consider using endpoints to provide event-notifications for multiple resources (see {{out-of-scope--endpoints}}). Clients on a browser requesting event-notifications over an HTTP/1.1 connection are advised to exercise caution when simultaneously opening multiple persistent connections to a given host.
 
 ## Comparison with Server-Sent Events {#sse-comparison}
 
