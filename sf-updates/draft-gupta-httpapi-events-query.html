@@ -1622,32 +1622,31 @@ strategy to be implemented by a client for synchronizing the representation usin
 </ol>
 </section>
 </div>
-<div id="endpoints">
+<div id="out-of-scope--endpoints">
 <section id="section-2.4.4">
           <h4 id="name-endpoints">
 <a href="#section-2.4.4" class="section-number selfRef">2.4.4. </a><a href="#name-endpoints" class="section-name selfRef">Endpoints</a>
           </h4>
-<p id="section-2.4.4-1">{#out-of-scope--endpoints}<a href="#section-2.4.4-1" class="pilcrow">¶</a></p>
 <div id="no-endpoints--replication">
-<p id="section-2.4.4-2">APIs built on top of existing messaging protocols (see, for example, WebSocket <span>[<a href="#WS" class="cite xref">WS</a>]</span> and WebSub <span>[<a href="#WEBSUB" class="cite xref">WEBSUB</a>]</span>) typically transfer <span id="iref-event-99" class="iref"></span><a href="#event" class="internal xref">event</a> <span id="iref-event-notification-100" class="iref"></span><span id="iref-notification-101" class="iref"></span><a href="#notification" class="internal xref">notifications</a> originating from multiple resources in a single response. To replicate this functionality with Events Query, applications can mint additional resources, each representing a collection of other resources (<span>[<a href="#REST" class="cite xref">REST</a>]</span>, Section 5.2.1.1), to serve as endpoints for multi-resource <span id="iref-event-notification-102" class="iref"></span><span id="iref-notification-103" class="iref"></span><a href="#notification" class="internal xref">notifications</a>.<a href="#section-2.4.4-2" class="pilcrow">¶</a></p>
+<p id="section-2.4.4-1">APIs built on top of existing messaging protocols (see, for example, WebSocket <span>[<a href="#WS" class="cite xref">WS</a>]</span> and WebSub <span>[<a href="#WEBSUB" class="cite xref">WEBSUB</a>]</span>) typically transfer <span id="iref-event-99" class="iref"></span><a href="#event" class="internal xref">event</a> <span id="iref-event-notification-100" class="iref"></span><span id="iref-notification-101" class="iref"></span><a href="#notification" class="internal xref">notifications</a> originating from multiple resources in a single response. To replicate this functionality with Events Query, applications can mint additional resources, each representing a collection of other resources (<span>[<a href="#REST" class="cite xref">REST</a>]</span>, Section 5.2.1.1), to serve as endpoints for multi-resource <span id="iref-event-notification-102" class="iref"></span><span id="iref-notification-103" class="iref"></span><a href="#notification" class="internal xref">notifications</a>.<a href="#section-2.4.4-1" class="pilcrow">¶</a></p>
 </div>
 <div id="no-endpoints--unspecified">
-<p id="section-2.4.4-3">The Events Query leaves the design of endpoints to additional specifications, which can provide:<a href="#section-2.4.4-3" class="pilcrow">¶</a></p>
+<p id="section-2.4.4-2">The Events Query leaves the design of endpoints to additional specifications, which can provide:<a href="#section-2.4.4-2" class="pilcrow">¶</a></p>
 </div>
-<ol start="1" type="1" class="normal type-1" id="section-2.4.4-4">
-<li id="section-2.4.4-4.1">
+<ol start="1" type="1" class="normal type-1" id="section-2.4.4-3">
+<li id="section-2.4.4-3.1">
 <div id="no-endpoints--advertise-endpoint">
-              <p id="section-2.4.4-4.1.1">A mechanism for a server to advertise an endpoint, and the resources whose <span id="iref-event-104" class="iref"></span><a href="#event" class="internal xref">events</a> the endpoint can report.<a href="#section-2.4.4-4.1.1" class="pilcrow">¶</a></p>
+              <p id="section-2.4.4-3.1.1">A mechanism for a server to advertise an endpoint, and the resources whose <span id="iref-event-104" class="iref"></span><a href="#event" class="internal xref">events</a> the endpoint can report.<a href="#section-2.4.4-3.1.1" class="pilcrow">¶</a></p>
 </div>
             </li>
-<li id="section-2.4.4-4.2">
+<li id="section-2.4.4-3.2">
 <div id="no-endpoints--identify-resources">
-              <p id="section-2.4.4-4.2.1">A mechanism for a client to specify the resources from which it wants to receive <span id="iref-event-105" class="iref"></span><a href="#event" class="internal xref">event</a> <span id="iref-event-notification-106" class="iref"></span><span id="iref-notification-107" class="iref"></span><a href="#notification" class="internal xref">notifications</a>, for example by extending the <span id="iref-subscription-108" class="iref"></span><a href="#subscription" class="internal xref">Subscription</a> <span id="iref-data-model-109" class="iref"></span><a href="#data-model" class="internal xref">Data Model</a> (Section 6).<a href="#section-2.4.4-4.2.1" class="pilcrow">¶</a></p>
+              <p id="section-2.4.4-3.2.1">A mechanism for a client to specify the resources from which it wants to receive <span id="iref-event-105" class="iref"></span><a href="#event" class="internal xref">event</a> <span id="iref-event-notification-106" class="iref"></span><span id="iref-notification-107" class="iref"></span><a href="#notification" class="internal xref">notifications</a>, for example by extending the <span id="iref-subscription-108" class="iref"></span><a href="#subscription" class="internal xref">Subscription</a> <span id="iref-data-model-109" class="iref"></span><a href="#data-model" class="internal xref">Data Model</a> (Section 6).<a href="#section-2.4.4-3.2.1" class="pilcrow">¶</a></p>
 </div>
           </li>
 </ol>
 <div id="no-endpoints--discouraged">
-<p id="section-2.4.4-5">Subscribing to multiple resources with a single Events Query is, however, discouraged. It mirrors methods that encapsulate multiple requests within a single message, such as MGET or MHEAD, which were rejected during the design of HTTP/1.1 because they violate REST constraints (<span>[<a href="#REST" class="cite xref">REST</a>]</span>, Section 6.3.3.1). Where per-resource subscriptions are impractical, such as in limited environments or with legacy applications, endpoints can serve as an alternative.<a href="#section-2.4.4-5" class="pilcrow">¶</a></p>
+<p id="section-2.4.4-4">Subscribing to multiple resources with a single Events Query is, however, discouraged. It mirrors methods that encapsulate multiple requests within a single message, such as MGET or MHEAD, which were rejected during the design of HTTP/1.1 because they violate REST constraints (<span>[<a href="#REST" class="cite xref">REST</a>]</span>, Section 6.3.3.1). Where per-resource subscriptions are impractical, such as in limited environments or with legacy applications, endpoints can serve as an alternative.<a href="#section-2.4.4-4" class="pilcrow">¶</a></p>
 </div>
 </section>
 </div>
@@ -2940,7 +2939,7 @@ Content-Type: application/json-seq
                 <dt id="appendix-C-2.1.2.1.1.1">Data Model</dt>
                 <dd style="margin-left: 1.5em" id="appendix-C-2.1.2.1.1.2">
                   <p id="appendix-C-2.1.2.1.1.2.1">
-                    <a href="#section-2.4.4-4.2.1" class="auto internal xref">Section 2.4.4, Paragraph 4.2.1</a><a href="#appendix-C-2.1.2.1.1.2.1" class="pilcrow">¶</a></p>
+                    <a href="#section-2.4.4-3.2.1" class="auto internal xref">Section 2.4.4, Paragraph 3.2.1</a><a href="#appendix-C-2.1.2.1.1.2.1" class="pilcrow">¶</a></p>
 </dd>
                 <dd class="break"></dd>
 <dt id="appendix-C-2.1.2.1.1.3">data model</dt>
@@ -2986,9 +2985,9 @@ Content-Type: application/json-seq
 <a href="#section-2.4.1-3" class="auto internal xref">Section 2.4.1, Paragraph 3</a>; 
 <a href="#section-2.4.3-2.1.1" class="auto internal xref">Section 2.4.3, Paragraph 2.1.1</a>; 
 <a href="#section-2.4.3-2.2.1" class="auto internal xref">Section 2.4.3, Paragraph 2.2.1</a>; 
-<a href="#no-endpoints--replication" class="auto internal xref">Section 2.4.4, Paragraph 2</a>; 
-<a href="#section-2.4.4-4.1.1" class="auto internal xref">Section 2.4.4, Paragraph 4.1.1</a>; 
-<a href="#section-2.4.4-4.2.1" class="auto internal xref">Section 2.4.4, Paragraph 4.2.1</a>; 
+<a href="#no-endpoints--replication" class="auto internal xref">Section 2.4.4, Paragraph 1</a>; 
+<a href="#section-2.4.4-3.1.1" class="auto internal xref">Section 2.4.4, Paragraph 3.1.1</a>; 
+<a href="#section-2.4.4-3.2.1" class="auto internal xref">Section 2.4.4, Paragraph 3.2.1</a>; 
 <a href="#benefits-over-sse" class="auto internal xref">Section 2.6, Paragraph 4</a>; 
 <strong><em><a href="#event" class="auto internal xref">Section 4.1</a></em></strong>; 
 <a href="#observation-defn" class="auto internal xref">Section 4.2, Paragraph 1</a>; 
@@ -3040,8 +3039,8 @@ Content-Type: application/json-seq
 <a href="#section-2.4.3-2.2.1" class="auto internal xref">Section 2.4.3, Paragraph 2.2.1</a>; 
 <a href="#section-2.4.3-2.3.1" class="auto internal xref">Section 2.4.3, Paragraph 2.3.1</a>; 
 <a href="#section-2.4.3-2.4.1" class="auto internal xref">Section 2.4.3, Paragraph 2.4.1</a>; 
-<a href="#no-endpoints--replication" class="auto internal xref">Section 2.4.4, Paragraph 2</a>; 
-<a href="#section-2.4.4-4.2.1" class="auto internal xref">Section 2.4.4, Paragraph 4.2.1</a>; 
+<a href="#no-endpoints--replication" class="auto internal xref">Section 2.4.4, Paragraph 1</a>; 
+<a href="#section-2.4.4-3.2.1" class="auto internal xref">Section 2.4.4, Paragraph 3.2.1</a>; 
 <a href="#limitation--connection-limits" class="auto internal xref">Section 2.5, Paragraph 1</a>; 
 <a href="#sse-defacto" class="auto internal xref">Section 2.6, Paragraph 1</a>; 
 <a href="#benefits-over-sse" class="auto internal xref">Section 2.6, Paragraph 4</a>; 
@@ -3181,8 +3180,8 @@ Content-Type: application/json-seq
 <a href="#section-2.4.3-2.2.1" class="auto internal xref">Section 2.4.3, Paragraph 2.2.1</a>; 
 <a href="#section-2.4.3-2.3.1" class="auto internal xref">Section 2.4.3, Paragraph 2.3.1</a>; 
 <a href="#section-2.4.3-2.4.1" class="auto internal xref">Section 2.4.3, Paragraph 2.4.1</a>; 
-<a href="#no-endpoints--replication" class="auto internal xref">Section 2.4.4, Paragraph 2</a>; 
-<a href="#section-2.4.4-4.2.1" class="auto internal xref">Section 2.4.4, Paragraph 4.2.1</a>; 
+<a href="#no-endpoints--replication" class="auto internal xref">Section 2.4.4, Paragraph 1</a>; 
+<a href="#section-2.4.4-3.2.1" class="auto internal xref">Section 2.4.4, Paragraph 3.2.1</a>; 
 <a href="#limitation--connection-limits" class="auto internal xref">Section 2.5, Paragraph 1</a>; 
 <a href="#sse-defacto" class="auto internal xref">Section 2.6, Paragraph 1</a>; 
 <a href="#benefits-over-sse" class="auto internal xref">Section 2.6, Paragraph 4</a>; 
@@ -3297,7 +3296,7 @@ Content-Type: application/json-seq
 <dt id="appendix-C-2.6.2.1.1.3">subscription</dt>
                 <dd style="margin-left: 1.5em" id="appendix-C-2.6.2.1.1.4">
                   <p id="appendix-C-2.6.2.1.1.4.1">
-                    <a href="#section-2.4.4-4.2.1" class="auto internal xref">Section 2.4.4, Paragraph 4.2.1</a>; 
+                    <a href="#section-2.4.4-3.2.1" class="auto internal xref">Section 2.4.4, Paragraph 3.2.1</a>; 
 <a href="#benefits-over-sse" class="auto internal xref">Section 2.6, Paragraph 4</a>; 
 <strong><em><a href="#subscription" class="auto internal xref">Section 4.4</a></em></strong>; 
 <a href="#data-model-requirements" class="auto internal xref">Section 6, Paragraph 2</a>; 
