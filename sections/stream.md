@@ -81,7 +81,7 @@ Content-Type: application/json-seq
 Subsequently, when event(s) occur, the server transmits a notification.
 
 {: #stream-update-event-multipart}
-An event-notification transferred in a `multipart/mixed` response stream is identical to the [Single Notification Response](#single-notification-response){:noabbrev}, except that non "Content-*" fields are excluded as required by {{RFC2046, Section 5.1}}:
+An event-notification transferred in a `multipart/mixed` response stream is identical to the [Single Notification Response](#single-notification-response){:noabbrev}, with only "Content-*" fields included, as these alone have defined meaning in a body part ({{RFC2046, Section 5.1}}):
 
 ~~~ http-message
 {::include examples/notifications/update.multipart.txt}
