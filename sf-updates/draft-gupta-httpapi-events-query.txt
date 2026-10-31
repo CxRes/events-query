@@ -399,21 +399,24 @@ Table of Contents
 
 2.5.  Limitations
 
-   Browsers cap the number of persistent HTTP/1.1 connections per host,
-   limiting the suitability of Events Query for web applications in the
-   browser that require simultaneous event notifications from multiple
-   resources on the same host.  This limitation is identical to that of
-   other HTTP-based streaming protocols, such as Server-Sent Events
-   ([HTML], Section 9.2).  Implementations are strongly encouraged to
-   adopt HTTP/2 (or later).  HTTP/1.1 servers might consider setting up
-   a reverse proxy over HTTP/2 (or later) or implement mitigation
-   strategies, such as, maximizing the number of concurrent connections
-   and providing alternate hosts for resources.  Implementations might
+   Browsers cap the number of persistent HTTP/1.1 connections per host
+   ([RFC6202], Section 5.1), limiting the suitability of Events Query
+   for web applications in the browser that require simultaneous event
+   notifications from multiple resources on a host reachable only over
+   HTTP/1.1.  This limitation is identical to that of other HTTP-based
+   streaming protocols, such as Server-Sent Events ([HTML],
+   Section 9.2).  Implementations are strongly encouraged to adopt
+   HTTP/2 (or later).  HTTP/1.1 servers might consider setting up a
+   reverse proxy over HTTP/2 (or later), deploying an alternative
+   service with a different protocol configuration ([RFC7838]), or
+   providing alternate hosts for resources.  Implementations might
    alternatively consider using endpoints to provide event notifications
    for multiple resources (see Section 2.4.4).  Clients on a browser
    requesting event notifications over an HTTP/1.1 connection are
-   advised to exercise caution when simultaneously opening multiple
-   persistent connections to a given host.
+   advised to limit the number of persistent connections they open
+   simultaneously to a given host, for example, by sharing a
+   subscription across the frames, tabs, or windows of the same browser
+   ([RFC6202], Section 5.1).
 
 2.6.  Comparison with Server-Sent Events
 
@@ -1578,13 +1581,13 @@ Index
 
          subscriber  Section 4.3, Paragraph 3; *_Section 4.4, Paragraph
             1_*; Section 4.4, Paragraph 2
-         subscription  Section 2.6, Paragraph 4; *_Section 4.4_*;
-            Section 6, Paragraph 2; Section 6, Paragraph 5; Section 6,
-            Paragraph 6; Section 8.1, Paragraph 2.1.1; Section 9.1,
-            Paragraph 2.1.1; Section 9.1, Paragraph 3; Section 9.1,
-            Paragraph 4; Section 9.1, Paragraph 6; Section 10.1,
-            Paragraph 2.1.1; Section 10.1, Paragraph 3; Section 11.2,
-            Paragraph 1; Section 12, Paragraph 2
+         subscription  Section 2.5, Paragraph 1; Section 2.6, Paragraph
+            4; *_Section 4.4_*; Section 6, Paragraph 2; Section 6,
+            Paragraph 5; Section 6, Paragraph 6; Section 8.1, Paragraph
+            2.1.1; Section 9.1, Paragraph 2.1.1; Section 9.1, Paragraph
+            3; Section 9.1, Paragraph 4; Section 9.1, Paragraph 6;
+            Section 10.1, Paragraph 2.1.1; Section 10.1, Paragraph 3;
+            Section 11.2, Paragraph 1; Section 12, Paragraph 2
 
 Author's Address
 
