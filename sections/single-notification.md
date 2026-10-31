@@ -8,10 +8,10 @@ The simplest {{&protocol}} is to request a notification for the next event(s) on
 {: #single-notification-request-procedure}
 To receive a single notification, a client MUST:
 
-+ {: #single-notification-request-procedure--data-model} 
++ {: #single-notification-request-procedure--data-model}
 send a realization of the subscription data model that does not include an interest in receiving a stream of event notifications,
 
-+ {: #single-notification-request-procedure--method} 
++ {: #single-notification-request-procedure--method}
 using the `QUERY` method ({{HTTP-QUERY, Section 2}}).
 
 {: #single-notification-request-conneg}

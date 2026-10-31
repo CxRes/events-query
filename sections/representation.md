@@ -12,12 +12,12 @@ To receive a representation of the resource alongside notifications, a client MU
 send a realization of the subscription data model that includes an interest in receiving a stream containing:
 
     + {: #representation-request-procedure--data-model-representation}
-    the representation(s) in a preferred form, and 
+    the representation(s) in a preferred form, and
 
     + {: #representation-request-procedure--data-model-notifications}
     event notifications in a preferred form,
 
-+ {: #representation-request-procedure--method}   
++ {: #representation-request-procedure--method}
 using the `QUERY` method ({{HTTP-QUERY, Section 2}}).
 
 {: #representation-request-example-description}

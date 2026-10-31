@@ -12,7 +12,7 @@ To receive multiple notifications, a client MUST:
 send a realization of the subscription data model that includes an interest in receiving a stream of event-notifications in a preferred form,
 
 + {: #stream-request-procedure--method}
-using the QUERY method ({{HTTP-QUERY, Section 2}}). 
+using the QUERY method ({{HTTP-QUERY, Section 2}}).
 
 {: #stream-request-conneg}
 Since the response transmits event-notifications within an encapsulating representation ({{stream-response}}), it follows that header fields cannot be used to negotiate the form of event-notifications as in the case of [Single Notification Request](#single-notification-request){:noabbrev}. Instead, header fields are useful for negotiating the representation that encapsulates event-notifications. The following examples illustrate subscription requests that negotiate a stream of event-notifications to be transferred respectively using a composite media type (`multipart/mixed`) and a discrete media type (`application/json-seq`):
@@ -81,7 +81,7 @@ Content-Type: application/json-seq
 Subsequently, when event(s) occur, the server transmits a notification.
 
 {: #stream-update-event-multipart}
-An event-notification transferred in a `multipart/mixed` response stream is identical to the [Single Notification Response](#single-notification-response){:noabbrev}, except that non "Content-*" fields are excluded as required by {{RFC2046, Section 5.1}}: 
+An event-notification transferred in a `multipart/mixed` response stream is identical to the [Single Notification Response](#single-notification-response){:noabbrev}, except that non "Content-*" fields are excluded as required by {{RFC2046, Section 5.1}}:
 
 ~~~ http-message
 {::include examples/notifications/update.multipart.txt}

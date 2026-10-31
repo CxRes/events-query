@@ -74,12 +74,12 @@ The events for which a notification might be generated.
 1. {: #no-event-semantics--notification-content}
 The content of an event-notification.
 
-Implementations can further provide mechanisms to filter the events generating notifications or to select the content of notifications. Affordances for such mechanisms can be exposed to clients by extending the abstract {{<<data-model}} with additional specifications. 
+Implementations can further provide mechanisms to filter the events generating notifications or to select the content of notifications. Affordances for such mechanisms can be exposed to clients by extending the abstract {{<<data-model}} with additional specifications.
 
 ### Realizations and Formats {#out-of-scope--realizations}
 
 {: #no-format}
-Since transferred data is subject to content negotiation between clients and server, the {{&protocol}} Protocol does not commit to a specific: 
+Since transferred data is subject to content negotiation between clients and server, the {{&protocol}} Protocol does not commit to a specific:
 
 1. {: #no-format--request-data-model}
 Realization of the abstract data model ({{data-model}}) used for requesting event-notifications.
@@ -92,11 +92,11 @@ Form of event-notifications within the response stream.
 
 ### Temporal Coordination {#out-of-scope--temporal-coordination}
 
-{: #no-sync} 
+{: #no-sync}
 Event-notifications are typically implemented along with temporal coordination mechanisms, ranging in complexity from resumability on reconnection to real-time state synchronization. Implementations adopt these mechanisms based on application requirements. For this reason, the {{&protocol}} Protocol itself does not specify temporal coordination across responses. Instead, implementations shall be able to extend the {{<<data-model}} with additional specifications that provide:
 
 1. {: #no-sync--versioning}
-A scheme for versioning events occurring on a resource. 
+A scheme for versioning events occurring on a resource.
 
 1. {: #no-sync--replay}
 Replay or resumption of event-notifications from a prior event. This can, for example, help clients recover upon reconnection without refetching the representation.
@@ -105,7 +105,7 @@ Replay or resumption of event-notifications from a prior event. This can, for ex
 Identification of resource representations, separate from event-notifications, within the [response stream](#representation-response). This is useful for a first fetch before a client starts receiving notifications or for periodic reconciliation during state synchronization.
 
 1. {: #no-sync--merge-types}
-The Conflict-free Replicated Data Types (CRDT) or Operational Transforms (OT) 
+The Conflict-free Replicated Data Types (CRDT) or Operational Transforms (OT)
 strategy to be implemented by a client for synchronizing the representation using event-notifications.
 
 ## Limitations {#limitations}
@@ -119,7 +119,7 @@ Browsers cap the number of persistent HTTP/1.1 connections per host, limiting th
 ## Comparison with Server-Sent Events {#sse-comparison}
 
 {: #sse-defacto}
-At the time of writing, Server-Sent Events (SSE) has emerged as the de facto mechanism for transferring event-notifications over HTTP. 
+At the time of writing, Server-Sent Events (SSE) has emerged as the de facto mechanism for transferring event-notifications over HTTP.
 
 {: #sse-standardization}
 Server-Sent Events is standardized as part of HTML Living Standard by the WHATWG[^EventSource_Obsolecense] through the EventSource API ({{HTML}}, Section 9.2.2) on user agents and the `text/event-stream` media type ({{HTML}}, Section 17.7) to transmit event-notifications. This approach is fundamentally inconsistent with terminology defined in HTTP Semantics ({{HTTP, Section 3.2}}), transferring a sequence of asynchronous messages instead of a representation "intended to reflect a past, current, or desired state of a given resource". Practically, the `text/event-stream` media type being limited to only textual content forces developers to opt for alternative protocols such as WebSockets {{WS}}, despite the increased complexity. The EventSource API does not even allow for headers to be sent with requests.

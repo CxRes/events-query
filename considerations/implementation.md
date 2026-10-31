@@ -19,4 +19,4 @@ The demonstration and libraries are Free and Open Source Software, released unde
 
 ## CAMARA API Demo {#camara-api-demo}
 
-A second, independent implementation by Jaime Jiménez that applies Events Query in an agent-ready mock for the [CAMARA (Global Telco API Alliance)](https://camaraproject.org) HTTP APIs is available at [](https://camara.jaime.win). The CAMARA sandbox uses Events Query to notify clients of SIM-swaps. An agent can observe changes to the SIM-swap state in-band as a JSON Sequence by sending a QUERY request to a resource, rather than setting up a separate Webhooks subscription.    
+A second, independent implementation by Jaime Jiménez that applies Events Query in an agent-ready mock for the [CAMARA (Global Telco API Alliance)](https://camaraproject.org) HTTP APIs is available at [](https://camara.jaime.win). The CAMARA sandbox uses Events Query to notify clients of SIM-swaps. An agent can observe changes to the SIM-swap state in-band as a JSON Sequence by sending a QUERY request to a resource, rather than setting up a separate Webhooks subscription.
