@@ -3,9 +3,9 @@
 
 
 Building Blocks for HTTP APIs                                   R. Gupta
-Internet-Draft                                           30 October 2026
+Internet-Draft                                           31 October 2026
 Intended status: Standards Track                                        
-Expires: 3 May 2027
+Expires: 4 May 2027
 
 
                            HTTP Events Query
@@ -15,11 +15,11 @@ Abstract
 
    Events Query is a minimal protocol built on top of HTTP that allows
    user agents to receive event notifications directly from any resource
-   of interest.  It uses the QUERY method [RFC10008] to request
-   (optionally) the current representation and subsequent event
-   notifications within a single response.  The Events Query Protocol
-   (EQP) is predicated on the idea that the most intuitive source for
-   event notifications is the resource itself.
+   of interest.  It uses the HTTP QUERY method to request (optionally)
+   the current representation and subsequent event notifications within
+   a single response.  The Events Query Protocol (EQP) is predicated on
+   the idea that the most intuitive source for event notifications is
+   the resource itself.
 
 About This Document
 
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 May 2027.
+   This Internet-Draft will expire on 4 May 2027.
 
 Copyright Notice
 
@@ -866,8 +866,8 @@ Table of Contents
 
    An event notification transferred in a multipart/mixed response
    stream is identical to the Single Notification Response
-   (Section 8.2), except that non "Content-*" fields are excluded as
-   required by [RFC2046], Section 5.1:
+   (Section 8.2), with only "Content-*" fields included, as these alone
+   have defined meaning in a body part ([RFC2046], Section 5.1):
 
    --THIS_STRING_SEPARATES
    Content-Length: 31                               | Notification
