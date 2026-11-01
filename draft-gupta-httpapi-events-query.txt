@@ -3,9 +3,9 @@
 
 
 Building Blocks for HTTP APIs                                   R. Gupta
-Internet-Draft                                               2 July 2026
+Internet-Draft                                           1 November 2026
 Intended status: Standards Track                                        
-Expires: 3 January 2027
+Expires: 5 May 2027
 
 
                            HTTP Events Query
@@ -15,11 +15,11 @@ Abstract
 
    Events Query is a minimal protocol built on top of HTTP that allows
    user agents to receive event notifications directly from any resource
-   of interest.  It uses the QUERY method [RFC10008] to request
-   (optionally) the current representation and subsequent event
-   notifications within a single response.  The Events Query Protocol
-   (EQP) is predicated on the idea that the most intuitive source for
-   event notifications is the resource itself.
+   of interest.  It uses the HTTP QUERY method to request (optionally)
+   the current representation and subsequent event notifications within
+   a single response.  The Events Query Protocol (EQP) is predicated on
+   the idea that the most intuitive source for event notifications is
+   the resource itself.
 
 About This Document
 
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 January 2027.
+   This Internet-Draft will expire on 5 May 2027.
 
 Copyright Notice
 
@@ -80,6 +80,7 @@ Table of Contents
        2.4.1.  Event Semantics
        2.4.2.  Realizations and Formats
        2.4.3.  Temporal Coordination
+       2.4.4.  Endpoints
      2.5.  Limitations
      2.6.  Comparison with Server-Sent Events
    3.  Conformance
@@ -108,6 +109,7 @@ Table of Contents
    11. Implementation Status
      11.1.  Express Demo
      11.2.  CAMARA API Demo
+     11.3.  23signs Web Service
    12. Security Considerations
    13. IANA Considerations
      13.1.  HTTP Field Registration
@@ -275,13 +277,14 @@ Table of Contents
        specifications.  Implementers shall be able to repurpose existing
        tools and libraries for implementing this specification.
 
-   2.  conforms to Representational State Transfer (REST), best
-       practices for Building Protocols with HTTP [RFC9205], and Known
-       Issues and Best Practices for the Use of Long Polling and
-       Streaming in Bidirectional HTTP [RFC6202].  This specification
-       can thus be used to extend the capabilities of any existing or
-       future resource to additionally serve event notifications over
-       HTTP.  This is to afford implementers the opportunity to scale
+   2.  conforms to the Representational State Transfer (REST)
+       architectural style ([REST], Chapter 5), best practices for
+       Building Protocols with HTTP [RFC9205], and Known Issues and Best
+       Practices for the Use of Long Polling and Streaming in
+       Bidirectional HTTP [RFC6202].  This specification can thus be
+       used to extend the capabilities of any existing or future
+       resource to additionally serve event notifications over HTTP.
+       This is to afford implementers the opportunity to scale
        notifications with their data and application.
 
 2.3.  Scope
@@ -349,7 +352,8 @@ Table of Contents
    able to extend the Subscription Data Model with additional
    specifications that provide:
 
-   1.  A scheme for versioning events occurring on a resource.
+   1.  A scheme for labeling events on a resource or versioning its
+       states.
 
    2.  Replay or resumption of event notifications from a prior event.
        This can, for example, help clients recover upon reconnection
@@ -365,66 +369,95 @@ Table of Contents
        Transforms (OT) strategy to be implemented by a client for
        synchronizing the representation using event notifications.
 
+2.4.4.  Endpoints
+
+   APIs built on top of existing messaging protocols (see, for example,
+   WebSocket [WS] and WebSub [WEBSUB]) typically transfer event
+   notifications for multiple resources from a single endpoint.  To
+   replicate this functionality with Events Query, an application can
+   mint an additional resource, which represents a collection of other
+   resources ([REST], Section 5.2.1.1), to serve as an endpoint for
+   multi-resource notifications.
+
+   The Events Query Protocol leaves the design of endpoints to
+   additional specifications, which can provide:
+
+   1.  A mechanism for a server to advertise an endpoint, and the
+       resources whose events the endpoint can report.
+
+   2.  A mechanism for a client to specify the resources from which it
+       wants to receive event notifications, for example by extending
+       the Subscription Data Model.
+
+   Subscribing to multiple resources with a single Events Query is,
+   however, discouraged.  It mirrors methods that encapsulate multiple
+   requests within a single message, such as MGET or MHEAD, which were
+   rejected during the design of HTTP/1.1 because they violate several
+   REST constraints ([REST], Section 6.3.3.1).  Where per-resource
+   subscriptions are impractical, such as in limited environments or
+   with legacy applications, endpoints can serve as an alternative.
+
 2.5.  Limitations
 
-   Events Query only allows notifications to be sent for events on a
-   given resource.  To transfer event notifications originating from
-   multiple resources in a single response, implementations will need to
-   mint additional resources to serve as notification endpoints.  This
-   is no different from APIs built on top of existing messaging
-   protocols (see, for example, WebSocket [WS] and WebSub [WEBSUB]).
-
-   Browsers cap the number of persistent HTTP/1.1 connections per host,
-   limiting the suitability of Events Query for web applications in the
-   browser that require simultaneous event notifications from multiple
-   resources on the same host.  This limitation is identical to that of
-   other HTTP-based streaming protocols, such as Server-Sent Events
-   ([HTML], Section 9.2).  Implementations are strongly encouraged to
-   adopt HTTP/2 (or later).  HTTP/1.1 servers might consider setting up
-   a reverse proxy over HTTP/2 (or later) or implement mitigation
-   strategies, such as, maximizing the number of concurrent connections
-   and providing alternate hosts for resources.  Implementations might
+   Browsers cap the number of persistent HTTP/1.1 connections per host
+   ([RFC6202], Section 5.1), limiting the suitability of Events Query
+   for web applications in the browser that require simultaneous event
+   notifications from multiple resources on a host reachable only over
+   HTTP/1.1.  This limitation is identical to that of other HTTP-based
+   streaming protocols, such as Server-Sent Events ([HTML],
+   Section 9.2).  Implementations are strongly encouraged to adopt
+   HTTP/2 (or later).  HTTP/1.1 servers might consider setting up a
+   reverse proxy over HTTP/2 (or later), deploying an alternative
+   service with a different protocol configuration ([RFC7838]), or
+   providing alternate hosts for resources.  Implementations might
    alternatively consider using endpoints to provide event notifications
-   for multiple resources as previously described.  Clients on a browser
+   for multiple resources (see Section 2.4.4).  Clients on a browser
    requesting event notifications over an HTTP/1.1 connection are
-   advised to exercise caution when simultaneously opening multiple
-   persistent connections to a given host.
+   advised to limit the number of persistent connections they open
+   simultaneously to a given host, for example, by sharing a
+   subscription across the frames, tabs, or windows of the same browser
+   ([RFC6202], Section 5.1).
 
 2.6.  Comparison with Server-Sent Events
 
    At the time of writing, Server-Sent Events (SSE) has emerged as the
    de facto mechanism for transferring event notifications over HTTP.
 
-   Server-Sent Events is standardized as part of HTML Living Standard by
-   the WHATWG
-   // As of October 2022, HTML Living Standard maintainer Anne van
-   // Kesteren has stated (https://github.com/whatwg/html/
-   // issues/8297#issuecomment-1291658863) that WHATWG does not intend
-   // to extend the EventSource API, with reasons for the decision cited
+   The HTML Living Standard standardizes Server-Sent Events ([HTML],
+   Section 9.2) with the EventSource interface
+   // As of October 2022, WHATWG does not intend to extend the
+   // EventSource feature, as announced (https://github.com/whatwg/html/
+   // issues/8297#issuecomment-1291658863) by HTML Living Standard
+   // maintainer Anne van Kesteren, with reasons for the decision cited
    // in a subsequent comment (https://github.com/whatwg/html/
-   // issues/8297#issuecomment-1291658863). through the EventSource API
-   ([HTML], Section 9.2.2) on user agents and the text/event-stream
-   media type ([HTML], Section 17.7) to transmit event notifications.
-   This approach is fundamentally inconsistent with terminology defined
-   in HTTP Semantics ([HTTP], Section 3.2), transferring a sequence of
-   asynchronous messages instead of a representation "intended to
+   // issues/8297#issuecomment-1293054529).  ([HTML], Section 9.2.2) and
+   the text/event-stream media type ([HTML], Section 17.7).  This
+   approach is fundamentally inconsistent with terminology defined in
+   HTTP Semantics ([HTTP], Section 3.2), transferring a sequence of
+   asynchronous messages instead of a _representation_ "intended to
    reflect a past, current, or desired state of a given resource".
-   Practically, the text/event-stream media type being limited to only
-   textual content forces developers to opt for alternative protocols
-   such as WebSockets [WS], despite the increased complexity.  The
-   EventSource API does not even allow for headers to be sent with
-   requests.
+   Practically, the EventSource interface is extremely limited.  For
+   example, it does not even allow for custom HTTP header fields to be
+   sent with requests.  The response is only sent as text/event-stream,
+   a text format in which any line break is a delimiter.  Not just
+   binary content but even multi-line text that requires line endings to
+   be preserved must therefore be encoded, typically as Base 64
+   ([RFC4648], Section 4), which results in an additional burden for
+   both the sender and the recipient.
 
-   This has led to a proliferation of non-standard implementations of
-   Server-Sent Events
+   On one hand, these deficiencies have led to a proliferation of non-
+   standard implementations of Server-Sent Events
    // such as this (https://www.npmjs.com/package/event-source-plus),
    // this (https://www.npmjs.com/package/@microsoft/fetch-event-
    // source), this (https://www.npmjs.com/package/fetch-event-stream),
    // this (https://www.npmjs.com/package/extended-eventsource), this
    // (https://www.npmjs.com/package/ngx-sse-client) and this
    // (https://www.npmjs.com/package/sse.js) that provide support for
-   custom headers, such as for sending credentials, or use the POST
-   method to communicate additional configuration in the request body.
+   custom header fields, such as for sending credentials, or use the
+   POST method to communicate additional configuration in a request
+   body.  On the other hand, they have forced developers to adopt
+   alternative protocols such as WebSocket [WS], despite the increased
+   complexity.
 
    Events Query takes a principled approach to event notifications, as
    established in Section 4.  In particular, the definition of an event
@@ -577,14 +610,17 @@ Table of Contents
 
    The abstract data model specifies the semantics of an Events Query.
 
-   A realization of the data model allows a client to specify in a
+   A realization of the data model allows a client to express in a
    subscription request:
 
    *  an interest in receiving a stream of event notifications from a
       resource in a preferred form.
 
-   *  an interest in receiving a representation of a resource in a
-      preferred form.
+   *  an interest in receiving a representation of a resource (as would
+      be sent in response to a GET request) in a preferred form.
+
+   A client MAY express interests conditional on the representations it
+   is prepared to accept in response to the QUERY request.
 
    Implementations can choose appropriate media types to realize the
    subscription data model.  Implementations are free to extend the data
@@ -592,9 +628,9 @@ Table of Contents
    model is beyond the scope of this specification (see Section 2.4.2).
 
    The following example shows the body of a subscription request
-   wherein the state and events properties are used to specify request
-   headers for representation and event notifications respectively in a
-   YAML-like syntax.
+   wherein the state and events properties use request header fields to
+   express preferences for the representation and event notifications
+   respectively, in a YAML-like syntax.
 
    state:
      Accept: text/html
@@ -602,6 +638,36 @@ Table of Contents
      Accept: example/event-notification
 
           Figure 2: Events Query Data Model in a YAML-like syntax
+
+   The following modifies the previous example to express interests
+   conditional on the type and language of the response.
+
+   - type: application/json-seq
+     language: hi
+     state:
+       "@context": [https://schema.org, {"@language": hi}]
+       "@type": Person
+     events:
+       "@context": [https://www.w3.org/ns/activitystreams, {"@language": hi}]
+   - type: application/json-seq
+     state:
+       "@context": https://schema.org
+       "@type": Person
+     events:
+       "@context": https://www.w3.org/ns/activitystreams
+   - language: hi
+     state:
+       Accept: text/html
+       Accept-Language: hi
+     events:
+       Accept: example/event-notification
+       Accept-Language: hi
+   - state:
+       Accept: text/html
+     events:
+       Accept: example/event-notification
+
+        Figure 3: Events Query Data Model with Conditional Interests
 
 7.  Discovery
 
@@ -614,14 +680,14 @@ Table of Contents
    HEAD /foo HTTP/1.1
    Host: example.org
 
-                        Figure 3: Discovery Request
+                        Figure 4: Discovery Request
 
    HTTP/1.1 200 OK
    Date: Thu, 02 Jan 2025 10:00:00 GMT
    Accept: text/html
    Accept-Query: "example/events-query"
 
-                        Figure 4: Discovery Response
+                        Figure 5: Discovery Response
 
       |  *Implementation Advice*
       |  
@@ -659,7 +725,7 @@ Table of Contents
 
    ---
 
-                Figure 5: Single Event Notification Request
+                Figure 6: Single Event Notification Request
 
 8.2.  Response
 
@@ -677,7 +743,7 @@ Table of Contents
    event-id: 456
    type: update
 
-                Figure 6: Single Event Notification Response
+                Figure 7: Single Event Notification Response
 
 
       |  *Implementation Advice*
@@ -732,13 +798,13 @@ Table of Contents
    events:
      Accept: example/event-notification
 
-            Figure 7: Request for Multipart Notifications Stream
+            Figure 8: Request for Multipart Notifications Stream
 
    The second example shows a subscription request for a stream of JSON
    notifications to be transferred using application/json-seq
    ([RFC7464]) as the encapsulating media type.  The events property in
-   this example is being used to communicate the preferred schema for
-   the requested event notifications.
+   this example is being used to communicate the preferred vocabulary
+   for the requested event notifications.
 
    QUERY /foo HTTP/1.1
    Host: example.org
@@ -747,9 +813,9 @@ Table of Contents
    Events: duration=0
 
    events:
-     @context: activity+json
+     "@context": https://www.w3.org/ns/activitystreams
 
-              Figure 8: Request for JSON Notifications Stream
+              Figure 9: Request for JSON Notifications Stream
 
 9.2.  Response
 
@@ -770,9 +836,9 @@ Table of Contents
       -  The duration property, set to the maximum duration for which
          the server intends to serve event notifications.
 
-   *  The Incremental header field ([INCREMENTAL-HTTP-MESSAGES],
-      Section 3) set to ?1 to indicate that the response is to be
-      immediately forwarded by intermediaries and not buffered.
+   *  The Incremental header field ([RFC10036], Section 3) set to ?1 to
+      indicate that the response is to be immediately forwarded by
+      intermediaries and not buffered.
 
    HTTP/1.1 200 OK
    Date: Thu, 02 Jan 2025 10:10:10 GMT
@@ -781,20 +847,20 @@ Table of Contents
    Incremental: ?1
    Transfer-Encoding: chunked
 
-              Figure 9: Notifications Stream Response Headers
+              Figure 10: Notifications Stream Response Headers
 
    The Content-Type header field in response to the request in the first
    example is:
 
    Content-Type: multipart/mixed; boundary="THIS_STRING_SEPARATES"
 
-     Figure 10: Notifications Stream Multipart Content Response Header
+     Figure 11: Notifications Stream Multipart Content Response Header
 
    whereas in response to the request in the second example is:
 
    Content-Type: application/json-seq
 
-       Figure 11: Notifications Stream JSON Content Response Headers
+       Figure 12: Notifications Stream JSON Content Response Headers
 
 9.2.2.  Notifications
 
@@ -803,8 +869,8 @@ Table of Contents
 
    An event notification transferred in a multipart/mixed response
    stream is identical to the Single Notification Response
-   (Section 8.2), except that non "Content-*" fields are excluded as
-   required by [RFC2046], Section 5.1:
+   (Section 8.2), with only "Content-*" fields included, as these alone
+   have defined meaning in a body part ([RFC2046], Section 5.1):
 
    --THIS_STRING_SEPARATES
    Content-Length: 31                               | Notification
@@ -814,7 +880,7 @@ Table of Contents
    event-id: 456                                    |
    type: update                                     |
 
-                  Figure 12: Multipart Update Notification
+                  Figure 13: Multipart Update Notification
 
    The same event notification when transferred in an application/json-
    seq response stream is as follows:
@@ -825,7 +891,7 @@ Table of Contents
      "type": "update"                               |
    }                                                |
 
-                    Figure 13: JSON Update Notification
+                    Figure 14: JSON Update Notification
 
    A server MUST end the response immediately after transmitting the
    event notification that signals the deletion of a resource.
@@ -842,7 +908,7 @@ Table of Contents
    type: delete                                     |
    --THIS_STRING_SEPARATES--
 
-                  Figure 14: Multipart Delete Notification
+                  Figure 15: Multipart Delete Notification
 
    The same notification for a delete event as JSON would be as follows:
 
@@ -852,7 +918,7 @@ Table of Contents
      "type": "delete"                               |
    }                                                |
 
-                    Figure 15: JSON Delete Notification
+                    Figure 16: JSON Delete Notification
 
    Otherwise, a server MUST end the response when the connection
    duration exceeds the period set in the duration property of the
@@ -903,7 +969,7 @@ Table of Contents
    events:
      Accept: example/event-notification
 
-          Figure 16: HTTP Representation and Notifications Request
+          Figure 17: HTTP Representation and Notifications Request
 
 10.2.  Response
 
@@ -934,7 +1000,7 @@ Table of Contents
                                                     |
    Hello World!                                     |
 
-          Figure 17: Representation Response before Notifications
+          Figure 18: Representation Response before Notifications
 
    While this is default behavior, there is no requirement that a
    representation is the first message or that representations are sent
@@ -980,6 +1046,17 @@ Table of Contents
    SIM-swap state in-band as a JSON Sequence by sending a QUERY request
    to a resource, rather than setting up a separate Webhooks
    subscription.
+
+11.3.  23signs Web Service
+
+   Jaime Jiménez has also created a web service hosted at
+   https://web.23signs.org that serves clean Markdown representations of
+   public web pages, with change notifications delivered using Events
+   Query.
+
+   This service demonstrates a third-party observer generating event
+   notifications for resources that do not natively support Events
+   Query.
 
 12.  Security Considerations
 
@@ -1152,13 +1229,6 @@ Table of Contents
               HTTP", RFC 9651, DOI 10.17487/RFC9651, September 2024,
               <https://www.rfc-editor.org/rfc/rfc9651>.
 
-   [INCREMENTAL-HTTP-MESSAGES]
-              Oku, K., Pauly, T., and M. Thomson, "Incremental
-              Forwarding of HTTP Messages", Work in Progress, Internet-
-              Draft, draft-ietf-httpbis-incremental-04, 2 March 2026,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
-              incremental-04>.
-
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
@@ -1172,6 +1242,11 @@ Table of Contents
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+   [RFC10036] Oku, K., Pauly, T., and M. Thomson, "Incremental
+              Forwarding of HTTP Messages", RFC 10036,
+              DOI 10.17487/RFC10036, August 2026,
+              <https://www.rfc-editor.org/rfc/rfc10036>.
 
 15.2.  Informative References
 
@@ -1188,11 +1263,19 @@ Table of Contents
               DOI 10.1145/267896.267920, November 1997,
               <https://doi.org/10.1145/267896.267920>.
 
-   [FETCH]    WHATWG, "Fetch", WHATWG Living Standard, May 2025,
-              <https://fetch.spec.whatwg.org>.
+   [FETCH]    WHATWG, "Fetch", WHATWG Living Standard,
+              <https://fetch.spec.whatwg.org>.  Commit snapshot (19
+              October 2026): https://fetch.spec.whatwg.org/commit-
+              snapshots/59afe349913d56898c947576216f1c2579308be7/
+              (https://fetch.spec.whatwg.org/commit-
+              snapshots/59afe349913d56898c947576216f1c2579308be7/)
 
-   [HTML]     WHATWG, "HTML", WHATWG Living Standard, April 2026,
-              <https://html.spec.whatwg.org>.
+   [HTML]     WHATWG, "HTML", WHATWG Living Standard,
+              <https://html.spec.whatwg.org>.  Commit snapshot (30
+              October 2026): https://html.spec.whatwg.org/commit-
+              snapshots/404b3eb14a7a936dddefb2d78e224dbeb01d2358/
+              (https://html.spec.whatwg.org/commit-
+              snapshots/404b3eb14a7a936dddefb2d78e224dbeb01d2358/)
 
    [HTTP-CACHING]
               Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
@@ -1200,12 +1283,10 @@ Table of Contents
               DOI 10.17487/RFC9111, June 2022,
               <https://www.rfc-editor.org/rfc/rfc9111>.
 
-   [REST]     Fielding, R., "Representational State Transfer (REST)",
-              Chapter 5, Architectural Styles and the Design of Network-
-              based Software Architectures, Doctoral
-              Dissertation University of California, Irvine,
-              <https://roy.gbiv.com/pubs/dissertation/
-              rest_arch_style.htm>.
+   [REST]     Fielding, R. T., "Architectural Styles and the Design of
+              Network-based Software Architectures", Doctoral
+              Dissertation, University of California, Irvine, September
+              2000, <https://roy.gbiv.com/pubs/dissertation/top.htm>.
 
    [RFC2046]  Freed, N. and N. Borenstein, "Multipurpose Internet Mail
               Extensions (MIME) Part Two: Media Types", RFC 2046,
@@ -1215,6 +1296,10 @@ Table of Contents
    [RFC3935]  Alvestrand, H., "A Mission Statement for the IETF",
               BCP 95, RFC 3935, DOI 10.17487/RFC3935, October 2004,
               <https://www.rfc-editor.org/rfc/rfc3935>.
+
+   [RFC4648]  Josefsson, S., "The Base16, Base32, and Base64 Data
+              Encodings", RFC 4648, DOI 10.17487/RFC4648, October 2006,
+              <https://www.rfc-editor.org/rfc/rfc4648>.
 
    [RFC6202]  Loreto, S., Saint-Andre, P., Salsano, S., and G. Wilkins,
               "Known Issues and Best Practices for the Use of Long
@@ -1268,7 +1353,7 @@ A.1.1.  Request
    events:
      Accept: example/event-notification
 
-          Figure 18: Request for Representation and Notifications
+          Figure 19: Request for Representation and Notifications
 
 A.1.2.  Response
 
@@ -1303,7 +1388,7 @@ A.1.2.  Response
    type: delete                                     |
    --THIS_STRING_SEPARATES--
 
-         Figure 19: Response with Representation and Notifications
+         Figure 20: Response with Representation and Notifications
 
 A.2.  Notifications Stream
 
@@ -1320,9 +1405,9 @@ A.2.1.  Request
    Events: duration=0
 
    events:
-     @context: activity+json
+     "@context": https://www.w3.org/ns/activitystreams
 
-                 Figure 20: Request for JSON Notifications
+                 Figure 21: Request for JSON Notifications
 
 A.2.2.  Response
 
@@ -1345,7 +1430,7 @@ A.2.2.  Response
      "type": "delete"                               |
    }                                                |
 
-                Figure 21: Response with JSON Notifications
+                Figure 22: Response with JSON Notifications
 
 Acknowledgments
 
@@ -1373,15 +1458,16 @@ Index
          event  Section 2, Paragraph 1; Section 2.4.1, Paragraph 1;
             Section 2.4.1, Paragraph 2.1.1; Section 2.4.1, Paragraph 3;
             Section 2.4.3, Paragraph 2.1.1; Section 2.4.3, Paragraph
-            2.2.1; Section 2.5, Paragraph 1; Section 2.6, Paragraph 4;
-            *_Section 4.1_*; Section 4.2, Paragraph 1; Section 4.2,
-            Paragraph 2; Section 4.2, Paragraph 3; Section 4.3,
-            Paragraph 1; Section 4.3, Paragraph 2; Section 4.3,
-            Paragraph 3; Section 7, Paragraph 4.2; Section 8, Paragraph
-            1; Section 8.1, Paragraph 2.1.1; Section 9.2.2, Paragraph 1;
-            Section 9.2.2, Paragraph 7; Section 9.2.2, Paragraph 9;
-            Section 10.1, Paragraph 2.1.2.2.1; Section 11.1, Paragraph
-            2.2.1; Section 14, Paragraph 4
+            2.2.1; Section 2.4.4, Paragraph 3.1.1; Section 2.6,
+            Paragraph 4; *_Section 4.1_*; Section 4.2, Paragraph 1;
+            Section 4.2, Paragraph 2; Section 4.2, Paragraph 3;
+            Section 4.3, Paragraph 1; Section 4.3, Paragraph 2;
+            Section 4.3, Paragraph 3; Section 7, Paragraph 4.2;
+            Section 8, Paragraph 1; Section 8.1, Paragraph 2.1.1;
+            Section 9.2.2, Paragraph 1; Section 9.2.2, Paragraph 7;
+            Section 9.2.2, Paragraph 9; Section 10.1, Paragraph
+            2.1.2.2.1; Section 11.1, Paragraph 2.2.1; Section 14,
+            Paragraph 4
          event notification  Section Abstract, Paragraph 1; Section 1,
             Paragraph 3; Section 1, Paragraph 5; Section 1, Paragraph 6;
             Section 1, Paragraph 9; Section 1, Paragraph 10; Section 2,
@@ -1396,16 +1482,16 @@ Index
             Section 2.4.2, Paragraph 2.1.1; Section 2.4.2, Paragraph
             2.3.1; Section 2.4.3, Paragraph 1; Section 2.4.3, Paragraph
             2.2.1; Section 2.4.3, Paragraph 2.3.1; Section 2.4.3,
-            Paragraph 2.4.1; Section 2.5, Paragraph 1; Section 2.5,
-            Paragraph 2; Section 2.6, Paragraph 1; Section 2.6,
-            Paragraph 2; Section 2.6, Paragraph 4; Section 4.2,
+            Paragraph 2.4.1; Section 2.4.4, Paragraph 1; Section 2.4.4,
+            Paragraph 3.2.1; Section 2.5, Paragraph 1; Section 2.6,
+            Paragraph 1; Section 2.6, Paragraph 4; Section 4.2,
             Paragraph 3; *_Section 4.3_*; Section 4.3, Paragraph 1;
             Section 4.3, Paragraph 2; Section 4.3, Paragraph 3;
             Section 4.4, Paragraph 1; Section 4.4, Paragraph 2;
             Section 4.4, Paragraph 3; Section 5, Paragraph 2; Section 5,
             Paragraph 3; Section 5.1, Paragraph 2; Section 5.1,
             Paragraph 3; Section 5.1, Paragraph 4; Section 6, Paragraph
-            3.1.1; Section 6, Paragraph 5; Section 7, Paragraph 4.2;
+            3.1.1; Section 6, Paragraph 6; Section 7, Paragraph 4.2;
             Section 8, Paragraph 1; Section 8.1, Paragraph 1;
             Section 8.1, Paragraph 2.1.1; Section 8.1, Paragraph 3;
             Section 8.2, Paragraph 1; Section 9, Paragraph 1;
@@ -1421,11 +1507,12 @@ Index
             2.1.2.2.1; Section 10.1, Paragraph 3; Section 10.2,
             Paragraph 1; Section 10.2, Paragraph 2; Section 10.2,
             Paragraph 5; Section 10.2, Paragraph 6; Section 11.1,
-            Paragraph 2.2.1; Section 11.1, Paragraph 2.3.1; Section 12,
-            Paragraph 2; Section 12, Paragraph 3; Section 14, Paragraph
-            2; Section 14, Paragraph 3; Section 14, Paragraph 4;
-            Section 14, Paragraph 5; Appendix A.1, Paragraph 1;
-            Appendix A.2, Paragraph 1
+            Paragraph 2.2.1; Section 11.1, Paragraph 2.3.1;
+            Section 11.3, Paragraph 1; Section 11.3, Paragraph 2;
+            Section 12, Paragraph 2; Section 12, Paragraph 3;
+            Section 14, Paragraph 2; Section 14, Paragraph 3;
+            Section 14, Paragraph 4; Section 14, Paragraph 5;
+            Appendix A.1, Paragraph 1; Appendix A.2, Paragraph 1
          events (header field)  *_Section 5_*; Section 9.2.1, Paragraph
             2.1.1; Section 9.2.2, Paragraph 11; Section 11.1, Paragraph
             2.1.1; Table 1; Section 13.2, Paragraph 1; Section 13.2.1,
@@ -1452,15 +1539,15 @@ Index
             Section 2.4.2, Paragraph 2.1.1; Section 2.4.2, Paragraph
             2.3.1; Section 2.4.3, Paragraph 1; Section 2.4.3, Paragraph
             2.2.1; Section 2.4.3, Paragraph 2.3.1; Section 2.4.3,
-            Paragraph 2.4.1; Section 2.5, Paragraph 1; Section 2.5,
-            Paragraph 2; Section 2.6, Paragraph 1; Section 2.6,
-            Paragraph 2; Section 2.6, Paragraph 4; Section 4.2,
+            Paragraph 2.4.1; Section 2.4.4, Paragraph 1; Section 2.4.4,
+            Paragraph 3.2.1; Section 2.5, Paragraph 1; Section 2.6,
+            Paragraph 1; Section 2.6, Paragraph 4; Section 4.2,
             Paragraph 3; *_Section 4.3_*; Section 4.3, Paragraph 1;
             Section 4.4, Paragraph 1; Section 4.4, Paragraph 2;
             Section 4.4, Paragraph 3; Section 5, Paragraph 2; Section 5,
             Paragraph 3; Section 5.1, Paragraph 2; Section 5.1,
             Paragraph 3; Section 5.1, Paragraph 4; Section 6, Paragraph
-            3.1.1; Section 6, Paragraph 5; Section 7, Paragraph 4.2;
+            3.1.1; Section 6, Paragraph 6; Section 7, Paragraph 4.2;
             Section 8, Paragraph 1; Section 8.1, Paragraph 1;
             Section 8.1, Paragraph 2.1.1; Section 8.1, Paragraph 3;
             Section 8.2, Paragraph 1; Section 9, Paragraph 1;
@@ -1476,30 +1563,31 @@ Index
             2.1.2.2.1; Section 10.1, Paragraph 3; Section 10.2,
             Paragraph 1; Section 10.2, Paragraph 2; Section 10.2,
             Paragraph 5; Section 10.2, Paragraph 6; Section 11.1,
-            Paragraph 2.2.1; Section 11.1, Paragraph 2.3.1; Section 12,
-            Paragraph 2; Section 12, Paragraph 3; Section 14, Paragraph
-            2; Section 14, Paragraph 3; Section 14, Paragraph 4;
-            Section 14, Paragraph 5; Appendix A.1, Paragraph 1;
-            Appendix A.2, Paragraph 1
+            Paragraph 2.2.1; Section 11.1, Paragraph 2.3.1;
+            Section 11.3, Paragraph 1; Section 11.3, Paragraph 2;
+            Section 12, Paragraph 2; Section 12, Paragraph 3;
+            Section 14, Paragraph 2; Section 14, Paragraph 3;
+            Section 14, Paragraph 4; Section 14, Paragraph 5;
+            Appendix A.1, Paragraph 1; Appendix A.2, Paragraph 1
 
       O
 
          observation  *_Section 4.2_*; Section 11.1, Paragraph 2.2.1
          observer  *_Section 4.2, Paragraph 1_*; Section 4.2, Paragraph
             2; Section 4.2, Paragraph 3; Section 4.3, Paragraph 1;
-            Section 4.4, Paragraph 1
+            Section 4.4, Paragraph 1; Section 11.3, Paragraph 2
 
       S
 
          subscriber  Section 4.3, Paragraph 3; *_Section 4.4, Paragraph
             1_*; Section 4.4, Paragraph 2
-         subscription  Section 2.6, Paragraph 4; *_Section 4.4_*;
-            Section 6, Paragraph 2; Section 6, Paragraph 4; Section 6,
-            Paragraph 5; Section 8.1, Paragraph 2.1.1; Section 9.1,
-            Paragraph 2.1.1; Section 9.1, Paragraph 3; Section 9.1,
-            Paragraph 4; Section 9.1, Paragraph 6; Section 10.1,
-            Paragraph 2.1.1; Section 10.1, Paragraph 3; Section 11.2,
-            Paragraph 1; Section 12, Paragraph 2
+         subscription  Section 2.5, Paragraph 1; Section 2.6, Paragraph
+            4; *_Section 4.4_*; Section 6, Paragraph 2; Section 6,
+            Paragraph 5; Section 6, Paragraph 6; Section 8.1, Paragraph
+            2.1.1; Section 9.1, Paragraph 2.1.1; Section 9.1, Paragraph
+            3; Section 9.1, Paragraph 4; Section 9.1, Paragraph 6;
+            Section 10.1, Paragraph 2.1.1; Section 10.1, Paragraph 3;
+            Section 11.2, Paragraph 1; Section 12, Paragraph 2
 
 Author's Address
 
