@@ -21,7 +21,7 @@ to provide reliable and in-order transfer of event-notifications. The transfer o
 to deliver the representation and notifications in response to a single request, minimizing round trips between clients and servers. It also eliminates the need to synchronize the delivery of the representation and notifications.
 
 1. {: #goal--content-negotiation}
-to enable the transfer of event-notifications using arbitrary formats that might be content-negotiated. This allows implementers to serve notifications that are more expressive, say, in comparison to existing HTTP-based messaging protocols such as Server-Sent Events ({{HTML}}, Section 9.2).
+to enable the transfer of event-notifications using arbitrary formats that might be content-negotiated. This allows implementers to serve notifications that are more expressive, say, in comparison to existing HTTP-based messaging protocols such as Server-Sent Events ({{HTML}}, <xref target="HTML" section="Section 9.2" relative="#server-sent-events" sectionFormat="bare"/>).
 
 1. {: #goal--intermediation}
 to specify transparent notification semantics that empower intermediaries to scale event-notifications, improve reliability and reduce latency. Intermediaries shall also be able to proactively update caches in real-time.
@@ -35,7 +35,7 @@ To the extent feasible, the {{&protocol}}:
 adheres to established practices and conventions. In particular, every attempt has been made to reuse existing protocols and specifications. Implementers shall be able to repurpose existing tools and libraries for implementing this specification.
 
 1. {: #constraint--rest}
-conforms to {{<<REST}}, best practices for {{<<RFC9205}} {{RFC9205}}, and {{<<RFC6202}} {{RFC6202}}. This specification can thus be used to extend the capabilities of any existing or future resource to additionally serve event-notifications over HTTP. This is to afford implementers the opportunity to scale notifications with their data and application.
+conforms to the Representational State Transfer (REST) architectural style ({{REST}}, <xref target="REST" section="Chapter 5" relative="rest_arch_style.htm" sectionFormat="bare"/>), best practices for {{<<RFC9205}} {{RFC9205}}, and {{<<RFC6202}} {{RFC6202}}. This specification can thus be used to extend the capabilities of any existing or future resource to additionally serve event-notifications over HTTP. This is to afford implementers the opportunity to scale notifications with their data and application.
 <!--
   See my original comment on the solid/specification Gitter channel on 24 April 2020
   https://matrix.to/#/!PlIOdBsCTDRSCxsTGA:gitter.im/$VgCcuq2HbpLKJvxIw4witAUOsqcdhC98glgzqVI1WOY
@@ -74,12 +74,12 @@ The events for which a notification might be generated.
 1. {: #no-event-semantics--notification-content}
 The content of an event-notification.
 
-Implementations can further provide mechanisms to filter the events generating notifications or to select the content of notifications. Affordances for such mechanisms can be exposed to clients by extending the abstract {{<<data-model}} with additional specifications. 
+Implementations can further provide mechanisms to filter the events generating notifications or to select the content of notifications. Affordances for such mechanisms can be exposed to clients by extending the abstract {{<<data-model}} with additional specifications.
 
 ### Realizations and Formats {#out-of-scope--realizations}
 
 {: #no-format}
-Since transferred data is subject to content negotiation between clients and server, the {{&protocol}} Protocol does not commit to a specific: 
+Since transferred data is subject to content negotiation between clients and server, the {{&protocol}} Protocol does not commit to a specific:
 
 1. {: #no-format--request-data-model}
 Realization of the abstract data model ({{data-model}}) used for requesting event-notifications.
@@ -92,11 +92,11 @@ Form of event-notifications within the response stream.
 
 ### Temporal Coordination {#out-of-scope--temporal-coordination}
 
-{: #no-sync} 
+{: #no-sync}
 Event-notifications are typically implemented along with temporal coordination mechanisms, ranging in complexity from resumability on reconnection to real-time state synchronization. Implementations adopt these mechanisms based on application requirements. For this reason, the {{&protocol}} Protocol itself does not specify temporal coordination across responses. Instead, implementations shall be able to extend the {{<<data-model}} with additional specifications that provide:
 
 1. {: #no-sync--versioning}
-A scheme for versioning events occurring on a resource. 
+A scheme for labeling events on a resource or versioning its states.
 
 1. {: #no-sync--replay}
 Replay or resumption of event-notifications from a prior event. This can, for example, help clients recover upon reconnection without refetching the representation.
@@ -105,29 +105,43 @@ Replay or resumption of event-notifications from a prior event. This can, for ex
 Identification of resource representations, separate from event-notifications, within the [response stream](#representation-response). This is useful for a first fetch before a client starts receiving notifications or for periodic reconciliation during state synchronization.
 
 1. {: #no-sync--merge-types}
-The Conflict-free Replicated Data Types (CRDT) or Operational Transforms (OT) 
+The Conflict-free Replicated Data Types (CRDT) or Operational Transforms (OT)
 strategy to be implemented by a client for synchronizing the representation using event-notifications.
+
+### Endpoints {#out-of-scope--endpoints}
+
+{: #no-endpoints--replication}
+APIs built on top of existing messaging protocols (see, for example, WebSocket {{WS}} and WebSub {{WEBSUB}}) typically transfer event-notifications for multiple resources from a single endpoint. To replicate this functionality with {{&protocol}}, an application can mint an additional resource, which represents a collection of other resources ({{REST}}, <xref target="REST" section="Section 5.2.1.1" relative="rest_arch_style.htm#sec_5_2_1_1" sectionFormat="bare"/>), to serve as an endpoint for multi-resource notifications.
+
+{: #no-endpoints--unspecified}
+The {{&protocol}} Protocol leaves the design of endpoints to additional specifications, which can provide:
+
+1. {: #no-endpoints--advertise-endpoint}
+A mechanism for a server to advertise an endpoint, and the resources whose events the endpoint can report.
+
+1. {: #no-endpoints--identify-resources}
+A mechanism for a client to specify the resources from which it wants to receive event-notifications, for example by extending the {{<<data-model}}.
+
+{: #no-endpoints--discouraged}
+Subscribing to multiple resources with a single {{&protocol}} is, however, discouraged. It mirrors methods that encapsulate multiple requests within a single message, such as MGET or MHEAD, which were rejected during the design of HTTP/1.1 because they violate several REST constraints ({{REST}}, <xref target="REST" section="Section 6.3.3.1" relative="evaluation.htm#sec_6_3_3_1" sectionFormat="bare"/>). Where per-resource subscriptions are impractical, such as in limited environments or with legacy applications, endpoints can serve as an alternative.
 
 ## Limitations {#limitations}
 
-{: #limitation--resource-specificity}
-{{&protocol}} only allows notifications to be sent for events on a given resource. To transfer event-notifications originating from multiple resources in a single response, implementations will need to mint additional resources to serve as notification endpoints. This is no different from APIs built on top of existing messaging protocols (see, for example, WebSocket {{WS}} and WebSub {{WEBSUB}}).
-
 {: #limitation--connection-limits}
-Browsers cap the number of persistent HTTP/1.1 connections per host, limiting the suitability of {{&protocol}} for web applications in the browser that require simultaneous event-notifications from multiple resources on the same host. This limitation is identical to that of other HTTP-based streaming protocols, such as Server-Sent Events ({{HTML}}, Section 9.2). Implementations are strongly encouraged to adopt HTTP/2 (or later). HTTP/1.1 servers might consider setting up a reverse proxy over HTTP/2 (or later) or implement mitigation strategies, such as, maximizing the number of concurrent connections and providing alternate hosts for resources. Implementations might alternatively consider using endpoints to provide event-notifications for multiple resources as previously described. Clients on a browser requesting event-notifications over an HTTP/1.1 connection are advised to exercise caution when simultaneously opening multiple persistent connections to a given host.
+Browsers cap the number of persistent HTTP/1.1 connections per host ({{RFC6202, Section 5.1}}), limiting the suitability of {{&protocol}} for web applications in the browser that require simultaneous event-notifications from multiple resources on a host reachable only over HTTP/1.1. This limitation is identical to that of other HTTP-based streaming protocols, such as Server-Sent Events ({{HTML}}, <xref target="HTML" section="Section 9.2" relative="#server-sent-events" sectionFormat="bare"/>). Implementations are strongly encouraged to adopt HTTP/2 (or later). HTTP/1.1 servers might consider setting up a reverse proxy over HTTP/2 (or later), deploying an alternative service with a different protocol configuration ({{RFC7838}}), or providing alternate hosts for resources. Implementations might alternatively consider using endpoints to provide event-notifications for multiple resources (see {{out-of-scope--endpoints}}). Clients on a browser requesting event-notifications over an HTTP/1.1 connection are advised to limit the number of persistent connections they open simultaneously to a given host, for example, by sharing a subscription across the frames, tabs, or windows of the same browser ({{RFC6202, Section 5.1}}).
 
 ## Comparison with Server-Sent Events {#sse-comparison}
 
 {: #sse-defacto}
-At the time of writing, Server-Sent Events (SSE) has emerged as the de facto mechanism for transferring event-notifications over HTTP. 
+At the time of writing, Server-Sent Events (SSE) has emerged as the de facto mechanism for transferring event-notifications over HTTP.
 
 {: #sse-standardization}
-Server-Sent Events is standardized as part of HTML Living Standard by the WHATWG[^EventSource_Obsolecense] through the EventSource API ({{HTML}}, Section 9.2.2) on user agents and the `text/event-stream` media type ({{HTML}}, Section 17.7) to transmit event-notifications. This approach is fundamentally inconsistent with terminology defined in HTTP Semantics ({{HTTP, Section 3.2}}), transferring a sequence of asynchronous messages instead of a representation "intended to reflect a past, current, or desired state of a given resource". Practically, the `text/event-stream` media type being limited to only textual content forces developers to opt for alternative protocols such as WebSockets {{WS}}, despite the increased complexity. The EventSource API does not even allow for headers to be sent with requests.
+The HTML Living Standard standardizes Server-Sent Events ({{HTML}}, <xref target="HTML" section="Section 9.2" relative="#server-sent-events" sectionFormat="bare"/>) with the EventSource interface[^EventSource_Obsolescence] ({{HTML}}, <xref target="HTML" section="Section 9.2.2" relative="#the-eventsource-interface" sectionFormat="bare"/>) and the `text/event-stream` media type ({{HTML}}, <xref target="HTML" section="Section 17.7" relative="#text/event-stream" sectionFormat="bare"/>). This approach is fundamentally inconsistent with terminology defined in HTTP Semantics ({{HTTP, Section 3.2}}), transferring a sequence of asynchronous messages instead of a _representation_ "intended to reflect a past, current, or desired state of a given resource". Practically, the EventSource interface is extremely limited. For example, it does not even allow for custom HTTP header fields to be sent with requests. The response is only sent as `text/event-stream`, a text format in which any line break is a delimiter. Not just binary content but even multi-line text that requires line endings to be preserved must therefore be encoded, typically as Base 64 ({{RFC4648, Section 4}}), which results in an additional burden for both the sender and the recipient.
 
-[^EventSource_Obsolecense]: As of October 2022, HTML Living Standard maintainer Anne van Kesteren has [stated](https://github.com/whatwg/html/issues/8297#issuecomment-1291658863) that WHATWG does not intend to extend the EventSource API, with reasons for the decision cited in a subsequent [comment](https://github.com/whatwg/html/issues/8297#issuecomment-1291658863).
+[^EventSource_Obsolescence]: As of October 2022, WHATWG does not intend to extend the EventSource feature, as [announced](https://github.com/whatwg/html/issues/8297#issuecomment-1291658863) by HTML Living Standard maintainer Anne van Kesteren, with reasons for the decision cited in a subsequent [comment](https://github.com/whatwg/html/issues/8297#issuecomment-1293054529).
 
 {: #sse-non-standard}
-This has led to a proliferation of non-standard implementations of Server-Sent Events[^hacks] that provide support for custom headers, such as for sending credentials, or use the POST method to communicate additional configuration in the request body.
+On one hand, these deficiencies have led to a proliferation of non-standard implementations of Server-Sent Events[^hacks] that provide support for custom header fields, such as for sending credentials, or use the POST method to communicate additional configuration in a request body. On the other hand, they have forced developers to adopt alternative protocols such as WebSocket {{WS}}, despite the increased complexity.
 
 [^hacks]: such as [this](https://www.npmjs.com/package/event-source-plus), [this](https://www.npmjs.com/package/@microsoft/fetch-event-source), [this](https://www.npmjs.com/package/fetch-event-stream), [this](https://www.npmjs.com/package/extended-eventsource), [this](https://www.npmjs.com/package/ngx-sse-client) and [this](https://www.npmjs.com/package/sse.js)
 

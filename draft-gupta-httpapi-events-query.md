@@ -35,7 +35,7 @@ normative:
   HTTP: RFC9110
   HTTP-SF: RFC9651
   HTTP-QUERY: RFC10008
-  INCREMENTAL-HTTP-MESSAGES: I-D.ietf-httpbis-incremental-04
+  RFC10036:
   RFC8126:
 informative:
   COMET:
@@ -53,38 +53,37 @@ informative:
     title: Fetch
     author:
       -
-        name: WHATWG
+        org: WHATWG
     seriesinfo:
       WHATWG: Living Standard
-    date: Last Updated 28 May 2025
+    date: false
+    annotation: "Commit snapshot (19 October 2026): <https://fetch.spec.whatwg.org/commit-snapshots/59afe349913d56898c947576216f1c2579308be7/>"
   HTML:
     target: https://html.spec.whatwg.org
     title: HTML
     author:
       -
-        name: WHATWG
+        org: WHATWG
     seriesinfo:
       WHATWG: Living Standard
-    date: Last Updated 15 April 2026
+    date: false
+    annotation: "Commit snapshot (30 October 2026): <https://html.spec.whatwg.org/commit-snapshots/404b3eb14a7a936dddefb2d78e224dbeb01d2358/>"
   HTTP-CACHING: RFC9111
   REST:
-    target: https://roy.gbiv.com/pubs/dissertation/rest_arch_style.htm
-    title: Representational State Transfer (REST)
+    target: https://roy.gbiv.com/pubs/dissertation/top.htm
+    title: Architectural Styles and the Design of Network-based Software Architectures
     author:
       -
-        ins: R. Fielding
+        ins: R.T. Fielding
         name: Roy Thomas Fielding
         org: University of California, Irvine
-    date:
-      month: September
-      year: 2000
-    refcontent: Chapter 5, Architectural Styles and the Design of Network-based Software Architectures
-    seriesinfo:
-      "Doctoral Dissertation": University of California, Irvine
+    refcontent: Doctoral Dissertation, University of California, Irvine
+    date: September 2000
     format:
-      PDF: https://roy.gbiv.com/pubs/dissertation/fielding_dissertation.pdf#G16.1026811
+      PDF: https://roy.gbiv.com/pubs/dissertation/fielding_dissertation.pdf
   RFC2046:
   RFC3935:
+  RFC4648:
   RFC6202:
   RFC7464:
   RFC7838:
@@ -96,7 +95,7 @@ informative:
 
 --- abstract
 
-Events Query is a minimal protocol built on top of HTTP that allows user agents to receive event-notifications directly from any resource of interest. It uses the QUERY method [RFC10008] to request (optionally) the current representation and subsequent event-notifications within a single response. The Events Query Protocol (EQP) is predicated on the idea that the most intuitive source for event-notifications is the resource itself.
+Events Query is a minimal protocol built on top of HTTP that allows user agents to receive event-notifications directly from any resource of interest. It uses the HTTP QUERY method to request (optionally) the current representation and subsequent event-notifications within a single response. The Events Query Protocol (EQP) is predicated on the idea that the most intuitive source for event-notifications is the resource itself.
 
 
 --- middle

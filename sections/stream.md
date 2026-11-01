@@ -12,7 +12,7 @@ To receive multiple notifications, a client MUST:
 send a realization of the subscription data model that includes an interest in receiving a stream of event-notifications in a preferred form,
 
 + {: #stream-request-procedure--method}
-using the QUERY method ({{HTTP-QUERY, Section 2}}). 
+using the QUERY method ({{HTTP-QUERY, Section 2}}).
 
 {: #stream-request-conneg}
 Since the response transmits event-notifications within an encapsulating representation ({{stream-response}}), it follows that header fields cannot be used to negotiate the form of event-notifications as in the case of [Single Notification Request](#single-notification-request){:noabbrev}. Instead, header fields are useful for negotiating the representation that encapsulates event-notifications. The following examples illustrate subscription requests that negotiate a stream of event-notifications to be transferred respectively using a composite media type (`multipart/mixed`) and a discrete media type (`application/json-seq`):
@@ -26,7 +26,7 @@ The first example shows a subscription request for effectively a stream of discr
 {: sourcecode-name="stream-request-multipart-example.http" #stream-request-multipart-example title="Request for Multipart Notifications Stream"}
 
 {: #stream-request-json}
-The second example shows a subscription request for a stream of JSON notifications to be transferred using `application/json-seq` ({{RFC7464}}) as the encapsulating media type. The `events` property in this example is being used to communicate the preferred schema for the requested event-notifications.
+The second example shows a subscription request for a stream of JSON notifications to be transferred using `application/json-seq` ({{RFC7464}}) as the encapsulating media type. The `events` property in this example is being used to communicate the preferred vocabulary for the requested event-notifications.
 
 ~~~ http-message
 {::include examples/stream/json-events-request.http}
@@ -50,7 +50,7 @@ The =Events= header field, to communicate the properties of the notifications st
     The =duration= property, set to the maximum duration for which the server intends to serve event-notifications.
 
 + {: #stream-response-incremental-field}
-The `Incremental` header field ({{INCREMENTAL-HTTP-MESSAGES, Section 3}}) set to `?1` to indicate that the response is to be immediately forwarded by intermediaries and not buffered.
+The `Incremental` header field ({{RFC10036, Section 3}}) set to `?1` to indicate that the response is to be immediately forwarded by intermediaries and not buffered.
 
 ~~~ http-message
 {::include examples/stream/response-headers.http}
@@ -81,7 +81,7 @@ Content-Type: application/json-seq
 Subsequently, when event(s) occur, the server transmits a notification.
 
 {: #stream-update-event-multipart}
-An event-notification transferred in a `multipart/mixed` response stream is identical to the [Single Notification Response](#single-notification-response){:noabbrev}, except that non "Content-*" fields are excluded as required by {{RFC2046, Section 5.1}}: 
+An event-notification transferred in a `multipart/mixed` response stream is identical to the [Single Notification Response](#single-notification-response){:noabbrev}, with only "Content-*" fields included, as these alone have defined meaning in a body part ({{RFC2046, Section 5.1}}):
 
 ~~~ http-message
 {::include examples/notifications/update.multipart.txt}

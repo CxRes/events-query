@@ -1,4 +1,4 @@
---THIS_STRING_SEPARATES                                 
+--THIS_STRING_SEPARATES
 Content-Length: 14                               | Representation
 Content-Type: text/plain                         |
                                                  |
